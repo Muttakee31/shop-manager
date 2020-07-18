@@ -1,4 +1,4 @@
-import React from 'react';
+import React  from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './Counter.css';
@@ -12,6 +12,7 @@ import {
 } from './counterSlice';
 
 export default function Counter() {
+  // const [dummy, setDummy] = useState(0);
   const dispatch = useDispatch();
   const value = useSelector(selectCount);
   return (

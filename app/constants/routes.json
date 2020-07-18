@@ -1,4 +1,10 @@
 {
   "HOME": "/",
-  "COUNTER": "/counter"
+  "COUNTER": "/counter",
+  "ORDERS": "/orders",
+  "SUPPLY": "/supply",
+  "CUSTOMERS": "/customers",
+  "PRODUCTS": "/products",
+  "SUPPLIERS": "/suppliers",
+  "OVERVIEW": "/overview"
 }
