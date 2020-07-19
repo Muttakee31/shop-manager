@@ -22,7 +22,6 @@ export default function Routes() {
     <App>
       <Switch>
         <Route path={routes.COUNTER} component={CounterPage} />
-        <Route path={routes.HOME} component={ProductPage} />
         {/*
         <Route path={routes.OVERVIEW} component={HomePage} />
         */}
@@ -33,6 +32,7 @@ export default function Routes() {
         <Route path={routes.SUPPLIERS} component={CounterPage} />
         */}
         <Route path={routes.PRODUCTS} component={ProductPage} />
+        <Route path={routes.HOME} component={ProductPage} />
       </Switch>
     </App>
   );

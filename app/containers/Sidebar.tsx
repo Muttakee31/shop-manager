@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import StoreIcon from '@material-ui/icons/Store';
@@ -27,11 +27,20 @@ const useStyles = makeStyles({
   icons: {
     fontSize: 42,
   },
+  sideBarChild: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    cursor: 'pointer',
+  },
+  sideText: {
+    margin: 10,
+  },
 });
 
 const Sidebar: React.FC = () => {
   const router = useLocation();
-  console.log(router.pathname);
+  const history = useHistory();
   const classes = useStyles();
   return (
     <div style={{ height: '100vh' }}>
@@ -42,11 +51,17 @@ const Sidebar: React.FC = () => {
             : classes.links
         }
       >
-        <Link to={routes.OVERVIEW}>
+        <div
+          role="presentation"
+          className={classes.sideBarChild}
+          onClick={() => history.push(routes.OVERVIEW)}
+          onKeyDown={() => history.push(routes.OVERVIEW)}
+        >
           <AssessmentIcon className={classes.icons} />
-          <span>Overview</span>
-        </Link>
+          <span className={classes.sideText}>Overview</span>
+        </div>
       </Grid>
+
       <Grid
         className={
           router.pathname === routes.ORDERS
@@ -54,11 +69,17 @@ const Sidebar: React.FC = () => {
             : classes.links
         }
       >
-        <Link to={routes.ORDERS}>
+        <div
+          role="presentation"
+          className={classes.sideBarChild}
+          onClick={() => history.push(routes.COUNTER)}
+          onKeyDown={() => history.push(routes.COUNTER)}
+        >
           <ShoppingCartIcon className={classes.icons} />
-          Orders
-        </Link>
+          <span className={classes.sideText}>Orders</span>
+        </div>
       </Grid>
+
       <Grid
         className={
           router.pathname === routes.SUPPLY
@@ -66,11 +87,17 @@ const Sidebar: React.FC = () => {
             : classes.links
         }
       >
-        <Link to={routes.SUPPLY}>
+        <div
+          role="presentation"
+          className={classes.sideBarChild}
+          onClick={() => history.push(routes.SUPPLY)}
+          onKeyDown={() => history.push(routes.SUPPLY)}
+        >
           <StoreIcon className={classes.icons} />
-          Supply
-        </Link>
+          <span className={classes.sideText}>Supply</span>
+        </div>
       </Grid>
+
       <Grid
         className={
           router.pathname === routes.CUSTOMERS
@@ -78,11 +105,17 @@ const Sidebar: React.FC = () => {
             : classes.links
         }
       >
-        <Link to={routes.HOME}>
+        <div
+          role="presentation"
+          className={classes.sideBarChild}
+          onClick={() => history.push(routes.CUSTOMERS)}
+          onKeyDown={() => history.push(routes.CUSTOMERS)}
+        >
           <AccountCircleIcon className={classes.icons} />
-          Customers
-        </Link>
+          <span className={classes.sideText}>Customers</span>
+        </div>
       </Grid>
+
       <Grid
         className={
           router.pathname === routes.PRODUCTS
@@ -90,10 +123,15 @@ const Sidebar: React.FC = () => {
             : classes.links
         }
       >
-        <Link to={routes.PRODUCTS}>
+        <div
+          role="presentation"
+          className={classes.sideBarChild}
+          onClick={() => history.push(routes.PRODUCTS)}
+          onKeyDown={() => history.push(routes.PRODUCTS)}
+        >
           <EmojiFoodBeverageIcon className={classes.icons} />
-          Products
-        </Link>
+          <span className={classes.sideText}>Products</span>
+        </div>
       </Grid>
       <Grid
         className={
@@ -102,10 +140,15 @@ const Sidebar: React.FC = () => {
             : classes.links
         }
       >
-        <Link to={routes.SUPPLIERS}>
+        <div
+          role="presentation"
+          className={classes.sideBarChild}
+          onClick={() => history.push(routes.SUPPLIERS)}
+          onKeyDown={() => history.push(routes.SUPPLIERS)}
+        >
           <BusinessCenterIcon className={classes.icons} />
-          Suppliers
-        </Link>
+          <span className={classes.sideText}>Suppliers</span>
+        </div>
       </Grid>
     </div>
   );
