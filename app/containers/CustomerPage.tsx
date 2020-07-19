@@ -5,7 +5,7 @@ import Customers from './Customers';
 import Sidebar from './Sidebar';
 
 export default function CustomerPage() {
-  return(
+  return (
     <Grid container>
       <Grid item xs={3}>
         <Paper>
