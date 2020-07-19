@@ -15,7 +15,8 @@ interface Product {
   id: number;
   title: string;
   price: number;
-  stock_count: number | null;
+  shop_stock_count: number;
+  godown_stock_count: number;
   unit: string | null;
   out_of_stock: number | null;
 }
@@ -34,13 +35,12 @@ export default function ProductList(): JSX.Element {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
       'SELECT * FROM Product',
-      (_err: any, instant: React.SetStateAction<Product[]>) => {
-        // console.log(instant.id + ": " + instant.title);
+      (_err: Error, instant: React.SetStateAction<Product[]>) => {
         setProductList(instant);
       }
     );
     db.close();
-  }, [productList]);
+  }, []);
 
   return (
     <Container data-tid="container">
@@ -54,7 +54,12 @@ export default function ProductList(): JSX.Element {
               <TableRow>
                 <TableCell className={classes.texts}>Title</TableCell>
                 <TableCell className={classes.texts}>Price</TableCell>
-                <TableCell className={classes.texts}>Stock count</TableCell>
+                <TableCell className={classes.texts}>
+                  Shop Stock count
+                </TableCell>
+                <TableCell className={classes.texts}>
+                  Godown Stock count
+                </TableCell>
                 <TableCell className={classes.texts}>Unit</TableCell>
                 {/* <TableCell className={classes.texts}>Out of stock</TableCell> */}
               </TableRow>
@@ -69,7 +74,10 @@ export default function ProductList(): JSX.Element {
                     {row.price}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.stock_count === null ? 'N/A' : row.stock_count}
+                    {row.shop_stock_count}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.godown_stock_count}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.unit === null ? 'N/A' : row.unit}
