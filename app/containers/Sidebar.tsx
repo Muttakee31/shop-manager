@@ -10,6 +10,7 @@ import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import routes from '../constants/routes.json';
+import { themeColor } from '../constants/config';
 
 const useStyles = makeStyles({
   links: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles({
   },
   whiteWashedLinks: {
     textDecoration: 'none',
-    backgroundColor: '#277ea7',
+    backgroundColor: themeColor,
     padding: 14,
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,

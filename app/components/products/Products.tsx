@@ -8,6 +8,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -25,11 +27,16 @@ const useStyles = makeStyles({
   texts: {
     color: 'whitesmoke',
   },
+  header: {
+    textAlign: 'center',
+    color: 'white',
+  },
 });
 
 export default function ProductList(): JSX.Element {
   const classes = useStyles();
   const [productList, setProductList] = useState<Product[]>([]);
+  const history = useHistory();
   // console.log('Connected to the shop database.');
   useEffect(() => {
     const db = new sqlite3.Database('shopdb.sqlite3');
@@ -44,9 +51,20 @@ export default function ProductList(): JSX.Element {
 
   return (
     <Container data-tid="container">
-      <Grid style={{ textAlign: 'center', color: 'white' }}>
+      <Grid className={classes.header}>
         <h3>List of Products</h3>
       </Grid>
+
+      <Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => history.push('/add_product')}
+        >
+          Add product
+        </Button>
+      </Grid>
+
       <Grid>
         <TableContainer>
           <Table aria-label="simple table">

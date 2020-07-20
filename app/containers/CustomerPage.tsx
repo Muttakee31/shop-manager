@@ -1,7 +1,7 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Customers from './Customers';
+import Customers from '../components/users/Customers';
 import Sidebar from './Sidebar';
 
 export default function CustomerPage() {

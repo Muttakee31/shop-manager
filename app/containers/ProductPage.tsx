@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import ProductList from './Products';
+import ProductList from '../components/products/Products';
 import Sidebar from './Sidebar';
 
 export default function ProductPage(): JSX.Element {
