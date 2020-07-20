@@ -1,7 +1,9 @@
 name: Test
 
-on: push
-
+on:
+  push:
+    branches:
+      - develop
 jobs:
   release:
     runs-on: ${{ matrix.os }}
