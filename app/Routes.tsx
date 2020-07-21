@@ -7,6 +7,7 @@ import CustomerPage from './containers/CustomerPage';
 import ProductPage from './containers/ProductPage';
 import OverviewPage from './containers/OverviewPage';
 import ProductForm from './components/products/ProductForm';
+import OrderPage from './components/orders/OrderPage';
 // Lazily load routes and code split with webpacck
 const LazyCounterPage = React.lazy(() =>
   import(/* webpackChunkName: "CounterPage" */ './containers/CounterPage')
@@ -32,6 +33,7 @@ export default function Routes() {
         */}
         <Route path={routes.PRODUCTS} component={ProductPage} />
         <Route path={routes.ADD_PRODUCTS} component={ProductForm} />
+        <Route path={routes.PLACE_ORDERS} component={OrderPage} />
         <Route path={routes.HOME} component={OverviewPage} />
         {/* <Route path={routes.ADD_PRODUCTS} component={ProductForm} /> */}
       </Switch>

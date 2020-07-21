@@ -7,6 +7,6 @@
   "PRODUCTS": "/products",
   "SUPPLIERS": "/suppliers",
   "OVERVIEW": "/overview",
-  "ADD_PRODUCTS": "/add-product"
-
+  "ADD_PRODUCTS": "/add-product",
+  "PLACE_ORDERS": "/orders"
 }

@@ -10,7 +10,6 @@ import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import routes from '../constants/routes.json';
-import { themeColor } from '../constants/config';
 
 const useStyles = makeStyles({
   links: {
@@ -19,7 +18,7 @@ const useStyles = makeStyles({
   },
   whiteWashedLinks: {
     textDecoration: 'none',
-    backgroundColor: themeColor,
+    backgroundColor: '#277ea7',
     padding: 14,
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,
@@ -65,7 +64,7 @@ const Sidebar: React.FC = () => {
 
       <Grid
         className={
-          router.pathname === routes.ORDERS
+          router.pathname === routes.PLACE_ORDERS
             ? classes.whiteWashedLinks
             : classes.links
         }
@@ -73,8 +72,8 @@ const Sidebar: React.FC = () => {
         <div
           role="presentation"
           className={classes.sideBarChild}
-          onClick={() => history.push(routes.COUNTER)}
-          onKeyDown={() => history.push(routes.COUNTER)}
+          onClick={() => history.push(routes.PLACE_ORDERS)}
+          onKeyDown={() => history.push(routes.PLACE_ORDERS)}
         >
           <ShoppingCartIcon className={classes.icons} />
           <span className={classes.sideText}>Orders</span>
