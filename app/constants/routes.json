@@ -6,5 +6,7 @@
   "CUSTOMERS": "/customers",
   "PRODUCTS": "/products",
   "SUPPLIERS": "/suppliers",
-  "OVERVIEW": "/overview"
+  "OVERVIEW": "/overview",
+  "ADD_PRODUCTS": "/add-product"
+
 }

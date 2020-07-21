@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
@@ -42,6 +42,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignContent: 'center',
     marginTop: 40,
+    width: 340
   },
   textField: {
     color: 'white',
@@ -51,17 +52,40 @@ const useStyles = makeStyles({
   input: {
     color: 'white',
   },
+  deleteButton: {
+    background: '#ca263d',
+    marginRight: 15,
+    color: 'floralwhite',
+  }
 });
 
 export default function ProductForm(): JSX.Element {
   const [productName, setProductName] = useState('');
+  const [productID, setProductID] = useState(null);
   const [price, setPrice] = useState('');
   const [unit, setUnit] = useState('');
   const [shopStock, setShopStock] = useState(0);
   const [godownStock, setGodownStock] = useState(0);
 
+  const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
+
+  useEffect(() => {
+    const state: any = location.state;
+    if (state.product !== null) {
+      console.log(state.product)
+      setProductID(state.product.ID);
+      setProductName(state.product.title);
+      setPrice(state.product.price);
+      setUnit(state.product.unit);
+      setGodownStock(state.product.godown_stock_count);
+      setShopStock(state.product.shop_stock_count);
+    }
+    /*if (location.state.instant !== undefined) {
+      console.log(location.state.instant);
+    }*/
+  }, []);
 
   const createProduct = () => {
     const db = new sqlite3.Database('shopdb.sqlite3');
@@ -83,12 +107,35 @@ export default function ProductForm(): JSX.Element {
     // close the database connection
     db.close();
   };
+
+  const updateProduct = () => {
+    const db = new sqlite3.Database('shopdb.sqlite3');
+
+    // insert one row into the langs table
+    db.run(
+      `UPDATE Product SET title = ?, price = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE rowId=?`,
+      [productName, price, unit, shopStock, godownStock, productID],
+      function (err: Error) {
+        if (err) {
+          console.log(err.message);
+        }
+        // get the last insert id
+        history.goBack();
+        // console.log(`A row has been inserted`);
+      }
+    );
+
+    // close the database connection
+    db.close();
+  };
+
+
   return (
     <Grid container>
       <Grid item xs={4}>
         <Sidebar />
       </Grid>
-      <Grid item className={classes.grid}>
+      <Grid container className={classes.grid}>
         <Grid className={classes.header}>
           <h3>Add a product</h3>
         </Grid>
@@ -100,6 +147,7 @@ export default function ProductForm(): JSX.Element {
               label="Name"
               value={productName}
               className={classes.textField}
+              fullWidth
               onChange={(e) => setProductName(e.target.value)}
             />
           </Grid>
@@ -120,6 +168,7 @@ export default function ProductForm(): JSX.Element {
               label="Unit"
               value={unit}
               className={classes.textField}
+              fullWidth
               onChange={(e) => setUnit(e.target.value)}
             />
           </Grid>
@@ -128,6 +177,7 @@ export default function ProductForm(): JSX.Element {
               id="standard-basic"
               label="Stock in shop"
               value={shopStock}
+              fullWidth
               className={classes.textField}
               onChange={(e) => setShopStock(Number(e.target.value))}
             />
@@ -137,13 +187,15 @@ export default function ProductForm(): JSX.Element {
               id="standard-basic"
               label="Stock in godown"
               value={godownStock}
+              fullWidth
               className={classes.textField}
               onChange={(e) => setGodownStock(Number(e.target.value))}
             />
           </Grid>
-          <Grid style={{ alignContent: 'flex-end' }}>
+          <Grid style={{ marginTop: '30px' }}>
             <Button
               variant="contained"
+              className={classes.deleteButton}
               onClick={(e) => {
                 e.preventDefault();
                 history.goBack();
@@ -151,16 +203,29 @@ export default function ProductForm(): JSX.Element {
             >
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={(e) => {
-                e.preventDefault();
-                createProduct();
-              }}
-            >
-              Submit
-            </Button>
+            {productID === null ?
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  createProduct();
+                }}
+              >
+                Submit
+              </Button>
+              :
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateProduct();
+                }}
+              >
+                Update
+              </Button>
+            }
           </Grid>
         </form>
       </Grid>

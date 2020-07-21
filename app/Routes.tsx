@@ -31,7 +31,8 @@ export default function Routes() {
         <Route path={routes.SUPPLIERS} component={CounterPage} />
         */}
         <Route path={routes.PRODUCTS} component={ProductPage} />
-        <Route path={routes.HOME} component={ProductForm} />
+        <Route path={routes.ADD_PRODUCTS} component={ProductForm} />
+        <Route path={routes.HOME} component={OverviewPage} />
         {/* <Route path={routes.ADD_PRODUCTS} component={ProductForm} /> */}
       </Switch>
     </App>

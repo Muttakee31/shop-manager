@@ -10,6 +10,8 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
+import EditIcon from '@material-ui/icons/Edit';
+import routes from '../../constants/routes.json';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -41,13 +43,20 @@ export default function ProductList(): JSX.Element {
   useEffect(() => {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT * FROM Product',
+      'SELECT rowId as ID, * FROM Product',
       (_err: Error, instant: React.SetStateAction<Product[]>) => {
         setProductList(instant);
       }
     );
     db.close();
   }, []);
+
+  const editProduct = (instant: Product) => {
+    history.push({
+      pathname: routes.ADD_PRODUCTS,
+      state: { product: instant },
+    });
+  };
 
   return (
     <Container data-tid="container">
@@ -59,7 +68,11 @@ export default function ProductList(): JSX.Element {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => history.push('/add_product')}
+          onClick={() =>
+            history.push({
+              pathname: routes.ADD_PRODUCTS,
+              state: { product: null },
+            })}
         >
           Add product
         </Button>
@@ -79,7 +92,7 @@ export default function ProductList(): JSX.Element {
                   Godown Stock count
                 </TableCell>
                 <TableCell className={classes.texts}>Unit</TableCell>
-                {/* <TableCell className={classes.texts}>Out of stock</TableCell> */}
+                <TableCell className={classes.texts} />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -99,6 +112,9 @@ export default function ProductList(): JSX.Element {
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.unit === null ? 'N/A' : row.unit}
+                  </TableCell>
+                  <TableCell align="center" className={classes.texts}>
+                    <EditIcon onClick={() => editProduct(row)} />
                   </TableCell>
                 </TableRow>
               ))}
