@@ -16,34 +16,31 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
-  }),
+  })
 );
 
 function getSteps() {
-  return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+  return ['Select a customer', 'Add items', 'Record payment'];
 }
 
-
-export default function StepperComponent(props: {orderState:number}) {
+export default function StepperComponent(props: { orderState: number }) {
   const classes = useStyles();
   const steps = getSteps();
 
-
   return (
     <div className={classes.root}>
-    <Stepper activeStep={props.orderState}>
-    {steps.map((label) => {
-        const stepProps: { completed?: boolean } = {};
-        const labelProps: { optional?: React.ReactNode } = {};
-        return (
-          <Step key={label} {...stepProps}>
-        <StepLabel {...labelProps}>{label}</StepLabel>
-        </Step>
-      );
-      })}
-    </Stepper>
-    <div>
-  </div>
-  </div>
-);
+      <Stepper activeStep={props.orderState}>
+        {steps.map((label) => {
+          const stepProps: { completed?: boolean } = {};
+          const labelProps: { optional?: React.ReactNode } = {};
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      <div />
+    </div>
+  );
 }

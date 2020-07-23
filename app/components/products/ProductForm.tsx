@@ -38,11 +38,7 @@ const useStyles = makeStyles({
     color: 'white',
   },
   grid: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignContent: 'center',
     marginTop: 40,
-    width: 340
   },
   textField: {
     color: 'white',
@@ -131,16 +127,19 @@ export default function ProductForm(): JSX.Element {
 
 
   return (
-    <Grid container>
-      <Grid item xs={4}>
+    <Grid container direction='row'>
+      <Grid item sm={4} lg={3}>
         <Sidebar />
       </Grid>
-      <Grid container className={classes.grid}>
+      <Grid item sm={8} lg={9}
+            direction="column"
+            justify="center"
+            className={classes.grid}>
         <Grid className={classes.header}>
           <h3>Add a product</h3>
         </Grid>
 
-        <form autoComplete="off">
+        <form autoComplete="off" style={{width: '320px', margin: 'auto'}}>
           <Grid>
             <CssTextField
               id="standard-required"
