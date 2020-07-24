@@ -14,6 +14,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
 
@@ -40,6 +44,7 @@ interface OrderItem {
   title: string;
   quantity: number;
   price: number;
+  store: string;
 }
 
 const CssTextField = withStyles({
@@ -106,6 +111,7 @@ export default function SelectProducts(props: {
 
   const [quantity, setQuantity] = useState('');
   const [finalPrice, setFinalPrice] = useState('');
+  const [store, setStore] = useState('0');
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedProductID(event.target.value as string);
@@ -116,6 +122,10 @@ export default function SelectProducts(props: {
 
     // const product = productList.find()
     // setSelectedProduct(product);
+  };
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStore((event.target as HTMLInputElement).value);
   };
 
   const classes = useStyles();
@@ -145,6 +155,7 @@ export default function SelectProducts(props: {
       title: product.title,
       quantity: Number(quantity),
       price: Number(finalPrice),
+      store,
     };
 
     setOrderItemList((prevState) => [...prevState, order]);
@@ -178,15 +189,14 @@ export default function SelectProducts(props: {
           console.log(err.message);
         }
         // @ts-ignore
-        id = this.lastID
-        const order:any = {
+        id = this.lastID;
+        const order: any = {
           order_id: id,
           customer: props.selectedCustomer.id,
           customer_name: props.selectedCustomer.name,
-          date: date,
+          date,
           price: Number(totalPrice),
-
-        }
+        };
         props.setOrderDetails(order);
         const stmt = db.prepare(
           `INSERT INTO OrderedItem(order_id, product, quantity, price) VALUES (?, ?, ?, ?) `
@@ -202,7 +212,22 @@ export default function SelectProducts(props: {
               if (error) {
                 console.log(error.message);
               } else {
-                console.log('order item added.');
+                console.log(`order item added.${instant.store}`);
+                const dest =
+                  instant.store === '0'
+                    ? 'shop_stock_count'
+                    : 'godown_stock_count';
+                db.run(
+                  `UPDATE Product set ${dest}=${dest}  - ? where id=?`,
+                  [instant.quantity, instant.product_id],
+                  function (error_1: Error) {
+                    if (error_1) {
+                      console.log(error_1.message);
+                    } else {
+                      console.log('updated');
+                    }
+                  }
+                );
               }
             }
           );
@@ -260,6 +285,28 @@ export default function SelectProducts(props: {
           />
         </Grid>
       </Grid>
+      <Grid direction="row">
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Select storage</FormLabel>
+          <RadioGroup
+            aria-label="select storage"
+            name="store"
+            value={store}
+            onChange={handleRadioChange}
+          >
+            <FormControlLabel
+              value="0"
+              control={<Radio color="primary" />}
+              label="Shop"
+            />
+            <FormControlLabel
+              value="1"
+              control={<Radio color="primary" />}
+              label="Godown"
+            />
+          </RadioGroup>
+        </FormControl>
+      </Grid>
       <Grid>
         <Button
           color="primary"
@@ -278,17 +325,15 @@ export default function SelectProducts(props: {
                 <TableCell className={classes.texts}>Title</TableCell>
                 <TableCell className={classes.texts}>Rate</TableCell>
                 <TableCell className={classes.texts}>Quantity</TableCell>
+                <TableCell className={classes.texts}>Storage</TableCell>
                 <TableCell className={classes.texts}>Price</TableCell>
                 <TableCell className={classes.texts} />
               </TableRow>
             </TableHead>
             <TableBody>
               {orderItemList.length === 0 ? (
-                <div style={{textAlign: 'center'}}>
-                  No item added yet
-                </div>
-              )
-               : (
+                <div style={{ textAlign: 'center' }}>No item added yet</div>
+              ) : (
                 orderItemList.map((row) => (
                   <TableRow key={row.product_id}>
                     <TableCell align="left" className={classes.texts}>
@@ -299,6 +344,9 @@ export default function SelectProducts(props: {
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {row.quantity}
+                    </TableCell>
+                    <TableCell align="left" className={classes.texts}>
+                      {row.store === '1' ? 'Godown' : 'Shop'}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {row.quantity * row.price}

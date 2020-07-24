@@ -19,7 +19,6 @@ interface User {
   is_customer: number;
 }
 
-
 const CssTextField = withStyles({
   root: {
     '& label': {
@@ -40,11 +39,11 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const paymentType : object = {
-  'paid': 0,
-  'due': 1,
-  'both': 2,
-}
+const paymentType: object = {
+  paid: 0,
+  due: 1,
+  both: 2,
+};
 
 const useStyles = makeStyles({
   texts: {
@@ -77,7 +76,6 @@ const useStyles = makeStyles({
 export default function EnterPayment(props: {
   selectedCustomer: User | null;
 }): JSX.Element {
-
   const [paidByCustomer, setPaidByCustomer] = useState('');
   const [type, setType] = useState(0);
   const [labourCost, setLabourCost] = useState('');
@@ -92,16 +90,13 @@ export default function EnterPayment(props: {
   };
 
   return (
-    <Grid container
-      direction="column"
-      justify="center"
-      >
+    <Grid container direction="column" justify="center"
+    >
       <Grid className={classes.header}>
         <h3>Add a product</h3>
       </Grid>
 
       <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
-
         <Grid>
           <FormControl className={classes.selectField}>
             <InputLabel id="demo-simple-select-label">
@@ -116,13 +111,8 @@ export default function EnterPayment(props: {
               <MenuItem value="">Choose a product</MenuItem>
               {Object.entries(paymentType).forEach(([key, value]) => {
                 // @ts-ignore
-                return (
-                  <MenuItem value={value}>
-                    {key}
-                  </MenuItem>
-                  );
-                })
-              }
+                return <MenuItem value={value}>{key}</MenuItem>;
+              })}
             </Select>
           </FormControl>
         </Grid>
@@ -166,7 +156,7 @@ export default function EnterPayment(props: {
             color="primary"
             onClick={(e) => {
               e.preventDefault();
-              //createProduct();
+              // createProduct();
             }}
           >
             Submit

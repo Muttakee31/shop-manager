@@ -34,7 +34,12 @@ export default function OrderPage(): JSX.Element {
             setOrderDetails={setOrderDetails}
           />
         )}
-        {orderState === 2 && <EnterPayment selectedCustomer={selectedUser} orderDetails={orderDetails} />}
+        {orderState === 2 && (
+          <EnterPayment
+            selectedCustomer={selectedUser}
+            orderDetails={orderDetails}
+          />
+        )}
       </Grid>
     </Grid>
   );
