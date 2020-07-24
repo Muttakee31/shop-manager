@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -15,6 +15,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import DeleteIcon from '@material-ui/icons/Delete';
 import TableContainer from '@material-ui/core/TableContainer';
+import dayjs from 'dayjs';
 
 interface Product {
   id: number;
@@ -24,6 +25,14 @@ interface Product {
   godown_stock_count: number;
   unit: string | null;
   out_of_stock: number | null;
+}
+
+interface User {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  is_customer: number;
 }
 
 interface OrderItem {
@@ -70,7 +79,7 @@ const useStyles = makeStyles({
   selectField: {
     color: 'white',
     borderColor: 'white',
-    minWidth: 320,
+    width: '20vw',
     margin: 10,
   },
   total: {
@@ -85,17 +94,20 @@ const useStyles = makeStyles({
 const sqlite3 = require('sqlite3').verbose();
 
 
-export default function SelectProducts(): JSX.Element {
-  // const [orderState , setOrderState] = useState(1);
+export default function SelectProducts(props: {selectedCustomer: User, setOrderState: SetStateAction<number>}): JSX.Element {
   const [productList, setProductList] = useState<Product[]>([])
   const [selectedProductID, setSelectedProductID] = useState<Product | string>('');
   const [orderItemList, setOrderItemList] = useState<OrderItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const [quantity, setQuantity] = useState('');
+  const [finalPrice, setFinalPrice] = useState('');
+  const [newOrderID, setNewOrderID] = useState<number | null>(null);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedProductID(event.target.value as string);
+    const product:Product = productList.filter(item => item.id === Number(event.target.value))[0];
+    setFinalPrice(String(product.price));
 
     // const product = productList.find()
     // setSelectedProduct(product);
@@ -110,7 +122,7 @@ export default function SelectProducts(): JSX.Element {
   const getProducts = () => {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT rowId as id, * FROM Product',
+      'SELECT * FROM Product',
       (_err: Error, instant: React.SetStateAction<Product[]>) => {
         setProductList(instant);
       }
@@ -120,32 +132,69 @@ export default function SelectProducts(): JSX.Element {
 
   const addProduct = () => {
 
-    const product = productList.filter(instant => instant.id === Number(selectedProductID))[0];
+  const product = productList.filter(instant => instant.id === Number(selectedProductID))[0];
 
-    const order : OrderItem = {
-      product_id: product.id,
-      title: product.title,
-      quantity: Number(quantity),
-      price: product.price
-    };
+  const order : OrderItem = {
+    product_id: product.id,
+    title: product.title,
+    quantity: Number(quantity),
+    price: Number(finalPrice)
+  };
 
     setOrderItemList((prevState => [...prevState, order]));
-    setTotalPrice(totalPrice + product.price * Number(quantity));
+    setTotalPrice(totalPrice + Number(finalPrice) * Number(quantity));
     setQuantity('');
+    setFinalPrice('');
   }
 
 
 
   const deleteProduct = (row:OrderItem) => {
-    setOrderItemList(orderItemList.filter(item => item.product_id !== row.product_id));
     setTotalPrice(totalPrice - row.price * row.quantity);
+    setOrderItemList(orderItemList.filter(item => item.product_id !== row.product_id));
+  }
+
+  const createOrder = () => {
+    const db = new sqlite3.Database('shopdb.sqlite3');
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ssZ[Z]')
+    // console.log(JSON.stringify(props.selectedCustomer));
+    db.serialize(function() {
+      db.run(`INSERT INTO Orders(customer, customer_name, timestamp, total_cost) VALUES(?,?,?,?)  `,
+        [props.selectedCustomer.id, props.selectedCustomer.name, date, Number(finalPrice)],
+        function(err: Error) {
+          if (err) {
+            console.log(err.message);
+          }
+          // @ts-ignore
+          setNewOrderID(this.lastID);
+        });
+
+      let stmt = db.prepare(`INSERT INTO OrderedItem(order_id, product, quantity, price) VALUES (?, ?, ?, ?) `);
+      orderItemList.map((instant) => {
+        console.log(instant);
+        stmt.run(newOrderID, instant.product_id, instant.quantity, instant.price,
+          function(error: Error) {
+            if (error) {
+              console.log(error.message);
+            }
+            else {
+              console.log('order item added.')
+            }
+          });
+      })
+
+      stmt.finalize();
+    }
+  )
+    db.close();
+    props.setOrderState(2);
   }
 
   // console.log(props.selectedCustomer);
   return (
     <>
       <Grid container>
-        <Grid item>
+        <Grid item xs={4}>
           <FormControl className={classes.selectField}>
             <InputLabel id="demo-simple-select-label">
               Select a product
@@ -165,17 +214,23 @@ export default function SelectProducts(): JSX.Element {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item>
-          <Grid>
-            <CssTextField
+        <Grid item xs={4}>
+          <CssTextField
+            id="standard-required"
+            label="Price"
+            value={finalPrice}
+            className={classes.textField}
+            onChange={(e) => setFinalPrice(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <CssTextField
               id="standard-required"
               label="Quantity"
               value={quantity}
               className={classes.textField}
-              fullWidth
               onChange={(e) => setQuantity(e.target.value)}
             />
-          </Grid>
         </Grid>
       </Grid>
       <Grid>
@@ -190,6 +245,7 @@ export default function SelectProducts(): JSX.Element {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.texts}>Title</TableCell>
+                <TableCell className={classes.texts}>Rate</TableCell>
                 <TableCell className={classes.texts}>Quantity</TableCell>
                 <TableCell className={classes.texts}>Price</TableCell>
                 <TableCell className={classes.texts} />
@@ -205,6 +261,9 @@ export default function SelectProducts(): JSX.Element {
                 <TableRow key={row.product_id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.title}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.price}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.quantity}
@@ -230,7 +289,7 @@ export default function SelectProducts(): JSX.Element {
       }
 
       <Grid>
-        <Button variant='contained' color='primary'>
+        <Button variant='contained' color='primary' onClick={createOrder}>
           Confirm order
         </Button>
       </Grid>

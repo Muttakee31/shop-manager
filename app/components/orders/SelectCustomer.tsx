@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 const sqlite3 = require('sqlite3').verbose();
 
 interface User {
-  id: number | null;
+  id: number;
   name: string;
   phone: string;
   address: string;
@@ -74,7 +74,7 @@ export default function SelectCustomer(props: {
   useEffect(() => {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT rowId as id, * FROM USER WHERE is_customer = 1',
+      'SELECT * FROM USER WHERE is_customer = 1',
       (_err: Error, instant: React.SetStateAction<User[]>) => {
         setUserList(instant);
       }
@@ -86,7 +86,7 @@ export default function SelectCustomer(props: {
     setSelectedUser(event.target.value as string);
   };
 
-  const createCustomer = (e) => {
+  const createCustomer = (e:any) => {
     e.preventDefault();
     const db = new sqlite3.Database('shopdb.sqlite3');
 
@@ -98,8 +98,17 @@ export default function SelectCustomer(props: {
         if (err) {
           console.log(err.message);
         }
-        // @ts-ignore
-        props.setSelectedUser(this.lastID);
+
+        const user:User = {
+          // @ts-ignore
+          id: this.lastID,
+          name: userName,
+          address: userAddress,
+          phone: userPhone,
+          is_customer: 1
+        }
+
+        props.setSelectedUser(user);
         props.setOrderState(1);
         // console.log(`A row has been inserted`);
       }
@@ -110,8 +119,13 @@ export default function SelectCustomer(props: {
   };
 
   const confirmCustomer = () => {
+    console.log(selectedUser);
+    const user = userList
+      .filter(
+        item => item.id === Number(selectedUser)
+      )[0]
+    props.setSelectedUser(user);
     props.setOrderState(1);
-    props.setSelectedUser(selectedUser);
   }
 
   return (

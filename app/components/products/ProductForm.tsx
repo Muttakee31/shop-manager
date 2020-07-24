@@ -60,8 +60,8 @@ export default function ProductForm(): JSX.Element {
   const [productID, setProductID] = useState(null);
   const [price, setPrice] = useState('');
   const [unit, setUnit] = useState('');
-  const [shopStock, setShopStock] = useState(0);
-  const [godownStock, setGodownStock] = useState(0);
+  const [shopStock, setShopStock] = useState('');
+  const [godownStock, setGodownStock] = useState('');
 
   const location = useLocation();
   const history = useHistory();
@@ -75,8 +75,8 @@ export default function ProductForm(): JSX.Element {
       setProductName(state.product.title);
       setPrice(state.product.price);
       setUnit(state.product.unit);
-      setGodownStock(state.product.godown_stock_count);
-      setShopStock(state.product.shop_stock_count);
+      setGodownStock(String(state.product.godown_stock_count));
+      setShopStock(String(state.product.shop_stock_count));
     }
     /*if (location.state.instant !== undefined) {
       console.log(location.state.instant);
@@ -87,9 +87,9 @@ export default function ProductForm(): JSX.Element {
     const db = new sqlite3.Database('shopdb.sqlite3');
 
     // insert one row into the langs table
-    db.run(
+    db.run(t
       `INSERT INTO Product(title, price, unit, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?) `,
-      [productName, price, unit, shopStock, godownStock],
+      [productName, price, unit, Number(shopStock), Number(godownStock)],
       function (err: Error) {
         if (err) {
           // console.log(err.message);
@@ -178,7 +178,7 @@ export default function ProductForm(): JSX.Element {
               value={shopStock}
               fullWidth
               className={classes.textField}
-              onChange={(e) => setShopStock(Number(e.target.value))}
+              onChange={(e) => setShopStock(e.target.value)}
             />
           </Grid>
           <Grid>
@@ -188,7 +188,7 @@ export default function ProductForm(): JSX.Element {
               value={godownStock}
               fullWidth
               className={classes.textField}
-              onChange={(e) => setGodownStock(Number(e.target.value))}
+              onChange={(e) => setGodownStock(e.target.value)}
             />
           </Grid>
           <Grid style={{ marginTop: '30px' }}>

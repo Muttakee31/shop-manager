@@ -207,11 +207,6 @@ chownr@^1.1.1:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.4.tgz#6fc9d7b42d32a583596337666e7d08084da2cc6b"
   integrity sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==
 
-classnames@^2.2.5:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
-  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
-
 clsx@^1.0.4:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
@@ -263,6 +258,11 @@ dashdash@^1.12.0:
   integrity sha1-hTz6D3y+L+1d4gMmuN1YEDX24vA=
   dependencies:
     assert-plus "^1.0.0"
+
+dayjs@^1.8.30:
+  version "1.8.30"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.30.tgz#d3b314d3ccdc179015d915fd3c6e14422c026378"
+  integrity sha512-5s5IGuP5bVvIbOWkEDcfmXsUj24fZW1NMHVVSdSFF/kW8d+alZcI9SpBKC+baEyBe+z3fUp17y75ulstv5swUw==
 
 debug@^3.2.6:
   version "3.2.6"
@@ -865,21 +865,12 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-bootstrap-table-next@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-4.0.3.tgz#b55873b01adfe22a7181904b784a9d24ac2822cf"
-  integrity sha512-uKxC73qUdUfusRf2uzDfMiF9LvTG5vuhTZa0lbAgHWSLLLaKTsI0iHf1e4+c7gP71q8dFsp7StvkP65SxC1JRg==
-  dependencies:
-    classnames "^2.2.5"
-    react-transition-group "^4.2.0"
-    underscore "1.9.1"
-
 react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-transition-group@^4.2.0, react-transition-group@^4.4.0:
+react-transition-group@^4.4.0:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.1.tgz#63868f9325a38ea5ee9535d828327f85773345c9"
   integrity sha512-Djqr7OQ2aPUiYurhPalTrVy9ddmFCCzwhqQmtN+J3+3DzLO209Fdr70QrN8Z3DsglWql6iY1lDWAfpFiBtuKGw==
@@ -1094,11 +1085,6 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
-
-underscore@1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
-  integrity sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg==
 
 uri-js@^4.2.2:
   version "4.2.2"
