@@ -118,7 +118,8 @@ const Sidebar: React.FC = () => {
 
       <Grid
         className={
-          router.pathname === routes.PRODUCTS || router.pathname === routes.ADD_PRODUCTS
+          router.pathname === routes.PRODUCTS ||
+          router.pathname === routes.ADD_PRODUCTS
             ? classes.whiteWashedLinks
             : classes.links
         }

@@ -61,7 +61,8 @@ const useStyles = makeStyles({
 });
 
 export default function SelectCustomer(props: {
-  setOrderState: SetStateAction<any>, setSelectedUser: SetStateAction<any>
+  setOrderState: SetStateAction<any>;
+  setSelectedUser: SetStateAction<any>;
 }): JSX.Element {
   const [userList, setUserList] = useState<User[]>([]);
   const [userName, setUserName] = useState('');
@@ -86,7 +87,7 @@ export default function SelectCustomer(props: {
     setSelectedUser(event.target.value as string);
   };
 
-  const createCustomer = (e:any) => {
+  const createCustomer = (e: any) => {
     e.preventDefault();
     const db = new sqlite3.Database('shopdb.sqlite3');
 
@@ -94,19 +95,19 @@ export default function SelectCustomer(props: {
     db.run(
       `INSERT INTO User(name, phone, address, is_customer) VALUES(?,?,?,?) `,
       [userName, userPhone, userAddress, 1],
-      function(err: Error)  {
+      function (err: Error) {
         if (err) {
           console.log(err.message);
         }
 
-        const user:User = {
+        const user: User = {
           // @ts-ignore
           id: this.lastID,
           name: userName,
           address: userAddress,
           phone: userPhone,
-          is_customer: 1
-        }
+          is_customer: 1,
+        };
 
         props.setSelectedUser(user);
         props.setOrderState(1);
@@ -120,13 +121,10 @@ export default function SelectCustomer(props: {
 
   const confirmCustomer = () => {
     console.log(selectedUser);
-    const user = userList
-      .filter(
-        item => item.id === Number(selectedUser)
-      )[0]
+    const user = userList.filter((item) => item.id === Number(selectedUser))[0];
     props.setSelectedUser(user);
     props.setOrderState(1);
-  }
+  };
 
   return (
     <Grid container>
@@ -152,7 +150,11 @@ export default function SelectCustomer(props: {
       </Grid>
 
       <Grid>
-        <Button variant='contained' color='primary' onClick={()=> confirmCustomer()}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => confirmCustomer()}
+        >
           Select customer
         </Button>
       </Grid>
@@ -191,13 +193,16 @@ export default function SelectCustomer(props: {
             />
           </Grid>
           <Grid>
-            <Button variant='contained' color='primary' onClick={(e)=> createCustomer(e)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => createCustomer(e)}
+            >
               Create
             </Button>
           </Grid>
         </form>
       </Grid>
-
     </Grid>
   );
 }

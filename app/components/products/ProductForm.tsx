@@ -52,7 +52,7 @@ const useStyles = makeStyles({
     background: '#ca263d',
     marginRight: 15,
     color: 'floralwhite',
-  }
+  },
 });
 
 export default function ProductForm(): JSX.Element {
@@ -68,9 +68,10 @@ export default function ProductForm(): JSX.Element {
   const classes = useStyles();
 
   useEffect(() => {
+    // @ts-ignore
     const state: any = location.state;
     if (state.product !== null) {
-      console.log(state.product)
+      console.log(state.product);
       setProductID(state.product.ID);
       setProductName(state.product.title);
       setPrice(state.product.price);
@@ -78,16 +79,16 @@ export default function ProductForm(): JSX.Element {
       setGodownStock(String(state.product.godown_stock_count));
       setShopStock(String(state.product.shop_stock_count));
     }
-    /*if (location.state.instant !== undefined) {
+    /* if (location.state.instant !== undefined) {
       console.log(location.state.instant);
-    }*/
+    } */
   }, []);
 
   const createProduct = () => {
     const db = new sqlite3.Database('shopdb.sqlite3');
 
     // insert one row into the langs table
-    db.run(t
+    db.run(
       `INSERT INTO Product(title, price, unit, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?) `,
       [productName, price, unit, Number(shopStock), Number(godownStock)],
       function (err: Error) {
@@ -125,21 +126,22 @@ export default function ProductForm(): JSX.Element {
     db.close();
   };
 
-
   return (
-    <Grid container direction='row'>
+    <Grid container direction="row">
       <Grid item sm={4} lg={3}>
         <Sidebar />
       </Grid>
-      <Grid item sm={8} lg={9}
-            direction="column"
-            justify="center"
-            className={classes.grid}>
+      <Grid
+        item sm={8} lg={9}
+        direction="column"
+        justify="center"
+        className={classes.grid}
+      >
         <Grid className={classes.header}>
           <h3>Add a product</h3>
         </Grid>
 
-        <form autoComplete="off" style={{width: '320px', margin: 'auto'}}>
+        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
           <Grid>
             <CssTextField
               id="standard-required"
@@ -202,7 +204,7 @@ export default function ProductForm(): JSX.Element {
             >
               Cancel
             </Button>
-            {productID === null ?
+            {productID === null ? (
               <Button
                 variant="contained"
                 color="primary"
@@ -213,7 +215,7 @@ export default function ProductForm(): JSX.Element {
               >
                 Submit
               </Button>
-              :
+            ) : (
               <Button
                 variant="contained"
                 color="primary"
@@ -224,7 +226,7 @@ export default function ProductForm(): JSX.Element {
               >
                 Update
               </Button>
-            }
+            )}
           </Grid>
         </form>
       </Grid>
