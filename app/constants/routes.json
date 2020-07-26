@@ -8,5 +8,6 @@
   "SUPPLIERS": "/suppliers",
   "OVERVIEW": "/overview",
   "ADD_PRODUCTS": "/add-product",
-  "PLACE_ORDERS": "/orders"
+  "PLACE_ORDERS": "/place-order",
+  "TRANSACTIONS": "/transactions"
 }

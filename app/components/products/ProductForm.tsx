@@ -58,6 +58,7 @@ const useStyles = makeStyles({
 export default function ProductForm(): JSX.Element {
   const [productName, setProductName] = useState('');
   const [productID, setProductID] = useState(null);
+  const [productCode, setProductCode] = useState('');
   const [price, setPrice] = useState('');
   const [unit, setUnit] = useState('');
   const [shopStock, setShopStock] = useState('');
@@ -73,6 +74,7 @@ export default function ProductForm(): JSX.Element {
     if (state.product !== null) {
       console.log(state.product);
       setProductID(state.product.ID);
+      setProductCode(state.product.code);
       setProductName(state.product.title);
       setPrice(state.product.price);
       setUnit(state.product.unit);
@@ -89,11 +91,11 @@ export default function ProductForm(): JSX.Element {
 
     // insert one row into the langs table
     db.run(
-      `INSERT INTO Product(title, price, unit, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?) `,
-      [productName, price, unit, Number(shopStock), Number(godownStock)],
+      `INSERT INTO Product(title, price, unit, code, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?) `,
+      [productName, price, unit, productCode, Number(shopStock), Number(godownStock)],
       function (err: Error) {
         if (err) {
-          // console.log(err.message);
+          console.log(err.message);
         }
         // get the last insert id
         history.goBack();
@@ -150,6 +152,17 @@ export default function ProductForm(): JSX.Element {
               className={classes.textField}
               fullWidth
               onChange={(e) => setProductName(e.target.value)}
+            />
+          </Grid>
+
+          <Grid>
+            <CssTextField
+              id="standard-required"
+              label="Product code"
+              value={productCode}
+              className={classes.textField}
+              fullWidth
+              onChange={(e) => setProductCode(e.target.value)}
             />
           </Grid>
 

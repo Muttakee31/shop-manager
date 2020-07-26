@@ -3,11 +3,11 @@ import Grid from '@material-ui/core/Grid';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -155,7 +155,7 @@ export default function SelectCustomer(props: {
           color="primary"
           onClick={() => confirmCustomer()}
         >
-          Select customer
+          Select Customer
         </Button>
       </Grid>
 

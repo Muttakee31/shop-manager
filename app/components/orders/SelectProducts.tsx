@@ -23,6 +23,7 @@ import dayjs from 'dayjs';
 
 interface Product {
   id: number;
+  code: string;
   title: string;
   price: number;
   shop_stock_count: number;
