@@ -16,10 +16,10 @@ export default function OrderPage(): JSX.Element {
   }, [orderState]); */
   return (
     <Grid container>
-      <Grid item xs={4}>
+      <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={8} lg={9}>
         <StepperComponent orderState={orderState} />
         {orderState === 0 && (
           <SelectCustomer

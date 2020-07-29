@@ -4,10 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -83,8 +80,8 @@ export default function SelectCustomer(props: {
     db.close();
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedUser(event.target.value as string);
+  const handleChange = (value: number) => {
+    setSelectedUser(String(value));
   };
 
   const createCustomer = (e: any) => {
@@ -129,24 +126,14 @@ export default function SelectCustomer(props: {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <FormControl className={classes.selectField}>
-          <InputLabel id="demo-simple-select-label">
-            Select a customer
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedUser}
-            onChange={handleChange}
-          >
-            <MenuItem value="">Choose an user</MenuItem>
-            {userList.map((instant) => {
-              return (
-                <MenuItem value={String(instant.id)}>{instant.name}</MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+        <Autocomplete
+          id="combo-box-demo"
+          options={userList}
+          getOptionLabel={(option:User) => option.name + " - " + option.phone }
+          style={{ width: 300, margin: 30 }}
+
+          renderInput={(params) => <CssTextField {...params} label="Select customer" />}
+        />
       </Grid>
 
       <Grid>

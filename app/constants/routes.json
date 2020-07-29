@@ -9,5 +9,9 @@
   "OVERVIEW": "/overview",
   "ADD_PRODUCTS": "/add-product",
   "PLACE_ORDERS": "/place-order",
-  "TRANSACTIONS": "/transactions"
+  "ADD_SUPPLY": "/add-supply",
+  "TRANSACTIONS": "/transactions",
+  "USER_DETAILS": "/user-details",
+  "ORDER_DETAILS": "/order/:id",
+  "SUPPLY_DETAILS": "/supply/:id"
 }

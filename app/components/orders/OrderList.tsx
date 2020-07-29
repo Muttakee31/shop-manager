@@ -7,21 +7,22 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router';
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
-// import Sidebar from '../../containers/Sidebar';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import Button from '@material-ui/core/Button';
+import routes from '../../constants/routes.json';
+import { useHistory } from 'react-router';
 
 const sqlite3 = require('sqlite3').verbose();
 
-interface Supplier {
+interface Order {
   id: number;
-  name: string;
-  address: string;
-  phone: string;
-  due_amount: number;
+  customer_name: string;
+  total_cost: number;
+  timestamp: string;
 }
-const useStylesToo = makeStyles({
+
+const useStyles = makeStyles({
   texts: {
     color: 'whitesmoke',
   },
@@ -31,83 +32,73 @@ const useStylesToo = makeStyles({
   },
 });
 
-export default function SupplierList(): JSX.Element {
-  const classes = useStylesToo();
-  const [supplierList, setSupplierList] = useState<Supplier[]>([]);
-  // const [productList, setProductList] = useState<Product[]>([]);
+export default function OrderList(): JSX.Element {
+  const classes = useStyles();
+  const [orderList, setOrderList] = useState<Order[]>([]);
   const history = useHistory();
   // console.log('Connected to the shop database.');
+  // const [OrderList, setOrderList] = useState([]);
+
   useEffect(() => {
-    // add db.all function to get all suppliers
+    // add db.all function to get all Orders
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT * FROM User where is_supplier = ?', [1],
-      (_err: Error, instant: React.SetStateAction<Supplier[]>) => {
-        setSupplierList(instant);
+      'SELECT * FROM Orders',
+      (_err: Error, instant: React.SetStateAction<Order[]>) => {
+        setOrderList(instant);
       }
     );
     db.close();
   }, []);
-  const viewSupplier = (instant: Supplier) => {
 
-    history.push({
-      //pathname: routes.ADD_PRODUCTS,
-      //state: { product: instant },
-    });
-
-  };
-  /*
-  return (
+  return(
     <Grid container>
-      <Grid item xs={4} md={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={9} md={8}>
-        add SupplierListthe table for supplier here
-      </Grid>
-    </Grid>
-  );
-  */
-  return (
-    <Grid container direction='row'>
       <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>
       <Grid item xs={8} lg={9}>
-
         <Grid className={classes.header}>
-          <h3>List of Suppliers</h3>
+          <h3>List of Orders</h3>
         </Grid>
 
+        <Grid>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              history.push({
+                pathname: routes.PLACE_ORDERS,
+                state: { order: null },
+              })}
+          >
+            Create an order
+          </Button>
+        </Grid>
 
         <TableContainer>
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell className={classes.texts}>Supplier Name</TableCell>
-                <TableCell className={classes.texts}>Phone</TableCell>
-                <TableCell className={classes.texts}>Address</TableCell>
-                <TableCell className={classes.texts}>Due</TableCell>
-                <TableCell className={classes.texts} />
+                <TableCell className={classes.texts}>Customer name</TableCell>
+                <TableCell className={classes.texts}>Total cost</TableCell>
+                <TableCell className={classes.texts}>Time of order</TableCell>
+                <TableCell className={classes.texts}/>
               </TableRow>
             </TableHead>
             <TableBody>
-              {supplierList.map((row) => (
+              {orderList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
-                    {row.name}
+                    {row.customer_name}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.phone}
+                    {row.total_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.address}
+                    {row.timestamp}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.due_amount}
-                  </TableCell>
-                  <TableCell align="center" className={classes.texts}>
-                    <VisibilityIcon onClick={() => viewSupplier(row)} />
+                    <VisibilityIcon />
                   </TableCell>
                 </TableRow>
               ))}
@@ -118,3 +109,4 @@ export default function SupplierList(): JSX.Element {
     </Grid>
   );
 }
+

@@ -11,6 +11,8 @@ import OrderPage from './components/orders/OrderPage';
 import SupplyPage from './components/supply/SupplyPage';
 import SupplierList from './components/users/SupplierList';
 import TransactionList from './components/payment/TransactionList';
+import SupplyList from './components/supply/SupplyList';
+import OrderList from './components/orders/OrderList';
 // Lazily load routes and code split with webpacck
 const LazyCounterPage = React.lazy(() =>
   import(/* webpackChunkName: "CounterPage" */ './containers/CounterPage')
@@ -26,21 +28,22 @@ export default function Routes() {
   return (
     <App>
       <Switch>
-        <Route path={routes.COUNTER} component={CounterPage} />
-        <Route path={routes.OVERVIEW} component={OverviewPage} />
-        <Route path={routes.CUSTOMERS} component={CustomerList} />
-        {/*
-        <Route path={routes.ORDERS} component={OrderList} />
-        <Route path={routes.ORDERS} component={HomePage} />
-        */}
-        <Route path={routes.SUPPLIERS} component={SupplierList} />
-        <Route path={routes.TRANSACTIONS} component={TransactionList} />
-        <Route path={routes.SUPPLY} component={SupplyPage} />
         <Route path={routes.PRODUCTS} component={ProductPage} />
         <Route path={routes.ADD_PRODUCTS} component={ProductForm} />
+
+        <Route path={routes.ORDERS} component={OrderList} />
         <Route path={routes.PLACE_ORDERS} component={OrderPage} />
+        <Route path={routes.CUSTOMERS} component={CustomerList} />
+
+        <Route path={routes.SUPPLY} component={SupplyList} />
+        <Route path={routes.ADD_SUPPLY} component={SupplyPage} />
+        <Route path={routes.SUPPLIERS} component={SupplierList} />
+
+        <Route path={routes.TRANSACTIONS} component={TransactionList} />
+
+        <Route path={routes.COUNTER} component={CounterPage} />
+        <Route path={routes.OVERVIEW} component={OverviewPage} />
         <Route path={routes.HOME} component={OverviewPage} />
-        {/* <Route path={routes.ADD_PRODUCTS} component={ProductForm} /> */}
       </Switch>
     </App>
   );

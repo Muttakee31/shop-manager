@@ -17,6 +17,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 interface Product {
   id: number;
+  code: string;
   title: string;
   price: number;
   shop_stock_count: number;
@@ -43,7 +44,7 @@ export default function ProductList(): JSX.Element {
   useEffect(() => {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT rowId as ID, * FROM Product',
+      'SELECT * FROM Product',
       (_err: Error, instant: React.SetStateAction<Product[]>) => {
         setProductList(instant);
       }
@@ -84,6 +85,7 @@ export default function ProductList(): JSX.Element {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.texts}>Title</TableCell>
+                <TableCell className={classes.texts}>Code</TableCell>
                 <TableCell className={classes.texts}>Price</TableCell>
                 <TableCell className={classes.texts}>
                   Shop Stock count
@@ -100,6 +102,9 @@ export default function ProductList(): JSX.Element {
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.title}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.code}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.price}

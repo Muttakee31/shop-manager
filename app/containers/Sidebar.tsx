@@ -64,7 +64,7 @@ const Sidebar: React.FC = () => {
 
       <Grid
         className={
-          router.pathname === routes.PLACE_ORDERS
+          router.pathname === routes.ORDERS || router.pathname === routes.PLACE_ORDERS
             ? classes.whiteWashedLinks
             : classes.links
         }
@@ -72,8 +72,8 @@ const Sidebar: React.FC = () => {
         <div
           role="presentation"
           className={classes.sideBarChild}
-          onClick={() => history.push(routes.PLACE_ORDERS)}
-          onKeyDown={() => history.push(routes.PLACE_ORDERS)}
+          onClick={() => history.push(routes.ORDERS)}
+          onKeyDown={() => history.push(routes.ORDERS)}
         >
           <ShoppingCartIcon className={classes.icons} />
           <span className={classes.sideText}>Orders</span>
@@ -82,7 +82,7 @@ const Sidebar: React.FC = () => {
 
       <Grid
         className={
-          router.pathname === routes.SUPPLY
+          router.pathname === routes.SUPPLY || router.pathname === routes.ADD_SUPPLY
             ? classes.whiteWashedLinks
             : classes.links
         }
@@ -95,6 +95,24 @@ const Sidebar: React.FC = () => {
         >
           <StoreIcon className={classes.icons} />
           <span className={classes.sideText}>Supply</span>
+        </div>
+      </Grid>
+
+      <Grid
+        className={
+          router.pathname === routes.TRANSACTIONS
+            ? classes.whiteWashedLinks
+            : classes.links
+        }
+      >
+        <div
+          role="presentation"
+          className={classes.sideBarChild}
+          onClick={() => history.push(routes.TRANSACTIONS)}
+          onKeyDown={() => history.push(routes.TRANSACTIONS)}
+        >
+          <ShoppingCartIcon className={classes.icons} />
+          <span className={classes.sideText}>Transactions</span>
         </div>
       </Grid>
 
