@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
 import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
+import { app } from 'electron';
 
 
 interface Product {
@@ -44,13 +45,30 @@ export default function ProductList(): JSX.Element {
 
     try {
       const sqlite3 = require('sqlite3').verbose();
-      const db = new sqlite3.Database('shopdb.sqlite3');
+      const db = new sqlite3.Database('shopdb.sqlite3')
+      //const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
+      //const db = new sqlite3.Database(dbPath);
       db.all(
         'SELECT * FROM Product',
-        (_err: Error, instant: React.SetStateAction<Product[]>) => {
+        (err: Error, instant: React.SetStateAction<Product[]>) => {
+          if (err) {
+            console.log(err);
+          }
           setProductList(instant);
+          console.log(instant);
         }
       );
+      db.all(
+        "SELECT name FROM sqlite_master " +
+        "WHERE type=? ORDER BY name", ['table'],
+        (err: Error, instant: React.SetStateAction<Product[]>) => {
+          if (err) {
+            console.log(err);
+          }
+          //setProductList(instant);
+          console.log(instant);
+        }
+      )
       db.close();
     }
     catch (e) {
@@ -105,7 +123,7 @@ export default function ProductList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {productList && productList.length > 0 && productList.map((row) => (
+              {/*{productList && productList.length > 0 && productList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.title}
@@ -129,7 +147,7 @@ export default function ProductList(): JSX.Element {
                     <EditIcon onClick={() => editProduct(row)} />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))}*/}
             </TableBody>
           </Table>
         </TableContainer>
