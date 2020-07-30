@@ -12,6 +12,7 @@ import Sidebar from '../../containers/Sidebar';
 import Button from '@material-ui/core/Button';
 import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
+import dayjs from 'dayjs';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -95,7 +96,7 @@ export default function SupplyList(): JSX.Element {
                     {row.total_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.timestamp}
+                    {dayjs(row.timestamp).format("MMMM DD, YYYY [at] hh:mm a")}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     <VisibilityIcon />

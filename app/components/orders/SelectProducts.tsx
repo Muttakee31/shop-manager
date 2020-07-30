@@ -174,7 +174,7 @@ export default function SelectProducts(props: {
 
   const createOrder = () => {
     const db = new sqlite3.Database('shopdb.sqlite3');
-    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ssZ[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     let id = -1;
     // console.log(JSON.stringify(props.selectedCustomer));
     db.run(

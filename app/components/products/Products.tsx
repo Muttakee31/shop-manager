@@ -13,7 +13,6 @@ import { useHistory } from 'react-router';
 import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
 
-const sqlite3 = require('sqlite3').verbose();
 
 interface Product {
   id: number;
@@ -42,14 +41,22 @@ export default function ProductList(): JSX.Element {
   const history = useHistory();
   // console.log('Connected to the shop database.');
   useEffect(() => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
-    db.all(
-      'SELECT * FROM Product',
-      (_err: Error, instant: React.SetStateAction<Product[]>) => {
-        setProductList(instant);
-      }
-    );
-    db.close();
+
+    try {
+      const sqlite3 = require('sqlite3').verbose();
+      const db = new sqlite3.Database('shopdb.sqlite3');
+      db.all(
+        'SELECT * FROM Product',
+        (_err: Error, instant: React.SetStateAction<Product[]>) => {
+          setProductList(instant);
+        }
+      );
+      db.close();
+    }
+    catch (e) {
+      console.log(e);
+    }
+
   }, []);
 
   const editProduct = (instant: Product) => {
@@ -98,7 +105,7 @@ export default function ProductList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {productList.map((row) => (
+              {productList && productList.length > 0 && productList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.title}
