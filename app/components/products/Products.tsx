@@ -12,7 +12,6 @@ import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
 import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
-import { app } from 'electron';
 
 
 interface Product {
@@ -58,17 +57,6 @@ export default function ProductList(): JSX.Element {
           console.log(instant);
         }
       );
-      db.all(
-        "SELECT name FROM sqlite_master " +
-        "WHERE type=? ORDER BY name", ['table'],
-        (err: Error, instant: React.SetStateAction<Product[]>) => {
-          if (err) {
-            console.log(err);
-          }
-          //setProductList(instant);
-          console.log(instant);
-        }
-      )
       db.close();
     }
     catch (e) {

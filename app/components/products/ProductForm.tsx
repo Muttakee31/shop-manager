@@ -73,7 +73,7 @@ export default function ProductForm(): JSX.Element {
     const state: any = location.state;
     if (state.product !== null) {
       console.log(state.product);
-      setProductID(state.product.ID);
+      setProductID(state.product.id);
       setProductCode(state.product.code);
       setProductName(state.product.title);
       setPrice(state.product.price);
@@ -112,10 +112,11 @@ export default function ProductForm(): JSX.Element {
 
     // insert one row into the langs table
     db.run(
-      `UPDATE Product SET title = ?, price = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE id=?`,
-      [productName, price, unit, shopStock, godownStock, productID],
+      `UPDATE Product SET title = ?, price = ?, code = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE id=?`,
+      [productName, price, productCode, unit, shopStock, godownStock, productID],
       function (err: Error) {
         if (err) {
+          console.log(productID);
           console.log(err.message);
         }
         // get the last insert id
