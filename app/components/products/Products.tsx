@@ -123,7 +123,7 @@ export default function ProductList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/*{productList && productList.length > 0 && productList.map((row) => (
+              {productList && productList.length > 0 && productList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.title}
@@ -147,7 +147,7 @@ export default function ProductList(): JSX.Element {
                     <EditIcon onClick={() => editProduct(row)} />
                   </TableCell>
                 </TableRow>
-              ))}*/}
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

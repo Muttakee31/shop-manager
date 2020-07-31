@@ -4,7 +4,10 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -80,8 +83,8 @@ export default function SelectCustomer(props: {
     db.close();
   }, []);
 
-  const handleChange = (value: number) => {
-    setSelectedUser(String(value));
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedUser(event.target.value as string);
   };
 
   const createCustomer = (e: any) => {
@@ -126,14 +129,32 @@ export default function SelectCustomer(props: {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Autocomplete
+        {/*<Autocomplete
           id="combo-box-demo"
           options={userList}
           getOptionLabel={(option:User) => option.name + " - " + option.phone }
           style={{ width: 300, margin: 30 }}
 
           renderInput={(params) => <CssTextField {...params} label="Select customer" />}
-        />
+        />*/}
+        <FormControl className={classes.selectField}>
+          <InputLabel id="demo-simple-select-label">
+            Select a customer
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedUser}
+            onChange={handleChange}
+          >
+            <MenuItem value="">Choose an user</MenuItem>
+            {userList.map((instant) => {
+              return (
+                <MenuItem value={String(instant.id)}>{instant.name}</MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
       </Grid>
 
       <Grid>

@@ -78,6 +78,7 @@ export default function EnterPayment(props: {
   const [discount, setDiscount] = useState('0');
   const [moneyToReturn, setMoneyToReturn] = useState(0);
   const [dueAmount, setDueAmount] = useState(props.orderDetails.price);
+  const [totalCost, setTotalCost] = useState(props.orderDetails.price);
 
   const classes = useStyles();
 
@@ -180,11 +181,11 @@ export default function EnterPayment(props: {
           <CssTextField
             id="standard-basic"
             label="Cost"
-            value={props.orderDetails.price}
+            value={totalCost}
             className={classes.textField}
             disabled
             fullWidth
-            onChange={(e) => setDiscount(e.target.value)}
+            onChange={(e) => setTotalCost(e.target.value)}
           />
         </Grid>
 

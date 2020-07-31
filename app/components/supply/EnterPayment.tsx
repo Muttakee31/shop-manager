@@ -76,7 +76,7 @@ export default function EnterPayment(props: {
   const [type, setType] = useState(0);
   const [labourCost, setLabourCost] = useState('');
   const [moneyToReturn, setMoneyToReturn] = useState(0);
-  const [dueAmount, setDueAmount] = useState(props.supplyDetails.price);
+  const [dueAmount, setDueAmount] = useState(0);
 
   const classes = useStyles();
 
@@ -125,7 +125,7 @@ export default function EnterPayment(props: {
   }
 
   useEffect(() => {
-    const money : number = Number(paidToSupplier) - Number(labourCost) - props.supplyDetails.price
+    const money : number = Number(paidToSupplier) - Number(labourCost) - Number(props.supplyDetails.price)
     if (money > 0) {
       setMoneyToReturn(money);
       setDueAmount(0);

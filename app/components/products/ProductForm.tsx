@@ -91,7 +91,7 @@ export default function ProductForm(): JSX.Element {
 
     // insert one row into the langs table
     db.run(
-      `INSERT INTO Product(title, price, unit, code, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?) `,
+      `INSERT INTO Product(title, price, unit, code, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?,?) `,
       [productName, price, unit, productCode, Number(shopStock), Number(godownStock)],
       function (err: Error) {
         if (err) {
@@ -112,7 +112,7 @@ export default function ProductForm(): JSX.Element {
 
     // insert one row into the langs table
     db.run(
-      `UPDATE Product SET title = ?, price = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE rowId=?`,
+      `UPDATE Product SET title = ?, price = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE id=?`,
       [productName, price, unit, shopStock, godownStock, productID],
       function (err: Error) {
         if (err) {

@@ -15,6 +15,7 @@ const useStyles = makeStyles({
   links: {
     textDecoration: 'none',
     padding: 14,
+    cursor: 'pointer'
   },
   whiteWashedLinks: {
     textDecoration: 'none',
@@ -31,7 +32,6 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    cursor: 'pointer',
   },
   sideText: {
     margin: 10,
@@ -46,17 +46,15 @@ const Sidebar: React.FC = () => {
     <div style={{ height: '100vh' }}>
       <Grid
         className={
-          router.pathname === routes.OVERVIEW
+          router.pathname === routes.OVERVIEW || router.pathname === routes.HOME
             ? classes.whiteWashedLinks
             : classes.links
         }
+        onClick={() => history.push(routes.OVERVIEW)}
+        onKeyDown={() => history.push(routes.OVERVIEW)}
+        role="presentation"
       >
-        <div
-          role="presentation"
-          className={classes.sideBarChild}
-          onClick={() => history.push(routes.OVERVIEW)}
-          onKeyDown={() => history.push(routes.OVERVIEW)}
-        >
+        <div className={classes.sideBarChild}>
           <AssessmentIcon className={classes.icons} />
           <span className={classes.sideText}>Overview</span>
         </div>
@@ -68,13 +66,11 @@ const Sidebar: React.FC = () => {
             ? classes.whiteWashedLinks
             : classes.links
         }
+        onClick={() => history.push(routes.ORDERS)}
+        onKeyDown={() => history.push(routes.ORDERS)}
+        role="presentation"
       >
-        <div
-          role="presentation"
-          className={classes.sideBarChild}
-          onClick={() => history.push(routes.ORDERS)}
-          onKeyDown={() => history.push(routes.ORDERS)}
-        >
+        <div className={classes.sideBarChild}>
           <ShoppingCartIcon className={classes.icons} />
           <span className={classes.sideText}>Orders</span>
         </div>
@@ -86,13 +82,11 @@ const Sidebar: React.FC = () => {
             ? classes.whiteWashedLinks
             : classes.links
         }
+        onClick={() => history.push(routes.SUPPLY)}
+        onKeyDown={() => history.push(routes.SUPPLY)}
+        role="presentation"
       >
-        <div
-          role="presentation"
-          className={classes.sideBarChild}
-          onClick={() => history.push(routes.SUPPLY)}
-          onKeyDown={() => history.push(routes.SUPPLY)}
-        >
+        <div className={classes.sideBarChild}>
           <StoreIcon className={classes.icons} />
           <span className={classes.sideText}>Supply</span>
         </div>
@@ -104,13 +98,12 @@ const Sidebar: React.FC = () => {
             ? classes.whiteWashedLinks
             : classes.links
         }
+        onClick={() => history.push(routes.TRANSACTIONS)}
+        onKeyDown={() => history.push(routes.TRANSACTIONS)}
+        role="presentation"
+
       >
-        <div
-          role="presentation"
-          className={classes.sideBarChild}
-          onClick={() => history.push(routes.TRANSACTIONS)}
-          onKeyDown={() => history.push(routes.TRANSACTIONS)}
-        >
+        <div className={classes.sideBarChild}>
           <ShoppingCartIcon className={classes.icons} />
           <span className={classes.sideText}>Transactions</span>
         </div>
@@ -122,13 +115,11 @@ const Sidebar: React.FC = () => {
             ? classes.whiteWashedLinks
             : classes.links
         }
+        onClick={() => history.push(routes.CUSTOMERS)}
+        onKeyDown={() => history.push(routes.CUSTOMERS)}
+        role="presentation"
       >
-        <div
-          role="presentation"
-          className={classes.sideBarChild}
-          onClick={() => history.push(routes.CUSTOMERS)}
-          onKeyDown={() => history.push(routes.CUSTOMERS)}
-        >
+        <div className={classes.sideBarChild}>
           <AccountCircleIcon className={classes.icons} />
           <span className={classes.sideText}>Customers</span>
         </div>
@@ -141,13 +132,11 @@ const Sidebar: React.FC = () => {
             ? classes.whiteWashedLinks
             : classes.links
         }
+        onClick={() => history.push(routes.PRODUCTS)}
+        onKeyDown={() => history.push(routes.PRODUCTS)}
+        role="presentation"
       >
-        <div
-          role="presentation"
-          className={classes.sideBarChild}
-          onClick={() => history.push(routes.PRODUCTS)}
-          onKeyDown={() => history.push(routes.PRODUCTS)}
-        >
+        <div className={classes.sideBarChild}>
           <EmojiFoodBeverageIcon className={classes.icons} />
           <span className={classes.sideText}>Products</span>
         </div>
@@ -158,13 +147,11 @@ const Sidebar: React.FC = () => {
             ? classes.whiteWashedLinks
             : classes.links
         }
+        onClick={() => history.push(routes.SUPPLIERS)}
+        onKeyDown={() => history.push(routes.SUPPLIERS)}
+        role="presentation"
       >
-        <div
-          role="presentation"
-          className={classes.sideBarChild}
-          onClick={() => history.push(routes.SUPPLIERS)}
-          onKeyDown={() => history.push(routes.SUPPLIERS)}
-        >
+        <div className={classes.sideBarChild}>
           <BusinessCenterIcon className={classes.icons} />
           <span className={classes.sideText}>Suppliers</span>
         </div>
