@@ -8,11 +8,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import Sidebar from '../../containers/Sidebar';
 import Button from '@material-ui/core/Button';
-import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
 import dayjs from 'dayjs';
+import routes from '../../constants/routes.json';
+import Sidebar from '../../containers/Sidebar';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -96,7 +96,7 @@ export default function SupplyList(): JSX.Element {
                     {row.total_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {dayjs(row.timestamp).format("MMMM DD, YYYY [at] hh:mm a")}
+                    {dayjs(row.timestamp).format('MMMM DD, YYYY [at] hh:mm a')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     <VisibilityIcon />

@@ -11,7 +11,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 const sqlite3 = require('sqlite3').verbose();
 
-
 const CssTextField = withStyles({
   root: {
     '& label': {
@@ -70,7 +69,7 @@ const useStyles = makeStyles({
 
 export default function EnterPayment(props: {
   selectedSupplier: any;
-  supplyDetails: any
+  supplyDetails: any;
 }): JSX.Element {
   const [paidToSupplier, setPaidToSupplier] = useState('');
   const [type, setType] = useState(0);
@@ -93,26 +92,31 @@ export default function EnterPayment(props: {
     db.run(
       `INSERT INTO Transactions(supply_id, supply_cost, client, client_name, type, due_amount, paid_amount, labour_cost)
        VALUES(?,?,?,?,?,?,?,?) `,
-      [props.supplyDetails.supply_id, props.supplyDetails.price, props.selectedSupplier.id,
-        props.selectedSupplier.name, Number(type),
-        dueAmount, paidToSupplier, labourCost],
+      [
+        props.supplyDetails.supply_id,
+        props.supplyDetails.price,
+        props.selectedSupplier.id,
+        props.selectedSupplier.name,
+        Number(type),
+        dueAmount,
+        paidToSupplier,
+        labourCost,
+      ],
       function (err: Error) {
         if (err) {
           console.log(err.message);
-        }
-        else {
-          if (dueAmount > 0) {
-            db.run(`UPDATE User set due_amount = due_amount - ?, has_due_bill = 1`,
-              [dueAmount],
-              function(error: Error) {
-                if (error) {
-                  console.log(error.message);
-                }
-                else {
-                  //console.log('updated');
-                }
-              })
-          }
+        } else if (dueAmount > 0) {
+          db.run(
+            `UPDATE User set due_amount = due_amount - ?, has_due_bill = 1`,
+            [dueAmount],
+            function (error: Error) {
+              if (error) {
+                console.log(error.message);
+              } else {
+                // console.log('updated');
+              }
+            }
+          );
         }
 
         // console.log(`A row has been inserted`);
@@ -121,20 +125,22 @@ export default function EnterPayment(props: {
 
     // close the database connection
     db.close();
-    //props.setOrderState(3);
-  }
+    // props.setOrderState(3);
+  };
 
   useEffect(() => {
-    const money : number = Number(paidToSupplier) - Number(labourCost) - Number(props.supplyDetails.price)
+    const money: number =
+      Number(paidToSupplier) -
+      Number(labourCost) -
+      Number(props.supplyDetails.price);
     if (money > 0) {
       setMoneyToReturn(money);
       setDueAmount(0);
-    }
-    else {
+    } else {
       setDueAmount(money * -1);
       setMoneyToReturn(0);
     }
-  }, [dueAmount, paidToSupplier, labourCost])
+  }, [dueAmount, paidToSupplier, labourCost]);
 
   return (
     <Grid container direction="column" justify="center"
@@ -143,14 +149,28 @@ export default function EnterPayment(props: {
         <h3>Add payment details</h3>
       </Grid>
 
-      <Grid container justify='center' direction='row'>
-        <Grid item style={{padding: '20px', background: '#277ea7', borderRadius: '9px'}}>
-          <div style={{marginBottom: '10px'}}>Money to return: </div>
+      <Grid container justify="center" direction="row">
+        <Grid
+          item
+          style={{
+            padding: '20px',
+            background: '#277ea7',
+            borderRadius: '9px',
+          }}
+        >
+          <div style={{ marginBottom: '10px' }}>Money to return: </div>
           <div> {moneyToReturn}</div>
         </Grid>
         <Grid item xs={1} />
-        <Grid item style={{padding: '20px', background: '#277ea7', borderRadius: '9px'}}>
-          <div style={{marginBottom: '10px'}}>Due amount: &nbsp; &nbsp;</div>
+        <Grid
+          item
+          style={{
+            padding: '20px',
+            background: '#277ea7',
+            borderRadius: '9px',
+          }}
+        >
+          <div style={{ marginBottom: '10px' }}>Due amount: &nbsp; &nbsp;</div>
           <div> {dueAmount}</div>
         </Grid>
       </Grid>
@@ -158,19 +178,16 @@ export default function EnterPayment(props: {
       <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
         <Grid>
           <FormControl className={classes.selectField}>
-            <InputLabel id="demo-simple-select-label">
-             Payment type
-            </InputLabel>
+            <InputLabel id="demo-simple-select-label">Payment type</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={type}
               onChange={handleChange}
             >
-              <MenuItem value='0'>Paid</MenuItem>
-              <MenuItem value='1'>Due</MenuItem>
-              <MenuItem value='2'>Both</MenuItem>
-
+              <MenuItem value="0">Paid</MenuItem>
+              <MenuItem value="1">Due</MenuItem>
+              <MenuItem value="2">Both</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -196,7 +213,6 @@ export default function EnterPayment(props: {
             onChange={(e) => setPaidToSupplier(e.target.value)}
           />
         </Grid>
-
 
         <Grid style={{ marginTop: '30px' }}>
           <Button

@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   links: {
     textDecoration: 'none',
     padding: 14,
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   whiteWashedLinks: {
     textDecoration: 'none',
@@ -62,7 +62,8 @@ const Sidebar: React.FC = () => {
 
       <Grid
         className={
-          router.pathname === routes.ORDERS || router.pathname === routes.PLACE_ORDERS
+          router.pathname === routes.ORDERS ||
+          router.pathname === routes.PLACE_ORDERS
             ? classes.whiteWashedLinks
             : classes.links
         }
@@ -78,7 +79,8 @@ const Sidebar: React.FC = () => {
 
       <Grid
         className={
-          router.pathname === routes.SUPPLY || router.pathname === routes.ADD_SUPPLY
+          router.pathname === routes.SUPPLY ||
+          router.pathname === routes.ADD_SUPPLY
             ? classes.whiteWashedLinks
             : classes.links
         }
@@ -101,7 +103,6 @@ const Sidebar: React.FC = () => {
         onClick={() => history.push(routes.TRANSACTIONS)}
         onKeyDown={() => history.push(routes.TRANSACTIONS)}
         role="presentation"
-
       >
         <div className={classes.sideBarChild}>
           <ShoppingCartIcon className={classes.icons} />

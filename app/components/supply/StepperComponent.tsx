@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function getSteps() {
-  return ["Select a supplier", "Select products", "Record payments"];
+  return ['Select a supplier', 'Select products', 'Record payments'];
 }
 
 export default function StepperComponent(props: { orderState: number }) {

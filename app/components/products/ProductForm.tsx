@@ -92,7 +92,14 @@ export default function ProductForm(): JSX.Element {
     // insert one row into the langs table
     db.run(
       `INSERT INTO Product(title, price, unit, code, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?,?) `,
-      [productName, price, unit, productCode, Number(shopStock), Number(godownStock)],
+      [
+        productName,
+        price,
+        unit,
+        productCode,
+        Number(shopStock),
+        Number(godownStock),
+      ],
       function (err: Error) {
         if (err) {
           console.log(err.message);
@@ -113,7 +120,15 @@ export default function ProductForm(): JSX.Element {
     // insert one row into the langs table
     db.run(
       `UPDATE Product SET title = ?, price = ?, code = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE id=?`,
-      [productName, price, productCode, unit, shopStock, godownStock, productID],
+      [
+        productName,
+        price,
+        productCode,
+        unit,
+        shopStock,
+        godownStock,
+        productID,
+      ],
       function (err: Error) {
         if (err) {
           console.log(productID);
@@ -135,7 +150,9 @@ export default function ProductForm(): JSX.Element {
         <Sidebar />
       </Grid>
       <Grid
-        item sm={8} lg={9}
+        item
+        sm={8}
+        lg={9}
         direction="column"
         justify="center"
         className={classes.grid}

@@ -13,7 +13,6 @@ import { useHistory } from 'react-router';
 import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
 
-
 interface Product {
   id: number;
   code: string;
@@ -41,28 +40,26 @@ export default function ProductList(): JSX.Element {
   const history = useHistory();
   // console.log('Connected to the shop database.');
   useEffect(() => {
-
     try {
       const sqlite3 = require('sqlite3').verbose();
-      const db = new sqlite3.Database('shopdb.sqlite3')
-      //const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
-      //const db = new sqlite3.Database(dbPath);
+      const db = new sqlite3.Database('shopdb.sqlite3');
+      // const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
+      // const db = new sqlite3.Database(dbPath);
       db.all(
         'SELECT * FROM Product',
         (err: Error, instant: React.SetStateAction<Product[]>) => {
           if (err) {
             console.log(err);
+          } else {
+            setProductList(instant);
+            console.log(instant);
           }
-          setProductList(instant);
-          console.log(instant);
         }
       );
       db.close();
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
-
   }, []);
 
   const editProduct = (instant: Product) => {
@@ -100,18 +97,14 @@ export default function ProductList(): JSX.Element {
                 <TableCell className={classes.texts}>Title</TableCell>
                 <TableCell className={classes.texts}>Code</TableCell>
                 <TableCell className={classes.texts}>Price</TableCell>
-                <TableCell className={classes.texts}>
-                  Shop Stock count
-                </TableCell>
-                <TableCell className={classes.texts}>
-                  Godown Stock count
-                </TableCell>
+                <TableCell className={classes.texts}>Shop Stock</TableCell>
+                <TableCell className={classes.texts}>Godown Stock</TableCell>
                 <TableCell className={classes.texts}>Unit</TableCell>
                 <TableCell className={classes.texts} />
               </TableRow>
             </TableHead>
             <TableBody>
-              {productList && productList.length > 0 && productList.map((row) => (
+              {productList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.title}

@@ -7,11 +7,11 @@ import EnterPayment from './EnterPayment';
 import StepperComponent from './StepperComponent';
 
 interface OrderItem {
-  order_id: number,
-  price: number,
-  customer_name: string,
-  customer: number,
-  date: string
+  order_id: number;
+  price: number;
+  customer_name: string;
+  customer: number;
+  date: string;
 }
 
 export default function OrderPage(): JSX.Element {

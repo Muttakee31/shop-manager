@@ -37,9 +37,9 @@ const useStyles = makeStyles({
 });
 
 const type = {
-  "0": "Paid",
-  "1": "Due",
-  "2": "Both"
+  '0': 'Paid',
+  '1': 'Due',
+  '2': 'Both',
 };
 
 export default function TransactionList(): JSX.Element {
@@ -53,7 +53,7 @@ export default function TransactionList(): JSX.Element {
     // add db.all function to get all transactions
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT rowId as ID, * FROM Transactions',
+      'SELECT * FROM Transactions',
       (_err: Error, instant: React.SetStateAction<Transaction[]>) => {
         setTransactionList(instant);
       }
@@ -61,7 +61,7 @@ export default function TransactionList(): JSX.Element {
     db.close();
   }, []);
 
-  return(
+  return (
     <Grid container>
       <Grid item xs={4} lg={3}>
         <Sidebar />
@@ -117,4 +117,3 @@ export default function TransactionList(): JSX.Element {
     </Grid>
   );
 }
-

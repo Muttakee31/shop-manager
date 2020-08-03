@@ -7,11 +7,11 @@ import EnterPayment from './EnterPayment';
 import StepperComponent from './StepperComponent';
 
 interface SupplyItem {
-  supply_id: number,
-  price: number,
-  supplier_name: string,
-  supplier: number,
-  date: string
+  supply_id: number;
+  price: number;
+  supplier_name: string;
+  supplier: number;
+  date: string;
 }
 
 export default function SupplyPage(): JSX.Element {

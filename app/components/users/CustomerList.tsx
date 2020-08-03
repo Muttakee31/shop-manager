@@ -43,7 +43,8 @@ export default function CustomerList(): JSX.Element {
   useEffect(() => {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT * FROM User where is_customer=?', [1],
+      'SELECT * FROM User where is_customer=?',
+      [1],
       (_err: Error, instant: React.SetStateAction<Customer[]>) => {
         setCustomerList(instant);
       }
@@ -59,50 +60,50 @@ export default function CustomerList(): JSX.Element {
     */
   };
 
-  return(
+  return (
     <Grid container>
-      <Grid item xs ={4} lg={3}>
+      <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>
       <Grid item xs={8} lg={9}>
         <Grid className={classes.header}>
           <h3>List of Customers</h3>
         </Grid>
-          <TableContainer>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.texts}>Name</TableCell>
-                  <TableCell className={classes.texts}>Phone</TableCell>
-                  <TableCell className={classes.texts}>Address</TableCell>
-                  <TableCell className={classes.texts}>Due amount</TableCell>
-                  <TableCell className={classes.texts} />
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.texts}>Name</TableCell>
+                <TableCell className={classes.texts}>Phone</TableCell>
+                <TableCell className={classes.texts}>Address</TableCell>
+                <TableCell className={classes.texts}>Due amount</TableCell>
+                <TableCell className={classes.texts} />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {customerList.map((row: Customer) => (
+                <TableRow key={row.id}>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.phone}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.address}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.due_amount}
+                  </TableCell>
+                  <TableCell align="center" className={classes.texts}>
+                    <VisibilityIcon onClick={() => viewCustomer(row)} />
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {customerList.map((row: Customer) => (
-                  <TableRow key={row.id}>
-                    <TableCell align="left" className={classes.texts}>
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="left" className={classes.texts}>
-                      {row.phone}
-                    </TableCell>
-                    <TableCell align="left" className={classes.texts}>
-                      {row.address}
-                    </TableCell>
-                    <TableCell align="left" className={classes.texts}>
-                      {row.due_amount}
-                    </TableCell>
-                    <TableCell align="center" className={classes.texts}>
-                      <VisibilityIcon onClick={() => viewCustomer(row)} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
     </Grid>
   );
 }

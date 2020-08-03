@@ -41,7 +41,8 @@ export default function SupplierList(): JSX.Element {
     // add db.all function to get all suppliers
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT * FROM User where is_supplier = ?', [1],
+      'SELECT * FROM User where is_supplier = ?',
+      [1],
       (_err: Error, instant: React.SetStateAction<Supplier[]>) => {
         setSupplierList(instant);
       }
@@ -49,12 +50,10 @@ export default function SupplierList(): JSX.Element {
     db.close();
   }, []);
   const viewSupplier = (instant: Supplier) => {
-
     history.push({
-      //pathname: routes.ADD_PRODUCTS,
-      //state: { product: instant },
+      // pathname: routes.ADD_PRODUCTS,
+      // state: { product: instant },
     });
-
   };
   /*
   return (
@@ -69,16 +68,14 @@ export default function SupplierList(): JSX.Element {
   );
   */
   return (
-    <Grid container direction='row'>
+    <Grid container direction="row">
       <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>
       <Grid item xs={8} lg={9}>
-
         <Grid className={classes.header}>
           <h3>List of Suppliers</h3>
         </Grid>
-
 
         <TableContainer>
           <Table aria-label="simple table">

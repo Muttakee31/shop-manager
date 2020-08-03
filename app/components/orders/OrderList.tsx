@@ -7,12 +7,12 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
-import Sidebar from '../../containers/Sidebar';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from '@material-ui/core/Button';
-import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
 import dayjs from 'dayjs';
+import routes from '../../constants/routes.json';
+import Sidebar from '../../containers/Sidebar';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -52,7 +52,7 @@ export default function OrderList(): JSX.Element {
     db.close();
   }, []);
 
-  return(
+  return (
     <Grid container>
       <Grid item xs={4} lg={3}>
         <Sidebar />
@@ -83,7 +83,7 @@ export default function OrderList(): JSX.Element {
                 <TableCell className={classes.texts}>Customer name</TableCell>
                 <TableCell className={classes.texts}>Total cost</TableCell>
                 <TableCell className={classes.texts}>Time of order</TableCell>
-                <TableCell className={classes.texts}/>
+                <TableCell className={classes.texts} />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -96,7 +96,7 @@ export default function OrderList(): JSX.Element {
                     {row.total_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {dayjs(row.timestamp).format("MMM DD, YYYY [at] hh:mm a")}
+                    {dayjs(row.timestamp).format('MMM DD, YYYY [at] hh:mm a')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     <VisibilityIcon />
@@ -110,4 +110,3 @@ export default function OrderList(): JSX.Element {
     </Grid>
   );
 }
-

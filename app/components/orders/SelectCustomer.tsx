@@ -75,7 +75,7 @@ export default function SelectCustomer(props: {
   useEffect(() => {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
-      'SELECT * FROM USER WHERE is_customer = 1',
+      'SELECT * FROM USER',
       (_err: Error, instant: React.SetStateAction<User[]>) => {
         setUserList(instant);
       }
@@ -129,14 +129,14 @@ export default function SelectCustomer(props: {
   return (
     <Grid container>
       <Grid item xs={12}>
-        {/*<Autocomplete
+        {/* <Autocomplete
           id="combo-box-demo"
           options={userList}
           getOptionLabel={(option:User) => option.name + " - " + option.phone }
           style={{ width: 300, margin: 30 }}
 
           renderInput={(params) => <CssTextField {...params} label="Select customer" />}
-        />*/}
+        /> */}
         <FormControl className={classes.selectField}>
           <InputLabel id="demo-simple-select-label">
             Select a customer

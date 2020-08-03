@@ -187,9 +187,8 @@ export default function SelectProducts(props: {
       function (err: Error) {
         if (err) {
           console.log(err.message);
-        }
-        else {
-        // @ts-ignore
+        } else {
+          // @ts-ignore
           id = this.lastID;
           const supply: any = {
             supply_id: id,
