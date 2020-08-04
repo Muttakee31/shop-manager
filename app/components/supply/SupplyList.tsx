@@ -96,10 +96,10 @@ export default function SupplyList(): JSX.Element {
                     {row.total_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {dayjs(row.timestamp).format('MMMM DD, YYYY [at] hh:mm a')}
+                    {dayjs(row.timestamp).format('MMMM DD, YYYY [a]t hh:mm a')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    <VisibilityIcon />
+                    <VisibilityIcon onClick={()=> history.push(`/supply/${row.id}`)}/>
                   </TableCell>
                 </TableRow>
               ))}

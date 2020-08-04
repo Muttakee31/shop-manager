@@ -2,7 +2,7 @@
   "HOME": "/",
   "COUNTER": "/counter",
   "ORDERS": "/orders",
-  "SUPPLY": "/supply",
+  "SUPPLY": "/supplies",
   "CUSTOMERS": "/customers",
   "PRODUCTS": "/products",
   "SUPPLIERS": "/suppliers",
@@ -11,7 +11,7 @@
   "PLACE_ORDERS": "/place-order",
   "ADD_SUPPLY": "/add-supply",
   "TRANSACTIONS": "/transactions",
-  "USER_DETAILS": "/user-details",
+  "USER_DETAILS": "/user-details/:type/:id",
   "ORDER_DETAILS": "/order/:id",
   "SUPPLY_DETAILS": "/supply/:id"
 }

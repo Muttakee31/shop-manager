@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 
 const sqlite3 = require('sqlite3').verbose();
 
-interface OrderItem {
+interface SupplyItem {
   product_id: number;
   title: string;
   quantity: number;
@@ -21,9 +21,9 @@ interface OrderItem {
   store: string;
 }
 
-interface Order {
+interface Supply {
   id: number,
-  customer_name: string,
+  supplier_name: string,
   timestamp: string,
   total_cost: number
 }
@@ -52,9 +52,9 @@ const useStyles1 = makeStyles({
   }
 });
 
-const emptyOrder : Order  = {
+const emptySupply : Supply  = {
   id: 0,
-  customer_name: '',
+  supplier_name: '',
   timestamp: '',
   total_cost: 0
 }
@@ -68,11 +68,11 @@ const emptyTransaction : Transaction  = {
   due_amount: 0
 }
 
-export default function OrderDetails(): JSX.Element {
+export default function SupplyDetails(): JSX.Element {
   const classes = useStyles1();
-  const [order, setOrder] = useState<Order>(emptyOrder);
+  const [ supply, setSupply] = useState<Supply>(emptySupply);
   const [transactionInfo, setTransactionInfo] = useState<Transaction>(emptyTransaction);
-  const [itemList, setItemList] = useState<OrderItem[]>([]);
+  const [itemList, setItemList] = useState<SupplyItem[]>([]);
   //const history = useHistory();
   const match = useRouteMatch();
   // console.log('Connected to the shop database.');
@@ -84,21 +84,21 @@ export default function OrderDetails(): JSX.Element {
     console.log(id);
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.get(
-      'SELECT * FROM Orders where id=?',
+      'SELECT * FROM Supply where id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<Order>) => {
+      (err: Error, instant: React.SetStateAction<Supply>) => {
         if (err) {
           console.log(err);
         } else {
-          setOrder(instant);
+          setSupply(instant);
           console.log(instant);
         }
       }
     );
     db.all(
-      'SELECT * FROM OrderedItem where order_id=?',
+      'SELECT * FROM SupplyItem where supply_id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<OrderItem[]>) => {
+      (err: Error, instant: React.SetStateAction<SupplyItem[]>) => {
         if (err) {
           console.log(err);
         } else {
@@ -108,7 +108,7 @@ export default function OrderDetails(): JSX.Element {
       }
     );
     db.get(
-      'SELECT * FROM Transactions where order_id=?',
+      'SELECT * FROM Transactions where supply_id=?',
       [id],
       (err: Error, instant: React.SetStateAction<Transaction>) => {
         if (err) {
@@ -129,22 +129,22 @@ export default function OrderDetails(): JSX.Element {
       </Grid>
       <Grid item xs={8} lg={9}>
         <Grid className={classes.header}>
-          <h3>Order Details</h3>
+          <h3>Supply Details</h3>
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Customer Name: </Grid>
-          <Grid item xs={6}>{order.customer_name}</Grid>
+          <Grid item xs={6}>Supplier Name: </Grid>
+          <Grid item xs={6}>{ supply.supplier_name}</Grid>
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Date of order: </Grid>
-          <Grid item xs={6}>{dayjs(order.timestamp).format('MMMM DD, YYYY [a]t hh:mm')}</Grid>
+          <Grid item xs={6}>Date of supply: </Grid>
+          <Grid item xs={6}>{dayjs(supply.timestamp).format('MMMM DD, YYYY [a]t hh:mm')}</Grid>
         </Grid>
 
         <Grid className={classes.details}>
           <Grid item xs={6}>Total cost: </Grid>
-          <Grid item xs={6}>{order.total_cost}</Grid>
+          <Grid item xs={6}>{supply.total_cost}</Grid>
         </Grid>
 
         <Grid className={classes.header}>
@@ -194,7 +194,7 @@ export default function OrderDetails(): JSX.Element {
           </Grid>
 
           <Grid className={classes.details}>
-            <Grid item xs={6}>Paid by customer: </Grid>
+            <Grid item xs={6}>Paid to supplier: </Grid>
             <Grid item xs={6}>{transactionInfo.paid_amount}</Grid>
           </Grid>
 

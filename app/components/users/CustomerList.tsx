@@ -51,13 +51,11 @@ export default function CustomerList(): JSX.Element {
     );
     db.close();
   }, []);
+
   const viewCustomer = (instant: Customer) => {
-    /*
     history.push({
-      //pathname: routes.ADD_PRODUCTS,
-      //state: { product: instant },
+      pathname: `/user-details/0/${instant.id}` ,
     });
-    */
   };
 
   return (

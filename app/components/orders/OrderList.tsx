@@ -99,7 +99,7 @@ export default function OrderList(): JSX.Element {
                     {dayjs(row.timestamp).format('MMM DD, YYYY [at] hh:mm a')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    <VisibilityIcon />
+                    <VisibilityIcon onClick={()=> history.push(`/order/${row.id}`)}/>
                   </TableCell>
                 </TableRow>
               ))}

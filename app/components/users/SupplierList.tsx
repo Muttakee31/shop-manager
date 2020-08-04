@@ -51,8 +51,7 @@ export default function SupplierList(): JSX.Element {
   }, []);
   const viewSupplier = (instant: Supplier) => {
     history.push({
-      // pathname: routes.ADD_PRODUCTS,
-      // state: { product: instant },
+      pathname: `/user-details/1/${instant.id}` ,
     });
   };
   /*
