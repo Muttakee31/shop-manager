@@ -8,8 +8,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import { useRouteMatch } from 'react-router';
-import Sidebar from '../../containers/Sidebar';
 import dayjs from 'dayjs';
+import Sidebar from '../../containers/Sidebar';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -22,62 +22,64 @@ interface OrderItem {
 }
 
 interface Order {
-  id: number,
-  customer_name: string,
-  timestamp: string,
-  total_cost: number
+  id: number;
+  customer_name: string;
+  timestamp: string;
+  total_cost: number;
 }
 
 interface Transaction {
-  id: number,
-  type: string,
-  discount: number,
-  paid_amount: number,
-  labour_cost: number,
-  due_amount: number
+  id: number;
+  type: string;
+  discount: number;
+  paid_amount: number;
+  labour_cost: number;
+  due_amount: number;
 }
 
 const useStyles1 = makeStyles({
   texts: {
-    color: 'whitesmoke'
+    color: 'whitesmoke',
   },
   details: {
     margin: 10,
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   header: {
     textAlign: 'center',
     color: 'white',
-  }
+  },
 });
 
-const emptyOrder : Order  = {
+const emptyOrder: Order = {
   id: 0,
   customer_name: '',
   timestamp: '',
-  total_cost: 0
-}
+  total_cost: 0,
+};
 
-const emptyTransaction : Transaction  = {
+const emptyTransaction: Transaction = {
   id: 0,
   type: '0',
   discount: 0,
   paid_amount: 0,
   labour_cost: 0,
-  due_amount: 0
-}
+  due_amount: 0,
+};
 
 export default function OrderDetails(): JSX.Element {
   const classes = useStyles1();
   const [order, setOrder] = useState<Order>(emptyOrder);
-  const [transactionInfo, setTransactionInfo] = useState<Transaction>(emptyTransaction);
+  const [transactionInfo, setTransactionInfo] = useState<Transaction>(
+    emptyTransaction
+  );
   const [itemList, setItemList] = useState<OrderItem[]>([]);
-  //const history = useHistory();
+  // const history = useHistory();
   const match = useRouteMatch();
   // console.log('Connected to the shop database.');
   useEffect(() => {
-    //const { id } = useParams();
+    // const { id } = useParams();
 
     // @ts-ignore
     const id: number = match.params.id;
@@ -133,18 +135,33 @@ export default function OrderDetails(): JSX.Element {
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Customer Name: </Grid>
-          <Grid item xs={6}>{order.customer_name}</Grid>
+          <Grid item xs={6}>
+            Customer Name:
+{' '}
+          </Grid>
+          <Grid item xs={6}>
+            {order.customer_name}
+          </Grid>
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Date of order: </Grid>
-          <Grid item xs={6}>{dayjs(order.timestamp).format('MMMM DD, YYYY [a]t hh:mm')}</Grid>
+          <Grid item xs={6}>
+            Date of order:
+{' '}
+          </Grid>
+          <Grid item xs={6}>
+            {dayjs(order.timestamp).format('MMMM DD, YYYY [a]t hh:mm')}
+          </Grid>
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Total cost: </Grid>
-          <Grid item xs={6}>{order.total_cost}</Grid>
+          <Grid item xs={6}>
+            Total cost:
+{' '}
+          </Grid>
+          <Grid item xs={6}>
+            {order.total_cost}
+          </Grid>
         </Grid>
 
         <Grid className={classes.header}>
@@ -194,25 +211,44 @@ export default function OrderDetails(): JSX.Element {
           </Grid>
 
           <Grid className={classes.details}>
-            <Grid item xs={6}>Paid by customer: </Grid>
-            <Grid item xs={6}>{transactionInfo.paid_amount}</Grid>
+            <Grid item xs={6}>
+              Paid by customer:
+{' '}
+            </Grid>
+            <Grid item xs={6}>
+              {transactionInfo.paid_amount}
+            </Grid>
           </Grid>
 
           <Grid className={classes.details}>
-            <Grid item xs={6}>Due amount: </Grid>
-            <Grid item xs={6}>{transactionInfo.due_amount}</Grid>
+            <Grid item xs={6}>
+              Due amount:
+{' '}
+            </Grid>
+            <Grid item xs={6}>
+              {transactionInfo.due_amount}
+            </Grid>
           </Grid>
 
           <Grid className={classes.details}>
-            <Grid item xs={6}>Labour cost: </Grid>
-            <Grid item xs={6}>{transactionInfo.labour_cost}</Grid>
+            <Grid item xs={6}>
+              Labour cost:
+{' '}
+            </Grid>
+            <Grid item xs={6}>
+              {transactionInfo.labour_cost}
+            </Grid>
           </Grid>
 
           <Grid className={classes.details}>
-            <Grid item xs={6}>Discount: </Grid>
-            <Grid item xs={6}>{transactionInfo.labour_cost}</Grid>
+            <Grid item xs={6}>
+              Discount:
+{' '}
+            </Grid>
+            <Grid item xs={6}>
+              {transactionInfo.labour_cost}
+            </Grid>
           </Grid>
-
         </Grid>
       </Grid>
     </Grid>

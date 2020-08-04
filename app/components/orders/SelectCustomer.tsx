@@ -1,13 +1,10 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -68,7 +65,7 @@ export default function SelectCustomer(props: {
   const [userName, setUserName] = useState('');
   const [userPhone, setPhone] = useState('');
   const [userAddress, setAddress] = useState('');
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const classes = useStyles();
 
@@ -76,16 +73,14 @@ export default function SelectCustomer(props: {
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.all(
       'SELECT * FROM USER',
-      (_err: Error, instant: React.SetStateAction<User[]>) => {
-        setUserList(instant);
+      (err: Error, instant: React.SetStateAction<User[]>) => {
+        if (!err) {
+          setUserList(instant);
+        }
       }
     );
     db.close();
   }, []);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedUser(event.target.value as string);
-  };
 
   const createCustomer = (e: any) => {
     e.preventDefault();
@@ -121,40 +116,26 @@ export default function SelectCustomer(props: {
 
   const confirmCustomer = () => {
     console.log(selectedUser);
-    const user = userList.filter((item) => item.id === Number(selectedUser))[0];
-    props.setSelectedUser(user);
+    // const user = userList.filter((item) => item.id === Number(selectedUser))[0];
+    props.setSelectedUser(selectedUser);
     props.setOrderState(1);
   };
 
   return (
     <Grid container>
       <Grid item xs={12}>
-        {/* <Autocomplete
+        <Autocomplete
           id="combo-box-demo"
           options={userList}
-          getOptionLabel={(option:User) => option.name + " - " + option.phone }
-          style={{ width: 300, margin: 30 }}
-
-          renderInput={(params) => <CssTextField {...params} label="Select customer" />}
-        /> */}
-        <FormControl className={classes.selectField}>
-          <InputLabel id="demo-simple-select-label">
-            Select a customer
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedUser}
-            onChange={handleChange}
-          >
-            <MenuItem value="">Choose an user</MenuItem>
-            {userList.map((instant) => {
-              return (
-                <MenuItem value={String(instant.id)}>{instant.name}</MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+          getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
+          style={{ width: 250, margin: 30, margin: 'auto' }}
+          onChange={(event: ChangeEvent<{}>, newValue: User) => {
+            setSelectedUser(newValue);
+          }}
+          renderInput={(params) => (
+            <CssTextField {...params} label="Select customer" />
+          )}
+        />
       </Grid>
 
       <Grid>

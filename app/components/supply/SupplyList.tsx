@@ -99,7 +99,9 @@ export default function SupplyList(): JSX.Element {
                     {dayjs(row.timestamp).format('MMMM DD, YYYY [a]t hh:mm a')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    <VisibilityIcon onClick={()=> history.push(`/supply/${row.id}`)}/>
+                    <VisibilityIcon
+                      onClick={() => history.push(`/supply/${row.id}`)}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

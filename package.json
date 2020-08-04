@@ -52,7 +52,7 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "Store manager",
     "appId": "org.develar.ElectronReact",
     "files": [
       "dist/",
@@ -106,9 +106,9 @@
     "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
   },
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "",
+    "email": "",
+    "url": ""
   },
   "contributors": [
     {
@@ -328,7 +328,6 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
     }
   }
 }

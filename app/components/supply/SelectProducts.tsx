@@ -1,9 +1,6 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
@@ -20,10 +17,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 interface Product {
   id: number;
   title: string;
+  code: string;
   price: number;
   shop_stock_count: number;
   godown_stock_count: number;
@@ -112,17 +111,6 @@ export default function SelectProducts(props: {
   const [quantity, setQuantity] = useState('');
   const [finalPrice, setFinalPrice] = useState('');
   const [store, setStore] = useState('0');
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedProductID(event.target.value as string);
-    const product: Product = productList.filter(
-      (item) => item.id === Number(event.target.value)
-    )[0];
-    setFinalPrice(String(product.price));
-
-    // const product = productList.find()
-    // setSelectedProduct(product);
-  };
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStore((event.target as HTMLInputElement).value);
@@ -242,30 +230,27 @@ export default function SelectProducts(props: {
   };
 
   // console.log(props.selectedSupplier);
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       <Grid container>
         <Grid item xs={4}>
-          <FormControl className={classes.selectField}>
-            <InputLabel id="demo-simple-select-label">
-              Select a product
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={selectedProductID}
-              onChange={handleChange}
-            >
-              <MenuItem value="">Choose a product</MenuItem>
-              {productList.map((instant) => {
-                return (
-                  <MenuItem value={String(instant.id)}>
-                    {instant.title}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+          <Autocomplete
+            id="combo-box-demo"
+            options={productList}
+            getOptionLabel={(option: Product) =>
+              option.title + ' - ' + option.code
+            }
+            style={{ margin: 10 }}
+            onChange={(event: ChangeEvent<{}>, newValue: Product) => {
+              setSelectedProductID(String(newValue.id));
+              setFinalPrice(String(newValue.price));
+            }}
+            renderInput={(params) => (
+              <CssTextField {...params} label="Select products" />
+              )}
+          />
         </Grid>
         <Grid item xs={4}>
           <CssTextField

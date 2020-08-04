@@ -1,13 +1,10 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -68,7 +65,7 @@ export default function SelectSupplier(props: {
   const [userName, setUserName] = useState('');
   const [userPhone, setPhone] = useState('');
   const [userAddress, setAddress] = useState('');
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const classes = useStyles();
 
@@ -82,10 +79,6 @@ export default function SelectSupplier(props: {
     );
     db.close();
   }, []);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedUser(event.target.value as string);
-  };
 
   const createSupplier = (e: any) => {
     e.preventDefault();
@@ -121,32 +114,25 @@ export default function SelectSupplier(props: {
 
   const confirmSupplier = () => {
     console.log(selectedUser);
-    const user = userList.filter((item) => item.id === Number(selectedUser))[0];
-    props.setSelectedUser(user);
+    props.setSelectedUser(selectedUser);
     props.setSupplyState(1);
   };
 
   return (
     <Grid container>
       <Grid item xs={12}>
-        <FormControl className={classes.selectField}>
-          <InputLabel id="demo-simple-select-label">
-            Select a supplier
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedUser}
-            onChange={handleChange}
-          >
-            <MenuItem value="">Choose an user</MenuItem>
-            {userList.map((instant) => {
-              return (
-                <MenuItem value={String(instant.id)}>{instant.name}</MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+        <Autocomplete
+          id="combo-box-demo"
+          options={userList}
+          getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
+          style={{ width: 250, margin: 30, margin: 'auto' }}
+          onChange={(event: ChangeEvent<{}>, newValue: User) => {
+            setSelectedUser(newValue);
+          }}
+          renderInput={(params) => (
+            <CssTextField {...params} label="Select supplier" />
+          )}
+        />
       </Grid>
 
       <Grid>

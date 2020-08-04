@@ -51,7 +51,7 @@ export default function SupplierList(): JSX.Element {
   }, []);
   const viewSupplier = (instant: Supplier) => {
     history.push({
-      pathname: `/user-details/1/${instant.id}` ,
+      pathname: `/user-details/1/${instant.id}`,
     });
   };
   /*

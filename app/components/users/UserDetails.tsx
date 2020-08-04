@@ -8,52 +8,50 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useRouteMatch } from 'react-router';
-import Sidebar from '../../containers/Sidebar';
 import dayjs from 'dayjs';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import Sidebar from '../../containers/Sidebar';
 
 const sqlite3 = require('sqlite3').verbose();
 
 interface User {
-  id: number,
-  name: string,
-  phone: string,
-  address: string,
-  due_amount: number
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  due_amount: number;
 }
 
 interface Order {
-  id: number,
-  customer_name: string,
-  supplier_name: string,
-  timestamp: string,
-  total_cost: number
+  id: number;
+  customer_name: string;
+  supplier_name: string;
+  timestamp: string;
+  total_cost: number;
 }
-
 
 const useStyles1 = makeStyles({
   texts: {
-    color: 'whitesmoke'
+    color: 'whitesmoke',
   },
   details: {
     margin: 10,
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   header: {
     textAlign: 'center',
     color: 'white',
-  }
+  },
 });
 
-const emptyUser : User  = {
+const emptyUser: User = {
   id: 0,
   name: '',
   phone: '',
   address: '',
-  due_amount: 0
-}
-
+  due_amount: 0,
+};
 
 export default function UserDetails(): JSX.Element {
   const classes = useStyles1();
@@ -67,7 +65,7 @@ export default function UserDetails(): JSX.Element {
   const id: number = match.params.id;
   // console.log('Connected to the shop database.');
   useEffect(() => {
-    //const { id } = useParams();
+    // const { id } = useParams();
     console.log(id);
     const db = new sqlite3.Database('shopdb.sqlite3');
     db.get(
@@ -112,9 +110,9 @@ export default function UserDetails(): JSX.Element {
     db.close();
   }, []);
 
-  const seeDetails = (id : number) => {
-    type === 0 ? history.push(`/order/${id}`) : history.push(`/supply/${id}`)
-  }
+  const seeDetails = (id: number) => {
+    type === 0 ? history.push(`/order/${id}`) : history.push(`/supply/${id}`);
+  };
 
   return (
     <Grid container>
@@ -127,23 +125,43 @@ export default function UserDetails(): JSX.Element {
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Name: </Grid>
-          <Grid item xs={6}>{user.name}</Grid>
+          <Grid item xs={6}>
+            Name:
+{' '}
+          </Grid>
+          <Grid item xs={6}>
+            {user.name}
+          </Grid>
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Phone: </Grid>
-          <Grid item xs={6}>{user.phone}</Grid>
+          <Grid item xs={6}>
+            Phone:
+{' '}
+          </Grid>
+          <Grid item xs={6}>
+            {user.phone}
+          </Grid>
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Address: </Grid>
-          <Grid item xs={6}>{user.address}</Grid>
+          <Grid item xs={6}>
+            Address:
+{' '}
+          </Grid>
+          <Grid item xs={6}>
+            {user.address}
+          </Grid>
         </Grid>
 
         <Grid className={classes.details}>
-          <Grid item xs={6}>Due amount: </Grid>
-          <Grid item xs={6}>{user.due_amount}</Grid>
+          <Grid item xs={6}>
+            Due amount:
+{' '}
+          </Grid>
+          <Grid item xs={6}>
+            {user.due_amount}
+          </Grid>
         </Grid>
 
         <Grid className={classes.header}>
@@ -171,10 +189,12 @@ export default function UserDetails(): JSX.Element {
                       {row.total_cost}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {dayjs(row.timestamp).format('MMMM DD, YYYY [a]t hh:mm a')}
+                      {dayjs(row.timestamp).format(
+                        'MMMM DD, YYYY [a]t hh:mm a'
+                      )}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      <VisibilityIcon onClick={()=> seeDetails(row.id)}/>
+                      <VisibilityIcon onClick={() => seeDetails(row.id)} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -182,7 +202,6 @@ export default function UserDetails(): JSX.Element {
             </Table>
           </TableContainer>
         </Grid>
-
       </Grid>
     </Grid>
   );
