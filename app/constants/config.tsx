@@ -1,6 +1,9 @@
-const {app} = require('electron');
+const { remote } = require('electron');
 const path = require('path');
 
+const app = remote.app;
+
 export const dbPath =
-  (process.env.NODE_ENV === 'development') ?
-  'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
+  (app)?
+    (process.env.NODE_ENV === 'development') ?
+      'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3') : '';
