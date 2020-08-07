@@ -18,6 +18,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import * as dbpath from '../../constants/config';
 
 interface Product {
   id: number;
@@ -123,7 +124,7 @@ export default function SelectProducts(props: {
   }, []);
 
   const getProducts = () => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Product',
       (_err: Error, instant: React.SetStateAction<Product[]>) => {
@@ -160,7 +161,7 @@ export default function SelectProducts(props: {
   };
 
   const createOrder = () => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     let id = -1;
     // console.log(JSON.stringify(props.selectedCustomer));

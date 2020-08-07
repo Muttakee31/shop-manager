@@ -8,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import Sidebar from '../../containers/Sidebar';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -51,7 +52,7 @@ export default function TransactionList(): JSX.Element {
 
   useEffect(() => {
     // add db.all function to get all transactions
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Transactions',
       (_err: Error, instant: React.SetStateAction<Transaction[]>) => {

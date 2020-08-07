@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useRouteMatch } from 'react-router';
 import dayjs from 'dayjs';
 import Sidebar from '../../containers/Sidebar';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -84,7 +85,7 @@ export default function SupplyDetails(): JSX.Element {
     // @ts-ignore
     const { id } = match.params;
     console.log(id);
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     db.get(
       'SELECT * FROM Supply where id=?',
       [id],

@@ -11,6 +11,7 @@ import { useHistory, useRouteMatch } from 'react-router';
 import dayjs from 'dayjs';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -66,8 +67,7 @@ export default function UserDetails(): JSX.Element {
   // console.log('Connected to the shop database.');
   useEffect(() => {
     // const { id } = useParams();
-    console.log(id);
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     db.get(
       'SELECT * FROM User where id=?',
       [id],

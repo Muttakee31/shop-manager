@@ -8,6 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -53,10 +54,22 @@ const useStyles = makeStyles({
     margin: 10,
   },
   selectField: {
-    color: 'white',
-    borderColor: 'white',
     width: '20vw',
     margin: 10,
+    '&:input' : {
+      color: 'white',
+    },
+    '&:before': {
+      borderColor: 'white',
+      color: 'white'
+    },
+    '&:after': {
+      borderColor: 'lightblue',
+      color: 'lightblue'
+    },
+    icon: {
+      fill: 'white',
+    },
   },
   total: {
     display: 'flex',
@@ -88,7 +101,7 @@ export default function EnterPayment(props: {
   };
 
   const createTransaction = () => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
 
     // insert one row into the langs table
     db.run(
@@ -108,10 +121,11 @@ export default function EnterPayment(props: {
       function (err: Error) {
         if (err) {
           console.log(err.message);
-        } else if (dueAmount > 0) {
+        } else if (dueAmount > 0 || props.selectedCustomer.is_customer !== 1) {
+          const due = dueAmount < 0 ? 0 : dueAmount;
           db.run(
-            `UPDATE User set due_amount = due_amount + ?, has_due_bill = 1`,
-            [dueAmount],
+            `UPDATE User set due_amount = due_amount + ?, has_due_bill = ?, is_customer = ?`,
+            [due, 1, 1],
             function (error: Error) {
               if (error) {
                 console.log(error.message);
@@ -181,12 +195,13 @@ export default function EnterPayment(props: {
 
       <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
         <Grid>
-          <FormControl className={classes.selectField}>
-            <InputLabel id="demo-simple-select-label">Payment type</InputLabel>
+          <FormControl style={{color: 'white'}}>
+            <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={type}
+              className={classes.selectField}
               onChange={handleChange}
             >
               <MenuItem value="0">Paid</MenuItem>

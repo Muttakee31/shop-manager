@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
 import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
+import * as dbpath from '../../constants/config';
 
 interface Product {
   id: number;
@@ -42,9 +43,9 @@ export default function ProductList(): JSX.Element {
   useEffect(() => {
     try {
       const sqlite3 = require('sqlite3').verbose();
-      const db = new sqlite3.Database('shopdb.sqlite3');
+      const db = new sqlite3.Database(dbpath.dbPath);
       // const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
-      // const db = new sqlite3.Database(dbPath);
+      // const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
         'SELECT * FROM Product',
         (err: Error, instant: React.SetStateAction<Product[]>) => {

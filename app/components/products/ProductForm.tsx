@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -87,7 +88,7 @@ export default function ProductForm(): JSX.Element {
   }, []);
 
   const createProduct = () => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
 
     // insert one row into the langs table
     db.run(
@@ -115,7 +116,7 @@ export default function ProductForm(): JSX.Element {
   };
 
   const updateProduct = () => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
 
     // insert one row into the langs table
     db.run(

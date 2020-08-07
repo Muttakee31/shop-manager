@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -70,7 +71,7 @@ export default function SelectSupplier(props: {
   const classes = useStyles();
 
   useEffect(() => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM USER WHERE is_supplier = 1',
       (_err: Error, instant: React.SetStateAction<User[]>) => {
@@ -82,7 +83,7 @@ export default function SelectSupplier(props: {
 
   const createSupplier = (e: any) => {
     e.preventDefault();
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
 
     // insert one row into the langs table
     db.run(

@@ -2,15 +2,16 @@ import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Customers from '../components/users/Customers';
 import Sidebar from './Sidebar';
+import * as dbpath from '../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
 export default function OverviewPage() {
   useEffect(() => {
     try {
-      const db = new sqlite3.Database('shopdb.sqlite3');
+      const db = new sqlite3.Database(dbpath.dbPath);
       // const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
-      // const db = new sqlite3.Database(dbPath);
+      // const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
         'SELECT name FROM sqlite_master WHERE type=? AND name= ?',
         ['table', 'User'],

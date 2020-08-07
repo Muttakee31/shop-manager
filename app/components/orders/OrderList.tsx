@@ -13,6 +13,7 @@ import { useHistory } from 'react-router';
 import dayjs from 'dayjs';
 import routes from '../../constants/routes.json';
 import Sidebar from '../../containers/Sidebar';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -42,7 +43,7 @@ export default function OrderList(): JSX.Element {
 
   useEffect(() => {
     // add db.all function to get all Orders
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Orders',
       (_err: Error, instant: React.SetStateAction<Order[]>) => {

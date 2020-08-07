@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
-// import Sidebar from '../../containers/Sidebar';
+import * as dbpath from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -41,7 +41,7 @@ export default function CustomerList(): JSX.Element {
   const history = useHistory();
   // console.log('Connected to the shop database.');
   useEffect(() => {
-    const db = new sqlite3.Database('shopdb.sqlite3');
+    const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM User where is_customer=?',
       [1],

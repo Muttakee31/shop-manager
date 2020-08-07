@@ -2,7 +2,7 @@
   "name": "store-manager",
   "productName": "Store manager",
   "version": "1.2.0",
-  "description": "Simple web app for storing shop record and information.",
+  "description": "Simple desktop app for storing shop record and information.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
@@ -78,15 +78,12 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "msi"
+        "nsis"
       ]
     },
     "linux": {
       "target": [
-        "deb",
-        "rpm",
-        "AppImage"
+        "deb"
       ],
       "category": "Development"
     },
