@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import BackButton from '../snippets/BackButton';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -43,6 +44,8 @@ const useStyles1 = makeStyles({
   header: {
     textAlign: 'center',
     color: 'white',
+    textDecoration: 'underline',
+    textUnderlinePosition: 'under'
   },
 });
 
@@ -61,10 +64,11 @@ export default function UserDetails(): JSX.Element {
   const history = useHistory();
   const match = useRouteMatch();
   // @ts-ignore
-  const type: number = match.params.type;
+  const type: string = match.params.type;
   // @ts-ignore
-  const id: number = match.params.id;
-  // console.log('Connected to the shop database.');
+  const id: string = match.params.id;
+
+  // console.log(type + "   " + id);
   useEffect(() => {
     // const { id } = useParams();
     const db = new sqlite3.Database(dbpath.dbPath);
@@ -76,11 +80,12 @@ export default function UserDetails(): JSX.Element {
           console.log(err);
         } else {
           setUser(instant);
-          console.log(instant);
+          //console.log(instant);
         }
       }
     );
-    if (type === 0) {
+    if (type === '0') {
+      //console.log('customer');
       db.all(
         'SELECT * FROM Orders where customer=?',
         [id],
@@ -89,11 +94,12 @@ export default function UserDetails(): JSX.Element {
             console.log(err);
           } else {
             setOrderList(instant);
-            console.log(instant);
+            //console.log(instant);
           }
         }
       );
     } else {
+      console.log('supplier');
       db.all(
         'SELECT * FROM Supply where supplier=?',
         [id],
@@ -111,7 +117,7 @@ export default function UserDetails(): JSX.Element {
   }, []);
 
   const seeDetails = (id: number) => {
-    type === 0 ? history.push(`/order/${id}`) : history.push(`/supply/${id}`);
+    type === '0' ? history.push(`/order/${id}`) : history.push(`/supply/${id}`);
   };
 
   return (
@@ -120,9 +126,12 @@ export default function UserDetails(): JSX.Element {
         <Sidebar />
       </Grid>
       <Grid item xs={8} lg={9}>
+
         <Grid className={classes.header}>
           <h3>User Details</h3>
         </Grid>
+
+        <BackButton />
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
@@ -183,7 +192,7 @@ export default function UserDetails(): JSX.Element {
                 {orderList.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="left" className={classes.texts}>
-                      {type === 1 ? row.supplier_name : row.customer_name}
+                      {type === '1' ? row.supplier_name : row.customer_name}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {row.total_cost}

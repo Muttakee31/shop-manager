@@ -37,6 +37,8 @@ const useStyles = makeStyles({
   header: {
     textAlign: 'center',
     color: 'white',
+    textDecoration: 'underline',
+    textUnderlinePosition: 'under'
   },
   grid: {
     marginTop: 40,
@@ -71,7 +73,7 @@ export default function ProductForm(): JSX.Element {
 
   useEffect(() => {
     // @ts-ignore
-    const state: any = location.state;
+    const { state } = location;
     if (state.product !== null) {
       console.log(state.product);
       setProductID(state.product.id);

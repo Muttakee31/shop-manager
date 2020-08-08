@@ -47,6 +47,8 @@ const useStyles = makeStyles({
   header: {
     textAlign: 'center',
     color: 'white',
+    textDecoration: 'underline',
+    textUnderlinePosition: 'under'
   },
   textField: {
     color: 'white',
@@ -109,8 +111,8 @@ export default function EnterPayment(props: {
         } else if (dueAmount > 0 || props.selectedSupplier.is_supplier !== 1) {
           const due = dueAmount < 0 ? 0 : dueAmount;
           db.run(
-            `UPDATE User set due_amount = due_amount - ?, has_due_bill = ?, is_supplier = ?`,
-            [due, 1, 1],
+            `UPDATE User set due_amount = due_amount - ?, has_due_bill = ?, is_supplier = ? WHERE id = ?`,
+            [due, 1, 1, props.selectedSupplier.id],
             function (error: Error) {
               if (error) {
                 console.log(error.message);

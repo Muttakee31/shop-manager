@@ -11,6 +11,7 @@ import { useRouteMatch } from 'react-router';
 import dayjs from 'dayjs';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import BackButton from '../snippets/BackButton';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -50,6 +51,8 @@ const useStyles1 = makeStyles({
   header: {
     textAlign: 'center',
     color: 'white',
+    textDecoration: 'underline',
+    textUnderlinePosition: 'under'
   },
 });
 
@@ -131,9 +134,12 @@ export default function OrderDetails(): JSX.Element {
         <Sidebar />
       </Grid>
       <Grid item xs={8} lg={9}>
+
         <Grid className={classes.header}>
           <h3>Order Details</h3>
         </Grid>
+
+        <BackButton />
 
         <Grid className={classes.details}>
           <Grid item xs={6}>

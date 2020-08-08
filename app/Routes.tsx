@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router-dom';
 import routes from './constants/routes.json';
 import App from './containers/App';
 import CustomerList from './components/users/CustomerList';
-import ProductPage from './containers/ProductPage';
 import OverviewPage from './containers/OverviewPage';
 import ProductForm from './components/products/ProductForm';
 import OrderPage from './components/orders/OrderPage';
@@ -16,6 +15,7 @@ import OrderList from './components/orders/OrderList';
 import OrderDetails from './components/orders/OrderDetails';
 import SupplyDetails from './components/supply/SupplyDetails';
 import UserDetails from './components/users/UserDetails';
+import ProductList from './components/products/ProductList';
 // Lazily load routes and code split with webpacck
 const LazyCounterPage = React.lazy(() =>
   import(/* webpackChunkName: "CounterPage" */ './containers/CounterPage')
@@ -31,7 +31,7 @@ export default function Routes() {
   return (
     <App>
       <Switch>
-        <Route path={routes.PRODUCTS} component={ProductPage} />
+        <Route path={routes.PRODUCTS} component={ProductList} />
         <Route path={routes.ADD_PRODUCTS} component={ProductForm} />
 
         <Route path={routes.ORDERS} component={OrderList} />

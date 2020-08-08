@@ -19,6 +19,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as dbpath from '../../constants/config';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import { useHistory } from 'react-router';
 
 interface Product {
   id: number;
@@ -74,16 +78,12 @@ const useStyles = makeStyles({
   header: {
     textAlign: 'center',
     color: 'white',
+    textDecoration: 'underline',
+    textUnderlinePosition: 'under'
   },
   textField: {
     color: 'white',
     borderColor: 'white',
-    margin: 10,
-  },
-  selectField: {
-    color: 'white',
-    borderColor: 'white',
-    width: '20vw',
     margin: 10,
   },
   total: {
@@ -92,6 +92,24 @@ const useStyles = makeStyles({
     justifyContent: 'space-between',
     margin: '20px 4.5vw 40px 15px',
     fontSize: '20px',
+  },
+  selectField: {
+    width: '20vw',
+    margin: 10,
+    '&:input' : {
+      color: 'white',
+    },
+    '&:before': {
+      borderColor: 'white',
+      color: 'white'
+    },
+    '&:after': {
+      borderColor: 'lightblue',
+      color: 'lightblue'
+    },
+    icon: {
+      fill: 'white',
+    },
   },
 });
 
@@ -103,15 +121,22 @@ export default function SelectProducts(props: {
   setOrderDetails: SetStateAction<any>;
 }): JSX.Element {
   const [productList, setProductList] = useState<Product[]>([]);
-  const [selectedProductID, setSelectedProductID] = useState<Product | string>(
-    ''
-  );
+  const [selectedProductID, setSelectedProductID] = useState<Product | string>('');
   const [orderItemList, setOrderItemList] = useState<OrderItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const [quantity, setQuantity] = useState('');
   const [finalPrice, setFinalPrice] = useState('');
   const [store, setStore] = useState('0');
+
+  const [paidByCustomer, setPaidByCustomer] = useState('');
+  const [type, setType] = useState(0);
+  const [labourCost, setLabourCost] = useState('');
+  const [discount, setDiscount] = useState('0');
+  //const [moneyToReturn, setMoneyToReturn] = useState(0);
+  const [dueAmount, setDueAmount] = useState(0);
+  const history = useHistory();
+  //const [totalCost, setTotalCost] = useState(0);
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStore((event.target as HTMLInputElement).value);
@@ -187,6 +212,7 @@ export default function SelectProducts(props: {
           price: Number(totalPrice),
         };
         props.setOrderDetails(order);
+        createTransaction(id);
         const stmt = db.prepare(
           `INSERT INTO OrderedItem(order_id, product, quantity, price) VALUES (?, ?, ?, ?) `
         );
@@ -226,13 +252,65 @@ export default function SelectProducts(props: {
       }
     );
     db.close();
-    props.setOrderState(2);
+    history.push(`/order/${id}`);
+  };
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setType(Number(event.target.value));
+    // const product = productList.find()
+    // setSelectedProduct(product);
+  };
+
+  const createTransaction = (order_id:number) => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+
+    // insert one row into the langs table
+    db.run(
+      `INSERT INTO Transactions(order_id, order_cost, client, client_name, type, due_amount, paid_amount, labour_cost, discount)
+       VALUES(?,?,?,?,?,?,?,?,?) `,
+      [
+        order_id,
+        totalPrice + Number(labourCost) - Number(discount),
+        props.selectedCustomer.id,
+        props.selectedCustomer.name,
+        Number(type),
+        dueAmount,
+        paidByCustomer,
+        labourCost,
+        discount,
+      ],
+      function (err: Error) {
+        if (err) {
+          console.log(err.message);
+        } else if (dueAmount > 0 || props.selectedCustomer.is_customer !== 1) {
+          const due = dueAmount < 0 ? 0 : dueAmount;
+          db.run(
+            `UPDATE User set due_amount = due_amount + ?, has_due_bill = ?, is_customer = ? WHERE id = ?`,
+            [due, due>0?1:0, 1, props.selectedCustomer.id],
+            function (error: Error) {
+              if (error) {
+                console.log(error.message);
+              } else {
+                console.log('updated');
+              }
+            }
+          );
+        }
+
+        // console.log(`A row has been inserted`);
+      }
+    );
+
+    // close the database connection
+    db.close();
+    // props.setOrderState(3);
   };
 
   // console.log(props.selectedCustomer);
   return (
     <>
       <Grid container>
+
         <Grid item xs={4}>
           <Autocomplete
             id="combo-box-demo"
@@ -353,13 +431,96 @@ export default function SelectProducts(props: {
         </Grid>
       )}
 
+      <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+        <Grid>
+          <FormControl style={{color: 'white'}}>
+            <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={type}
+              className={classes.selectField}
+              onChange={handleChange}
+            >
+              <MenuItem value="0">Paid</MenuItem>
+              <MenuItem value="1">Due</MenuItem>
+              <MenuItem value="2">Both</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
+        <Grid>
+          <CssTextField
+            id="standard-basic"
+            label="Labour cost"
+            value={labourCost}
+            fullWidth
+            className={classes.textField}
+            onChange={(e) => setLabourCost(e.target.value)}
+          />
+        </Grid>
 
-      <Grid>
-        <Button variant="contained" color="primary" onClick={createOrder}>
-          Confirm order
-        </Button>
-      </Grid>
+        <Grid>
+          <CssTextField
+            id="standard-basic"
+            label="Discount"
+            value={discount}
+            className={classes.textField}
+            fullWidth
+            onChange={(e) => setDiscount(e.target.value)}
+          />
+        </Grid>
+
+        <Grid>
+          <CssTextField
+            id="standard-required"
+            label="Paid by customer"
+            value={paidByCustomer}
+            className={classes.textField}
+            fullWidth
+            onChange={(e) => setPaidByCustomer(e.target.value)}
+          />
+        </Grid>
+
+        {/*<Grid container justify="center" direction="row">
+          <Grid
+            item
+            style={{
+              padding: '20px',
+              background: '#277ea7',
+              borderRadius: '9px',
+            }}
+          >
+            <div style={{ marginBottom: '10px' }}>Money to return: </div>
+            <div> {moneyToReturn}</div>
+          </Grid>
+          <Grid item xs={1} />
+          <Grid
+            item
+            style={{
+              padding: '20px',
+              background: '#277ea7',
+              borderRadius: '9px',
+            }}
+          >
+            <div style={{ marginBottom: '10px' }}>Due amount: &nbsp; &nbsp;</div>
+            <div> {dueAmount}</div>
+          </Grid>
+        </Grid>*/}
+
+        <Grid style={{ marginTop: '30px' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(e) => {
+              e.preventDefault();
+              createOrder();
+            }}
+          >
+            Create Order
+          </Button>
+        </Grid>
+      </form>
     </>
   );
 }

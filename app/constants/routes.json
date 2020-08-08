@@ -13,5 +13,7 @@
   "TRANSACTIONS": "/transactions",
   "USER_DETAILS": "/user-details/:type/:id",
   "ORDER_DETAILS": "/order/:id",
-  "SUPPLY_DETAILS": "/supply/:id"
+  "SUPPLY_DETAILS": "/supply/:id",
+  "OTHER_EXPENSE": "/expense-form",
+  "DUE_PAYMENT": "/due-payment"
 }
