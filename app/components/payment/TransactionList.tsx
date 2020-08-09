@@ -9,6 +9,9 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import Button from '@material-ui/core/Button';
+import routes from '../../constants/routes.json';
+import { useHistory } from 'react-router';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -47,6 +50,8 @@ const type = {
 
 export default function TransactionList(): JSX.Element {
   const classes = useStyles();
+  const history = useHistory();
+
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   // const history = useHistory();
   // console.log('Connected to the shop database.');
@@ -73,6 +78,20 @@ export default function TransactionList(): JSX.Element {
         <Grid className={classes.header}>
           <h3>List of Transactions</h3>
         </Grid>
+
+        <Grid>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              history.push({
+                pathname: routes.DUE_PAYMENT,
+              })}
+          >
+            Create a transaction
+          </Button>
+        </Grid>
+
         <TableContainer>
           <Table aria-label="simple table">
             <TableHead>

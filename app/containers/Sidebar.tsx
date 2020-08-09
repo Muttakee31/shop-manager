@@ -10,6 +10,7 @@ import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import routes from '../constants/routes.json';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 const useStyles = makeStyles({
   links: {
@@ -107,6 +108,22 @@ const Sidebar: React.FC = () => {
         <div className={classes.sideBarChild}>
           <ShoppingCartIcon className={classes.icons} />
           <span className={classes.sideText}>Transactions</span>
+        </div>
+      </Grid>
+
+      <Grid
+        className={
+          router.pathname === routes.OTHER_EXPENSE
+            ? classes.whiteWashedLinks
+            : classes.links
+        }
+        onClick={() => history.push(routes.OTHER_EXPENSE)}
+        onKeyDown={() => history.push(routes.OTHER_EXPENSE)}
+        role="presentation"
+      >
+        <div className={classes.sideBarChild}>
+          <AccountBalanceWalletIcon className={classes.icons} />
+          <span className={classes.sideText}>Other expense</span>
         </div>
       </Grid>
 

@@ -73,7 +73,7 @@ export default function ProductForm(): JSX.Element {
 
   useEffect(() => {
     // @ts-ignore
-    const { state } = location;
+    const state: any = location.state;
     if (state.product !== null) {
       console.log(state.product);
       setProductID(state.product.id);
