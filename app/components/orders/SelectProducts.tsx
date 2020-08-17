@@ -23,6 +23,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useHistory } from 'react-router';
+import { transactionType } from '../../constants/config';
 
 interface Product {
   id: number;
@@ -135,6 +136,7 @@ export default function SelectProducts(props: {
   const [discount, setDiscount] = useState('0');
   //const [moneyToReturn, setMoneyToReturn] = useState(0);
   const [dueAmount, setDueAmount] = useState(0);
+  const [orderID, setOrderID] = useState(null);
   const history = useHistory();
   //const [totalCost, setTotalCost] = useState(0);
 
@@ -188,8 +190,8 @@ export default function SelectProducts(props: {
   const createOrder = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
-    let id = -1;
-    // console.log(JSON.stringify(props.selectedCustomer));
+    let id:number;
+        // console.log(JSON.stringify(props.selectedCustomer));
     db.run(
       `INSERT INTO Orders(customer, customer_name, timestamp, total_cost) VALUES(?,?,?,?)  `,
       [
@@ -202,57 +204,58 @@ export default function SelectProducts(props: {
         if (err) {
           console.log(err.message);
         }
-        // @ts-ignore
-        id = this.lastID;
-        const order: any = {
-          order_id: id,
-          customer: props.selectedCustomer.id,
-          customer_name: props.selectedCustomer.name,
-          date,
-          price: Number(totalPrice),
-        };
-        props.setOrderDetails(order);
-        createTransaction(id);
-        const stmt = db.prepare(
-          `INSERT INTO OrderedItem(order_id, product, quantity, price) VALUES (?, ?, ?, ?) `
-        );
-        orderItemList.map((instant) => {
-          console.log(instant);
-          stmt.run(
-            id,
-            instant.product_id,
-            instant.quantity,
-            instant.price,
-            function (error: Error) {
-              if (error) {
-                console.log(error.message);
-              } else {
-                console.log(`order item added.${instant.store}`);
-                const dest =
-                  instant.store === '0'
-                    ? 'shop_stock_count'
-                    : 'godown_stock_count';
-                db.run(
-                  `UPDATE Product set ${dest}=${dest}  - ? where id=?`,
-                  [instant.quantity, instant.product_id],
-                  function (error_1: Error) {
-                    if (error_1) {
-                      console.log(error_1.message);
-                    } else {
-                      console.log('updated');
-                    }
-                  }
-                );
-              }
-            }
+        else {
+          id = this.lastID;
+          //console.log(typeof this.lastID);
+          //setOrderID(id);
+          //props.setOrderDetails(order);
+          createTransaction(id);
+          const stmt = db.prepare(
+            `INSERT INTO OrderedItem(order_id, product, product_title, quantity, price, storage) VALUES (?, ?, ?, ?, ?, ?) `
           );
-        });
+          orderItemList.map((instant) => {
+            //console.log(instant);
+            stmt.run(
+              id,
+              instant.product_id,
+              instant.title,
+              instant.quantity,
+              instant.price,
+              instant.store,
+              function (error: Error) {
+                if (error) {
+                  console.log(error.message);
+                } else {
+                  //console.log(`order item added.${instant.store}`);
+                  const dest =
+                    instant.store === '0'
+                      ? 'shop_stock_count'
+                      : 'godown_stock_count';
+                  db.run(
+                    `UPDATE Product set ${dest}=${dest}  - ? where id=?`,
+                    [instant.quantity, instant.product_id],
+                    function (error_1: Error) {
+                      if (error_1) {
+                        console.log(error_1.message);
+                      } else {
+                        //console.log('updated');
+                      }
+                    }
+                  );
+                }
+              }
+            );
+          });
 
-        stmt.finalize();
-      }
+          stmt.finalize();
+        }
+        }
+        // @ts-ignore
     );
-    db.close();
-    history.push(`/order/${id}`);
+    db.close(() => { history.push(`/order/${id}`) });
+    //console.log(id);
+    //history.push(`/order/${id}`);
+    // history.push(`/order/${orderID}`);
   };
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -263,18 +266,21 @@ export default function SelectProducts(props: {
 
   const createTransaction = (order_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
-
+    let due = totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer) <= 0 ?
+      0 : totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer);
     // insert one row into the langs table
     db.run(
-      `INSERT INTO Transactions(order_id, order_cost, client, client_name, type, due_amount, paid_amount, labour_cost, discount)
-       VALUES(?,?,?,?,?,?,?,?,?) `,
+      `INSERT INTO Transactions(order_id, order_cost, client, client_name, transaction_type,
+       payment_type, due_amount, paid_amount, labour_cost, discount)
+       VALUES(?,?,?,?,?,?,?,?,?,?) `,
       [
         order_id,
         totalPrice + Number(labourCost) - Number(discount),
         props.selectedCustomer.id,
         props.selectedCustomer.name,
+        transactionType['order'],
         Number(type),
-        dueAmount,
+        due,
         paidByCustomer,
         labourCost,
         discount,
@@ -282,8 +288,8 @@ export default function SelectProducts(props: {
       function (err: Error) {
         if (err) {
           console.log(err.message);
-        } else if (dueAmount > 0 || props.selectedCustomer.is_customer !== 1) {
-          const due = dueAmount < 0 ? 0 : dueAmount;
+        } else if (due> 0 ||
+          props.selectedCustomer.is_customer !== 1) {
           db.run(
             `UPDATE User set due_amount = due_amount + ?, has_due_bill = ?, is_customer = ? WHERE id = ?`,
             [due, due>0?1:0, 1, props.selectedCustomer.id],
@@ -302,7 +308,6 @@ export default function SelectProducts(props: {
     );
 
     // close the database connection
-    db.close();
     // props.setOrderState(3);
   };
 

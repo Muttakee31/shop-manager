@@ -25,6 +25,7 @@ interface Transaction {
   order_cost: number;
   labour_cost: number;
   discount: number | null;
+  payment_type: number;
   type: string;
   due_amount: number | null;
   supply_id: number;
@@ -42,11 +43,11 @@ const useStyles = makeStyles({
   },
 });
 
-const type = {
+/*const type = {
   '0': 'Paid',
   '1': 'Due',
   '2': 'Both',
-};
+};*/
 
 export default function TransactionList(): JSX.Element {
   const classes = useStyles();
@@ -69,6 +70,9 @@ export default function TransactionList(): JSX.Element {
     db.close();
   }, []);
 
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
   return (
     <Grid container>
       <Grid item xs={4} lg={3}>
@@ -112,7 +116,7 @@ export default function TransactionList(): JSX.Element {
                     {row.client_name}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {type[row.type]}
+                    {row.payment_type}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.supply_id !== null && row.supply_cost}

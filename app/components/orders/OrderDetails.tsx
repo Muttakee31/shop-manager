@@ -20,7 +20,7 @@ interface OrderItem {
   title: string;
   quantity: number;
   price: number;
-  store: string;
+  storage: string;
 }
 
 interface Order {
@@ -87,7 +87,7 @@ export default function OrderDetails(): JSX.Element {
 
     // @ts-ignore
     const id: number = match.params.id;
-    console.log(dbpath.dbPath);
+    console.log(id);
     const db = new sqlite3.Database(dbpath.dbPath);
     db.get(
       'SELECT * FROM Orders where id=?',
@@ -184,6 +184,7 @@ export default function OrderDetails(): JSX.Element {
                   <TableCell className={classes.texts}>Rate</TableCell>
                   <TableCell className={classes.texts}>Quantity</TableCell>
                   <TableCell className={classes.texts}>Price</TableCell>
+                  <TableCell className={classes.texts}>Store</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -193,7 +194,7 @@ export default function OrderDetails(): JSX.Element {
                   itemList.map((row) => (
                     <TableRow key={row.product_id}>
                       <TableCell align="left" className={classes.texts}>
-                        {row.product_id}
+                        {row.product_title}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.price}
@@ -203,6 +204,9 @@ export default function OrderDetails(): JSX.Element {
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.quantity * row.price}
+                      </TableCell>
+                      <TableCell align="left" className={classes.texts}>
+                        {row.storage === "0" ? "Shop" : "Godown"}
                       </TableCell>
                     </TableRow>
                   ))

@@ -7,3 +7,10 @@ export const dbPath =
   (app)?
     (process.env.NODE_ENV === 'development') ?
       'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3') : '';
+
+export const transactionType = {
+  "order": 1,
+  "supply": 2,
+  "due": 3,
+  "other": 4,
+}

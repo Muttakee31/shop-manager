@@ -4,6 +4,7 @@ import Sidebar from '../../containers/Sidebar';
 import SelectCustomer from './SelectCustomer';
 import SelectProducts from './SelectProducts';
 import EnterPayment from './EnterPayment';
+import StepperComponent from './StepperComponent';
 
 interface OrderItem {
   order_id: number;
@@ -27,7 +28,7 @@ export default function OrderPage(): JSX.Element {
         <Sidebar />
       </Grid>
       <Grid item xs={8} lg={9}>
-        {/*<StepperComponent orderState={orderState} />*/}
+        <StepperComponent orderState={orderState} />
         {orderState === 0 && (
           <SelectCustomer
             setOrderState={setOrderState}
