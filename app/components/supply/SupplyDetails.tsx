@@ -192,7 +192,7 @@ export default function SupplyDetails(): JSX.Element {
                   itemList.map((row) => (
                     <TableRow key={row.product_id}>
                       <TableCell align="left" className={classes.texts}>
-                        {row.product_id}
+                        {row.product_title}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.price}
@@ -246,15 +246,6 @@ export default function SupplyDetails(): JSX.Element {
             </Grid>
           </Grid>
 
-          <Grid className={classes.details}>
-            <Grid item xs={6}>
-              Discount:
-{' '}
-            </Grid>
-            <Grid item xs={6}>
-              {transactionInfo.labour_cost}
-            </Grid>
-          </Grid>
         </Grid>
       </Grid>
     </Grid>

@@ -19,6 +19,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as dbpath from '../../constants/config';
+import { useHistory } from 'react-router';
+import { transactionType } from '../../constants/config';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 interface Product {
   id: number;
@@ -36,7 +41,7 @@ interface User {
   name: string;
   phone: string;
   address: string;
-  is_customer: number;
+  is_supplier: number;
 }
 
 interface SupplyItem {
@@ -115,6 +120,12 @@ export default function SelectProducts(props: {
   const [finalPrice, setFinalPrice] = useState('');
   const [store, setStore] = useState('0');
 
+  const [paidToSupplier, setPaidToSupplier] = useState('');
+  const [type, setType] = useState(0);
+  const [labourCost, setLabourCost] = useState('');
+  //const [moneyToReturn, setMoneyToReturn] = useState(0);
+  const history = useHistory();
+
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStore((event.target as HTMLInputElement).value);
   };
@@ -181,24 +192,20 @@ export default function SelectProducts(props: {
         } else {
           // @ts-ignore
           id = this.lastID;
-          const supply: any = {
-            supply_id: id,
-            supplier: props.selectedSupplier.id,
-            supplier_name: props.selectedSupplier.name,
-            date,
-            price: Number(totalPrice),
-          };
-          props.setSupplyDetails(supply);
+          createTransaction(id);
+
           const stmt = db.prepare(
-            `INSERT INTO SupplyItem(supply_id, product, quantity, price) VALUES (?, ?, ?, ?) `
+            `INSERT INTO SupplyItem(supply_id, product, product_title, quantity, price, storage) VALUES (?, ?, ?, ?, ?, ?) `
           );
           supplyItemList.map((instant) => {
             console.log(instant);
             stmt.run(
               id,
               instant.product_id,
+              instant.title,
               instant.quantity,
               instant.price,
+              instant.store,
               function (error: Error) {
                 if (error) {
                   console.log(error.message);
@@ -228,9 +235,62 @@ export default function SelectProducts(props: {
         }
       }
     );
-    db.close();
-    props.setSupplyState(2);
+    db.close(() => { history.push(`/supply/${id}`) });
   };
+
+  const createTransaction = (supply_id:number) => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    let due = totalPrice + Number(labourCost) - Number(paidToSupplier) <= 0 ?
+      0 : totalPrice + Number(labourCost) - Number(paidToSupplier);
+    // insert one row into the langs table
+    db.run(
+      `INSERT INTO Transactions(supply_id, supply_cost, client, client_name, transaction_type,
+       payment_type, due_amount, paid_amount, labour_cost, discount)
+       VALUES(?,?,?,?,?,?,?,?,?,?) `,
+      [
+        supply_id,
+        totalPrice + Number(labourCost),
+        props.selectedSupplier.id,
+        props.selectedSupplier.name,
+        transactionType['supply'],
+        Number(type),
+        due,
+        paidToSupplier,
+        labourCost,
+        0,
+      ],
+      function (err: Error) {
+        if (err) {
+          console.log(err.message);
+        } else if (due> 0 ||
+          props.selectedSupplier.is_supplier !== 1) {
+          db.run(
+            `UPDATE User set due_amount = due_amount - ?, has_due_bill = ?, is_customer = ? WHERE id = ?`,
+            [due, due>0?1:0, 1, props.selectedSupplier.id],
+            function (error: Error) {
+              if (error) {
+                console.log(error.message);
+              } else {
+                console.log('updated');
+              }
+            }
+          );
+        }
+
+        // console.log(`A row has been inserted`);
+      }
+    );
+
+    // close the database connection
+    // props.setOrderState(3);
+  };
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setType(Number(event.target.value));
+    // const product = productList.find()
+    // setSelectedProduct(product);
+  };
+
 
   // console.log(props.selectedSupplier);
   // @ts-ignore
@@ -357,6 +417,47 @@ export default function SelectProducts(props: {
           <div>{totalPrice}</div>
         </Grid>
       )}
+
+      <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+        <Grid>
+          <FormControl className={classes.selectField}>
+            <InputLabel id="demo-simple-select-label">Payment type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={type}
+              onChange={handleChange}
+            >
+              <MenuItem value="0">Paid</MenuItem>
+              <MenuItem value="1">Due</MenuItem>
+              <MenuItem value="2">Both</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid>
+          <CssTextField
+            id="standard-basic"
+            label="Labour cost"
+            value={labourCost}
+            fullWidth
+            className={classes.textField}
+            onChange={(e) => setLabourCost(e.target.value)}
+          />
+        </Grid>
+
+        <Grid>
+          <CssTextField
+            id="standard-required"
+            label="Paid to supplier"
+            value={paidToSupplier}
+            className={classes.textField}
+            fullWidth
+            onChange={(e) => setPaidToSupplier(e.target.value)}
+          />
+        </Grid>
+
+      </form>
 
       <Grid>
         <Button variant="contained" color="primary" onClick={createSupply}>

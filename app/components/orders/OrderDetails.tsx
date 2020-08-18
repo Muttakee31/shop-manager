@@ -17,6 +17,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 interface OrderItem {
   product_id: number;
+  product_title: string;
   title: string;
   quantity: number;
   price: number;

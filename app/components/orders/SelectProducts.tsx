@@ -136,7 +136,6 @@ export default function SelectProducts(props: {
   const [discount, setDiscount] = useState('0');
   //const [moneyToReturn, setMoneyToReturn] = useState(0);
   const [dueAmount, setDueAmount] = useState(0);
-  const [orderID, setOrderID] = useState(null);
   const history = useHistory();
   //const [totalCost, setTotalCost] = useState(0);
 
@@ -205,6 +204,7 @@ export default function SelectProducts(props: {
           console.log(err.message);
         }
         else {
+          // @ts-ignore
           id = this.lastID;
           //console.log(typeof this.lastID);
           //setOrderID(id);

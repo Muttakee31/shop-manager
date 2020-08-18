@@ -12,6 +12,7 @@ import * as dbpath from '../../constants/config';
 import Button from '@material-ui/core/Button';
 import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
+import { transactionType } from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -26,7 +27,7 @@ interface Transaction {
   labour_cost: number;
   discount: number | null;
   payment_type: number;
-  type: string;
+  transaction_type: number;
   due_amount: number | null;
   supply_id: number;
 }
@@ -116,7 +117,7 @@ export default function TransactionList(): JSX.Element {
                     {row.client_name}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.payment_type}
+                    {Object.keys(transactionType).find(item => transactionType[item] === row.transaction_type)}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.supply_id !== null && row.supply_cost}
