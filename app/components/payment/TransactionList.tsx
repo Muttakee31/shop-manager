@@ -117,11 +117,13 @@ export default function TransactionList(): JSX.Element {
                     {row.client_name}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {Object.keys(transactionType).find(item => transactionType[item] === row.transaction_type)}
+                    {Object.keys(transactionType).find(item => {
+                      // @ts-ignore
+                      return transactionType[item] === row.transaction_type;
+                    })}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.supply_id !== null && row.supply_cost}
-                    {row.order_id !== null && row.order_cost}
+                    {row.supply_id !== null ? row.supply_cost : row.order_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.paid_amount}

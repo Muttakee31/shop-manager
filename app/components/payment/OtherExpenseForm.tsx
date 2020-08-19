@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import { transactionType } from '../../constants/config';
+import routes from '../../constants/routes.json';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -81,20 +83,23 @@ export default function OtherExpenseForm(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
 
     db.run(
-      `INSERT INTO Product(title, price, unit, code, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?,?) `,
+      `INSERT INTO Transactions(transaction_type,
+       payment_type, order_cost, paid_amount, description)
+       VALUES(?, ?, ?, ?, ?) `,
       [
-
+        transactionType['other'],
+        0,
+        amount,
+        amount,
+        description,
       ],
       function (err: Error) {
         if (err) {
           console.log(err.message);
+        } else {
+          history.push(routes.TRANSACTIONS);
         }
-        // get the last insert id
-        history.goBack();
-        // console.log(`A row has been inserted`);
-      }
-    );
-
+      });
     // close the database connection
     db.close();
   };
