@@ -93,7 +93,7 @@ export default function TransactionList(): JSX.Element {
                 pathname: routes.DUE_PAYMENT,
               })}
           >
-            Create a transaction
+            Add due payment
           </Button>
         </Grid>
 

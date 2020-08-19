@@ -128,7 +128,7 @@ export default function SelectSupplier(props: {
           id="combo-box-demo"
           options={userList}
           getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
-          style={{ width: 250, margin: 30, margin: 'auto' }}
+          style={{ width: 250, margin: 'auto' }}
           onChange={(event: ChangeEvent<{}>, newValue: User) => {
             setSelectedUser(newValue);
           }}

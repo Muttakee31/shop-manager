@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import { transactionType } from '../../constants/config';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import routes from '../../constants/routes.json';
 
 const sqlite3 = require('sqlite3').verbose();
+
+interface User {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+}
 
 const CssTextField = withStyles({
   root: {
@@ -63,40 +73,65 @@ const useStyles = makeStyles({
 
 export default function DueTransaction(): JSX.Element {
   const [amount, setAmount] = useState('');
+  const [customer, setCustomer] = useState<User | null>(null);
   const [description, setDescription] = useState('');
+  const [userList, setUserList] = useState<User[]>([]);
 
-  const location = useLocation();
+  // const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
-    // @ts-ignore
-    const { state } = location;
-    /* if (location.state.instant !== undefined) {
-      console.log(location.state.instant);
-    } */
+    const db = new sqlite3.Database(dbpath.dbPath);
+    db.all(
+      'SELECT * FROM USER',
+      (err: Error, instant: React.SetStateAction<User[]>) => {
+        if (!err) {
+          setUserList(instant);
+        }
+      }
+    );
+    db.close();
   }, []);
 
-  const createOtherExpense = () => {
+  const createDuePayment = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
 
     db.run(
-      `INSERT INTO Product(title, price, unit, code, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?,?) `,
+      `INSERT INTO Transactions(client, client_name, transaction_type,
+       payment_type, paid_amount, discount, description)
+       VALUES(?,?,?,?,?,?,?) `,
       [
-
+        customer.id,
+        customer.name,
+        transactionType['due'],
+        1,
+        amount,
+        0,
+        description
       ],
       function (err: Error) {
         if (err) {
           console.log(err.message);
+        } else {
+          db.run(
+            `UPDATE User set due_amount = due_amount - ?, has_due_bill = ? WHERE id = ?`,
+            [amount, 0, customer.id],
+            function (error: Error) {
+              if (error) {
+                console.log(error.message);
+              } else {
+                console.log('updated');
+                history.push(routes.TRANSACTIONS);
+              }
+            }
+          );
         }
-        // get the last insert id
-        history.goBack();
+
         // console.log(`A row has been inserted`);
       }
     );
-
-    // close the database connection
-    db.close();
+  db.close();
   };
 
   return (
@@ -115,9 +150,24 @@ export default function DueTransaction(): JSX.Element {
         className={classes.grid}
       >
         <Grid className={classes.header}>
-          <h3>Add other expense</h3>
+          <h3>Add due payment</h3>
         </Grid>
         <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+
+          <Grid item xs={12}>
+            <Autocomplete
+              id="combo-box-demo"
+              options={userList}
+              getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
+              style={{ width: 320, margin: 'auto' }}
+              onChange={(event: ChangeEvent<{}>, newValue: User) => {
+                setCustomer(newValue);
+              }}
+              renderInput={(params) => (
+                <CssTextField {...params} label="Select customer" />
+              )}
+            />
+          </Grid>
 
           <Grid>
             <CssTextField
@@ -160,7 +210,7 @@ export default function DueTransaction(): JSX.Element {
               color="primary"
               onClick={(e) => {
                 e.preventDefault();
-                createOtherExpense();
+                createDuePayment();
               }}
             >
               Submit
