@@ -69,6 +69,15 @@ const CssTextField = withStyles({
     '& input': {
       color: 'floralwhite',
     },
+    '& .MuiFormLabel-root': {
+      color: 'floralwhite !important',
+    },
+    '& .MuiSelect-select.MuiSelect-select': {
+      color: 'floralwhite',
+    },
+    '& .MuiInputBase-root': {
+      color: 'floralwhite',
+    },
   },
 })(TextField);
 
@@ -399,7 +408,11 @@ export default function SelectProducts(props: {
             </TableHead>
             <TableBody>
               {orderItemList.length === 0 ? (
-                <div style={{ textAlign: 'center' }}>No item added yet</div>
+                <TableRow>
+                  <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                    No items
+                  </TableCell>
+                </TableRow>
               ) : (
                 orderItemList.map((row) => (
                   <TableRow key={row.product_id}>

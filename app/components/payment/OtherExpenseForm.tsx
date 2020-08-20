@@ -60,6 +60,14 @@ const useStyles = makeStyles({
     background: '#ca263d',
     marginRight: 15,
     color: 'floralwhite',
+    '&:hover' : {
+      background: '#d7495d',
+      color: 'floralwhite',
+    },
+    '&:focus' : {
+      background: '#d94056',
+      color: 'floralwhite',
+    },
   },
 });
 
