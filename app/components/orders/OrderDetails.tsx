@@ -190,7 +190,11 @@ export default function OrderDetails(): JSX.Element {
               </TableHead>
               <TableBody>
                 {itemList.length === 0 ? (
-                  <div style={{ textAlign: 'center' }}>No items</div>
+                  <TableRow>
+                    <TableCell colSpan={5} align="left" className={classes.texts} style={{textAlign: 'center'}}>
+                      No items
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   itemList.map((row) => (
                     <TableRow key={row.product_id}>

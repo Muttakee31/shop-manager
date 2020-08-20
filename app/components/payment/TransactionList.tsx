@@ -111,7 +111,13 @@ export default function TransactionList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactionList.map((row) => (
+              {transactionList.length === 0 ?
+                <TableRow>
+                  <TableCell colSpan={7} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                    No items
+                  </TableCell>
+                </TableRow>
+                :transactionList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.client_name}

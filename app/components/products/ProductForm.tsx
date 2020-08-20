@@ -27,6 +27,9 @@ const CssTextField = withStyles({
     '& input': {
       color: 'floralwhite',
     },
+    '& .MuiFormLabel-root.Mui-disabled': {
+      color: '#c1bbae',
+    }
   },
 })(TextField);
 
@@ -215,6 +218,7 @@ export default function ProductForm(): JSX.Element {
               fullWidth
               className={classes.textField}
               onChange={(e) => setShopStock(e.target.value)}
+              disabled={productID !== null}
             />
           </Grid>
           <Grid>
@@ -225,6 +229,7 @@ export default function ProductForm(): JSX.Element {
               fullWidth
               className={classes.textField}
               onChange={(e) => setGodownStock(e.target.value)}
+              disabled={productID !== null}
             />
           </Grid>
           <Grid style={{ marginTop: '30px' }}>

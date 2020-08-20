@@ -17,7 +17,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 interface SupplyItem {
   product_id: number;
-  title: string;
+  product_title: string;
   quantity: number;
   price: number;
   store: string;
@@ -187,7 +187,11 @@ export default function SupplyDetails(): JSX.Element {
               </TableHead>
               <TableBody>
                 {itemList.length === 0 ? (
-                  <div style={{ textAlign: 'center' }}>No items</div>
+                  <TableRow>
+                    <TableCell colSpan={4} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                      No items
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   itemList.map((row) => (
                     <TableRow key={row.product_id}>
