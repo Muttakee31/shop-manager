@@ -13,6 +13,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
+import { transactionType } from '../../constants/config';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -22,6 +23,23 @@ interface User {
   phone: string;
   address: string;
   due_amount: number;
+}
+
+interface Transaction {
+  id: number;
+  client: number;
+  order_id: number;
+  paid_amount: number;
+  client_name: string;
+  supply_cost: number;
+  order_cost: number;
+  labour_cost: number;
+  discount: number | null;
+  payment_type: number;
+  transaction_type: number;
+  due_amount: number | null;
+  supply_id: number;
+  timestamp: string;
 }
 
 interface Order {
@@ -61,6 +79,7 @@ export default function UserDetails(): JSX.Element {
   const classes = useStyles1();
   const [user, setUser] = useState<User>(emptyUser);
   const [orderList, setOrderList] = useState<Order[]>([]);
+  const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   const history = useHistory();
   const match = useRouteMatch();
   // @ts-ignore
@@ -113,6 +132,12 @@ export default function UserDetails(): JSX.Element {
         }
       );
     }
+    db.all(
+      'SELECT * FROM Transactions WHERE client = ?', [id],
+      (_err: Error, instant: React.SetStateAction<Transaction[]>) => {
+        setTransactionList(instant);
+      }
+    );
     db.close();
   }, []);
 
@@ -174,7 +199,7 @@ export default function UserDetails(): JSX.Element {
         </Grid>
 
         <Grid className={classes.header}>
-          <h3>List of items</h3>
+          <h3>List of {type === '0' ? "Orders" : "Supplies"}</h3>
         </Grid>
 
         <Grid>
@@ -207,6 +232,64 @@ export default function UserDetails(): JSX.Element {
                     </TableCell>
                   </TableRow>
                 ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+
+        <Grid className={classes.header}>
+          <h3>List of Transactions</h3>
+        </Grid>
+
+        <Grid>
+          <TableContainer>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell className={classes.texts}>Client name</TableCell>
+                  <TableCell className={classes.texts}>Type</TableCell>
+                  <TableCell className={classes.texts}>Cost</TableCell>
+                  <TableCell className={classes.texts}>Paid amount</TableCell>
+                  <TableCell className={classes.texts}>Labour cost</TableCell>
+                  <TableCell className={classes.texts}>Discount</TableCell>
+                  <TableCell className={classes.texts}>Due amount</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {transactionList.length === 0 ?
+                  <TableRow>
+                    <TableCell colSpan={7} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                      No transactions
+                    </TableCell>
+                  </TableRow>
+                  :transactionList.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="left" className={classes.texts}>
+                        {row.client_name}
+                      </TableCell>
+                      <TableCell align="left" className={classes.texts}>
+                        {Object.keys(transactionType).find(item => {
+                          // @ts-ignore
+                          return transactionType[item] === row.transaction_type;
+                        })}
+                      </TableCell>
+                      <TableCell align="left" className={classes.texts}>
+                        {row.supply_id !== null ? row.supply_cost : row.order_cost}
+                      </TableCell>
+                      <TableCell align="left" className={classes.texts}>
+                        {row.paid_amount}
+                      </TableCell>
+                      <TableCell align="left" className={classes.texts}>
+                        {row.labour_cost}
+                      </TableCell>
+                      <TableCell align="left" className={classes.texts}>
+                        {row.discount === null ? 'N/A' : row.discount}
+                      </TableCell>
+                      <TableCell align="left" className={classes.texts}>
+                        {row.due_amount === null ? 'N/A' : row.due_amount}
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>

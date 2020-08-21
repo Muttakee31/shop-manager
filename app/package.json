@@ -15,10 +15,13 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@date-io/dayjs": "^1.3.13",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
-    "dayjs": "^1.8.30",
+    "@material-ui/pickers": "^3.2.10",
+    "dayjs": "^1.8.34",
+    "googleapis": "^39.2.0",
     "sqlite3": "^5.0.0"
   }
 }

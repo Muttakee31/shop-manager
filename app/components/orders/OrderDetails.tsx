@@ -262,7 +262,7 @@ export default function OrderDetails(): JSX.Element {
 {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.labour_cost}
+              {transactionInfo.discount}
             </Grid>
           </Grid>
         </Grid>
