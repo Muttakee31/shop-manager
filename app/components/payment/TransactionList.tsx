@@ -13,6 +13,9 @@ import Button from '@material-ui/core/Button';
 import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
 import { transactionType } from '../../constants/config';
+import withStyles from '@material-ui/core/styles/withStyles';
+import TextField from '@material-ui/core/TextField';
+import dayjs from 'dayjs';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -30,6 +33,7 @@ interface Transaction {
   transaction_type: number;
   due_amount: number | null;
   supply_id: number;
+  timestamp: string;
 }
 
 const useStyles = makeStyles({
@@ -42,6 +46,15 @@ const useStyles = makeStyles({
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
+  textField: {
+    color: 'white',
+    borderColor: 'white',
+    margin: 10,
+  },
+  topbin: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  }
 });
 
 /*const type = {
@@ -50,11 +63,42 @@ const useStyles = makeStyles({
   '2': 'Both',
 };*/
 
+const CssTextField = withStyles({
+  root: {
+    '& label': {
+      color: 'floralwhite',
+    },
+    '& .MuiInput-underline:before': {
+      borderBottomColor: 'floralwhite',
+    },
+    '& label.Mui-focused': {
+      color: 'lightblue',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'lightblue',
+    },
+    '& input': {
+      color: 'floralwhite',
+    },
+    '& .MuiInputBase-root': {
+      color: 'floralwhite',
+    },
+    '& .MuiFormLabel-root': {
+      color: 'floralwhite',
+    },
+    '& .MuiSelect-select.MuiSelect-select': {
+      color: 'floralwhite',
+    },
+  },
+})(TextField);
+
 export default function TransactionList(): JSX.Element {
   const classes = useStyles();
   const history = useHistory();
+  const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
+  const [visibleTransactionList, setVisibleTransactionList] = useState<Transaction[]>([]);
   // const history = useHistory();
   // console.log('Connected to the shop database.');
   // const [transactionList, setTransactionList] = useState([]);
@@ -64,12 +108,26 @@ export default function TransactionList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Transactions',
-      (_err: Error, instant: React.SetStateAction<Transaction[]>) => {
+      (err: Error, instant: React.SetStateAction<Transaction[]>) => {
         setTransactionList(instant);
+        setVisibleTransactionList(
+          instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate))
       }
     );
     db.close();
   }, []);
+
+  const changeDate = (e:React.ChangeEvent) => {
+    // @ts-ignore
+    const value: string = e.target.value;
+    setSelectedDate(value);
+    //console.log(value);
+    const filtered = transactionList.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === value);
+    transactionList.map(item => {
+      console.log(dayjs(item.timestamp).format('YYYY-MM-DD hh:mm A'));
+    })
+    setVisibleTransactionList(filtered);
+  }
 
   // @ts-ignore
   // @ts-ignore
@@ -84,7 +142,7 @@ export default function TransactionList(): JSX.Element {
           <h3>List of Transactions</h3>
         </Grid>
 
-        <Grid>
+        <Grid item xs={8} lg={9} className={classes.topbin}>
           <Button
             variant="contained"
             color="primary"
@@ -95,6 +153,18 @@ export default function TransactionList(): JSX.Element {
           >
             Add due payment
           </Button>
+
+          <CssTextField
+            id="date"
+            label="Date"
+            type="date"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={selectedDate}
+            onChange={changeDate}
+          />
         </Grid>
 
         <TableContainer>
@@ -111,13 +181,13 @@ export default function TransactionList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactionList.length === 0 ?
+              {visibleTransactionList.length === 0 ?
                 <TableRow>
                   <TableCell colSpan={7} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
                     No items
                   </TableCell>
                 </TableRow>
-                :transactionList.map((row) => (
+                :visibleTransactionList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.client_name}

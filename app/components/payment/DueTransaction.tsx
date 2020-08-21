@@ -10,6 +10,7 @@ import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import routes from '../../constants/routes.json';
+import dayjs from 'dayjs';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -104,11 +105,12 @@ export default function DueTransaction(): JSX.Element {
 
   const createDuePayment = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
     db.run(
       `INSERT INTO Transactions(client, client_name, transaction_type,
-       payment_type, paid_amount, discount, description)
-       VALUES(?,?,?,?,?,?,?) `,
+       payment_type, paid_amount, discount, description, timestamp)
+       VALUES(?,?,?,?,?,?,?,?) `,
       [
         customer.id,
         customer.name,
@@ -116,7 +118,8 @@ export default function DueTransaction(): JSX.Element {
         1,
         amount,
         0,
-        description
+        description,
+        date
       ],
       function (err: Error) {
         if (err) {

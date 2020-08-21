@@ -9,6 +9,7 @@ import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import routes from '../../constants/routes.json';
+import dayjs from 'dayjs';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -89,17 +90,19 @@ export default function OtherExpenseForm(): JSX.Element {
 
   const createOtherExpense = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
     db.run(
       `INSERT INTO Transactions(transaction_type,
-       payment_type, order_cost, paid_amount, description)
-       VALUES(?, ?, ?, ?, ?) `,
+       payment_type, order_cost, paid_amount, description, timestamp)
+       VALUES(?, ?, ?, ?, ?, ?) `,
       [
         transactionType['other'],
         0,
         amount,
         amount,
         description,
+        date
       ],
       function (err: Error) {
         if (err) {

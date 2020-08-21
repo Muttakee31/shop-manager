@@ -275,13 +275,14 @@ export default function SelectProducts(props: {
 
   const createTransaction = (order_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     let due = totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer) <= 0 ?
       0 : totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer);
     // insert one row into the langs table
     db.run(
       `INSERT INTO Transactions(order_id, order_cost, client, client_name, transaction_type,
-       payment_type, due_amount, paid_amount, labour_cost, discount)
-       VALUES(?,?,?,?,?,?,?,?,?,?) `,
+       payment_type, due_amount, paid_amount, labour_cost, discount, timestamp)
+       VALUES(?,?,?,?,?,?,?,?,?,?,?) `,
       [
         order_id,
         totalPrice + Number(labourCost) - Number(discount),
@@ -293,6 +294,7 @@ export default function SelectProducts(props: {
         paidByCustomer,
         labourCost,
         discount,
+        date
       ],
       function (err: Error) {
         if (err) {
