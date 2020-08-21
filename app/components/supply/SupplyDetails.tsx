@@ -92,7 +92,7 @@ export default function SupplyDetails(): JSX.Element {
     db.get(
       'SELECT * FROM Supply where id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<Supply>) => {
+      (err: Error, instant: Supply) => {
         if (err) {
           console.log(err);
         } else {
@@ -104,7 +104,7 @@ export default function SupplyDetails(): JSX.Element {
     db.all(
       'SELECT * FROM SupplyItem where supply_id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<SupplyItem[]>) => {
+      (err: Error, instant: SupplyItem[]) => {
         if (err) {
           console.log(err);
         } else {
@@ -116,7 +116,7 @@ export default function SupplyDetails(): JSX.Element {
     db.get(
       'SELECT * FROM Transactions where supply_id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<Transaction>) => {
+      (err: Error, instant: Transaction) => {
         if (err) {
           console.log(err);
         } else {

@@ -48,7 +48,7 @@ export default function OrderList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Orders',
-      (_err: Error, instant: React.SetStateAction<Order[]>) => {
+      (_err: Error, instant:Order[]) => {
         setOrderList(instant);
       }
     );

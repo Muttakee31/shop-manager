@@ -94,7 +94,7 @@ export default function UserDetails(): JSX.Element {
     db.get(
       'SELECT * FROM User where id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<User>) => {
+      (err: Error, instant: User) => {
         if (err) {
           console.log(err);
         } else {
@@ -108,7 +108,7 @@ export default function UserDetails(): JSX.Element {
       db.all(
         'SELECT * FROM Orders where customer=?',
         [id],
-        (err: Error, instant: React.SetStateAction<Order[]>) => {
+        (err: Error, instant: Order[]) => {
           if (err) {
             console.log(err);
           } else {
@@ -122,7 +122,7 @@ export default function UserDetails(): JSX.Element {
       db.all(
         'SELECT * FROM Supply where supplier=?',
         [id],
-        (err: Error, instant: React.SetStateAction<Order[]>) => {
+        (err: Error, instant: Order[]) => {
           if (err) {
             console.log(err);
           } else {
@@ -134,7 +134,7 @@ export default function UserDetails(): JSX.Element {
     }
     db.all(
       'SELECT * FROM Transactions WHERE client = ?', [id],
-      (_err: Error, instant: React.SetStateAction<Transaction[]>) => {
+      (_err: Error, instant: Transaction[]) => {
         setTransactionList(instant);
       }
     );

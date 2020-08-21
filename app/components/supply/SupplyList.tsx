@@ -48,7 +48,7 @@ export default function SupplyList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Supply',
-      (_err: Error, instant: React.SetStateAction<Supply[]>) => {
+      (_err: Error, instant: Supply[]) => {
         setSupplyList(instant);
       }
     );

@@ -76,7 +76,7 @@ export default function SelectSupplier(props: {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM USER',
-      (_err: Error, instant: React.SetStateAction<User[]>) => {
+      (_err: Error, instant: User[]) => {
         setUserList(instant);
       }
     );

@@ -93,19 +93,19 @@ export default function OrderDetails(): JSX.Element {
     db.get(
       'SELECT * FROM Orders where id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<Order>) => {
+      (err: Error, instant: Order) => {
         if (err) {
           console.log(err);
         } else {
           setOrder(instant);
-          console.log(instant);
+          //console.log(instant);
         }
       }
     );
     db.all(
       'SELECT * FROM OrderedItem where order_id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<OrderItem[]>) => {
+      (err: Error, instant: OrderItem[]) => {
         if (err) {
           console.log(err);
         } else {
@@ -117,7 +117,7 @@ export default function OrderDetails(): JSX.Element {
     db.get(
       'SELECT * FROM Transactions where order_id=?',
       [id],
-      (err: Error, instant: React.SetStateAction<Transaction>) => {
+      (err: Error, instant: Transaction) => {
         if (err) {
           console.log(err);
         } else {

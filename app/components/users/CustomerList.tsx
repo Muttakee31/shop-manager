@@ -47,7 +47,7 @@ export default function CustomerList(): JSX.Element {
     db.all(
       'SELECT * FROM User where is_customer=?',
       [1],
-      (_err: Error, instant: React.SetStateAction<Customer[]>) => {
+      (_err: Error, instant: Customer[]) => {
         setCustomerList(instant);
       }
     );

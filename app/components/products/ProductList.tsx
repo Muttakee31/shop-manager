@@ -50,7 +50,7 @@ export default function ProductList(): JSX.Element {
       // const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
         'SELECT * FROM Product',
-        (err: Error, instant: React.SetStateAction<Product[]>) => {
+        (err: Error, instant: Product[]) => {
           if (err) {
             console.log(err);
           } else {

@@ -162,7 +162,7 @@ export default function SelectProducts(props: {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Product',
-      (_err: Error, instant: React.SetStateAction<Product[]>) => {
+      (_err: Error, instant: Product[]) => {
         setProductList(instant);
       }
     );

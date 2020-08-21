@@ -45,7 +45,7 @@ export default function SupplierList(): JSX.Element {
     db.all(
       'SELECT * FROM User where is_supplier = ?',
       [1],
-      (_err: Error, instant: React.SetStateAction<Supplier[]>) => {
+      (_err: Error, instant: Supplier[]) => {
         setSupplierList(instant);
       }
     );

@@ -94,7 +94,7 @@ export default function DueTransaction(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM USER',
-      (err: Error, instant: React.SetStateAction<User[]>) => {
+      (err: Error, instant: User[]) => {
         if (!err) {
           setUserList(instant);
         }

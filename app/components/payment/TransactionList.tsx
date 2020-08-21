@@ -108,7 +108,7 @@ export default function TransactionList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
       'SELECT * FROM Transactions',
-      (err: Error, instant: React.SetStateAction<Transaction[]>) => {
+      (_err: Error, instant: Transaction[]) => {
         setTransactionList(instant);
         setVisibleTransactionList(
           instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate))
