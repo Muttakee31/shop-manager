@@ -214,7 +214,14 @@ export default function UserDetails(): JSX.Element {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orderList.map((row) => (
+                {orderList.length === 0 ?
+                  <TableRow>
+                    <TableCell colSpan={4} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                      No item
+                    </TableCell>
+                  </TableRow>
+                  :
+                  orderList.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="left" className={classes.texts}>
                       {type === '1' ? row.supplier_name : row.customer_name}
