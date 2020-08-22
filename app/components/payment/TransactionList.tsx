@@ -16,6 +16,7 @@ import { transactionType } from '../../constants/config';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
+import Chip from '@material-ui/core/Chip';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -62,6 +63,8 @@ const useStyles = makeStyles({
   '1': 'Due',
   '2': 'Both',
 };*/
+
+const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c']
 
 const CssTextField = withStyles({
   root: {
@@ -129,6 +132,23 @@ export default function TransactionList(): JSX.Element {
     setVisibleTransactionList(filtered);
   }
 
+  const getChip = (type : number) => {
+    const text = Object.keys(transactionType).filter(item => {
+      // @ts-ignore
+     return transactionType[item] == type;
+    })[0];
+
+    console.log(type);
+    return (
+      <Chip
+        label={text}
+        style={{textTransform: 'capitalize', color: 'floralwhite',
+          backgroundColor: chipColor[type-1]}}
+      />
+
+    )
+  }
+
   // @ts-ignore
   // @ts-ignore
   // @ts-ignore
@@ -190,13 +210,10 @@ export default function TransactionList(): JSX.Element {
                 :visibleTransactionList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
-                    {row.client_name}
+                    {row.client_name === null ? 'N/A' : row.client_name}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {Object.keys(transactionType).find(item => {
-                      // @ts-ignore
-                      return transactionType[item] === row.transaction_type;
-                    })}
+                    {getChip(row.transaction_type)}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.supply_id !== null ? row.supply_cost : row.order_cost}
@@ -205,7 +222,7 @@ export default function TransactionList(): JSX.Element {
                     {row.paid_amount}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.labour_cost}
+                    {row.labour_cost !== null ? "N/A" : row.labour_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.discount === null ? 'N/A' : row.discount}
