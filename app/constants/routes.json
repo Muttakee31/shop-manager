@@ -15,5 +15,6 @@
   "ORDER_DETAILS": "/order/:id",
   "SUPPLY_DETAILS": "/supply/:id",
   "OTHER_EXPENSE": "/expense-form",
-  "DUE_PAYMENT": "/due-payment"
+  "DUE_PAYMENT": "/due-payment",
+  "STOCK_HISTORY": "/stock-history"
 }

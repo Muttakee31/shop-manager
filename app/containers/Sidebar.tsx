@@ -129,22 +129,6 @@ const Sidebar: React.FC = () => {
 
       <Grid
         className={
-          router.pathname === routes.CUSTOMERS
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.CUSTOMERS)}
-        onKeyDown={() => history.push(routes.CUSTOMERS)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <AccountCircleIcon className={classes.icons} />
-          <span className={classes.sideText}>Customers</span>
-        </div>
-      </Grid>
-
-      <Grid
-        className={
           router.pathname === routes.PRODUCTS ||
           router.pathname === routes.ADD_PRODUCTS
             ? classes.whiteWashedLinks
@@ -159,6 +143,40 @@ const Sidebar: React.FC = () => {
           <span className={classes.sideText}>Products</span>
         </div>
       </Grid>
+
+      <Grid
+        className={
+          router.pathname === routes.STOCK_HISTORY
+            ? classes.whiteWashedLinks
+            : classes.links
+        }
+        onClick={() => history.push(routes.STOCK_HISTORY)}
+        onKeyDown={() => history.push(routes.STOCK_HISTORY)}
+        role="presentation"
+      >
+        <div className={classes.sideBarChild}>
+          <EmojiFoodBeverageIcon className={classes.icons} />
+          <span className={classes.sideText}>Stock History</span>
+        </div>
+      </Grid>
+
+      <Grid
+        className={
+          router.pathname === routes.CUSTOMERS
+            ? classes.whiteWashedLinks
+            : classes.links
+        }
+        onClick={() => history.push(routes.CUSTOMERS)}
+        onKeyDown={() => history.push(routes.CUSTOMERS)}
+        role="presentation"
+      >
+        <div className={classes.sideBarChild}>
+          <AccountCircleIcon className={classes.icons} />
+          <span className={classes.sideText}>Customers</span>
+        </div>
+      </Grid>
+
+
       <Grid
         className={
           router.pathname === routes.SUPPLIERS

@@ -3,8 +3,20 @@ import Grid from '@material-ui/core/Grid';
 import Customers from '../components/users/Customers';
 import Sidebar from './Sidebar';
 import * as dbpath from '../constants/config';
+import dayjs from 'dayjs';
 
 const sqlite3 = require('sqlite3').verbose();
+
+interface Product {
+  id: number;
+  code: string;
+  title: string;
+  price: number;
+  shop_stock_count: number;
+  godown_stock_count: number;
+  unit: string | null;
+  out_of_stock: number | null;
+}
 
 export default function OverviewPage() {
   useEffect(() => {
@@ -158,7 +170,75 @@ export default function OverviewPage() {
     } catch (e) {
       console.log(e);
     }
+    insertDailyStockUpdate();
   }, []);
+
+  const insertDailyStockUpdate = () => {
+    const sqlite3 = require('sqlite3').verbose();
+    const db = new sqlite3.Database(dbpath.dbPath);
+    try {
+      db.all(
+        'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 1',
+        (err: Error, instant) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(instant);
+            const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
+
+            if (instant.length === 0 ||
+              dayjs(instant.date_created).format('DD-MM-YYYY') < dayjs(new Date()).format('DD-MM-YYYY')) {
+              try {
+                db.all(
+                  'SELECT * FROM Product',
+                  (err: Error, products : Product[]) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log(products);
+                      const stmt = db.prepare(
+                        `INSERT INTO StockHistory(product, product_title, date_created, date_updated,
+                      prev_shop_stock, current_shop_stock, prev_godown_stock, current_godown_stock)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?) `
+                      );
+                      products.map(product => {
+                        stmt.run(
+                          product.id,
+                          product.title,
+                          date,
+                          date,
+                          product.shop_stock_count,
+                          product.shop_stock_count,
+                          product.godown_stock_count,
+                          product.godown_stock_count,
+                          function (error_1: Error) {
+                            if (error_1) {
+                              console.log(error_1.message);
+                            } else {
+                              console.log(`stock history added`);
+                            }
+                          }
+                        );
+                      })
+                      stmt.finalize();
+                    }
+                  }
+                );
+              }
+              catch (e) {
+                console.log('sldfsldkf');
+              }
+            }
+          }
+        }
+      );
+      db.close();
+    }
+    catch (e) {
+      console.log(e);
+    }
+
+  };
 
   return (
     <Grid container>
