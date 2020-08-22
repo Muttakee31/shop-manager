@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import dayjs from 'dayjs';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -118,8 +119,37 @@ export default function ProductForm(): JSX.Element {
         if (err) {
           console.log(err.message);
         }
+        else {
+          // @ts-ignore
+          const id = this.lastID;
+          const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+
+          db.run(
+            `INSERT INTO StockHistory(product, product_title, date_created, date_updated,
+                      prev_shop_stock, current_shop_stock, prev_godown_stock, current_godown_stock)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              id,
+              productName,
+              today,
+              today,
+              shopStock,
+              shopStock,
+              godownStock,
+              godownStock,
+            ],
+            function (err: Error) {
+              if (err) {
+                console.log(productID);
+                console.log(err.message);
+              }
+              // get the last insert id
+              history.goBack();
+              // console.log(`A row has been inserted`);
+            }
+          );
+        }
         // get the last insert id
-        history.goBack();
         // console.log(`A row has been inserted`);
       }
     );
@@ -130,6 +160,9 @@ export default function ProductForm(): JSX.Element {
 
   const updateProduct = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
+    const temp = new Date();
+    temp.setHours(0,0,0,0);
+    const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
 
     // insert one row into the langs table
     db.run(
@@ -145,16 +178,38 @@ export default function ProductForm(): JSX.Element {
       ],
       function (err: Error) {
         if (err) {
-          console.log(productID);
           console.log(err.message);
         }
+        else {
+          const state: any = location.state;
+          const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+
+          console.log(state);
+          if (shopStock !== state.product.shop_stock_count || godownStock !== state.product.godown_stock_count) {
+            db.run(`UPDATE StockHistory SET current_shop_stock = ?, current_godown_stock = ?,
+            date_updated = ? WHERE product = ? and date_created = ?`,
+              [shopStock, godownStock, today, state.product.id, midnight],
+              function(err:Error) {
+              if (err) {
+                console.log(err.message);
+              }
+              else {
+                history.goBack();
+              }
+            });
+          }
+          else {
+            history.goBack();
+          }
+        }
         // get the last insert id
-        history.goBack();
+
         // console.log(`A row has been inserted`);
       }
     );
 
     // close the database connection
+    // disabled={productID !== null}
     db.close();
   };
 
@@ -226,7 +281,7 @@ export default function ProductForm(): JSX.Element {
               fullWidth
               className={classes.textField}
               onChange={(e) => setShopStock(e.target.value)}
-              disabled={productID !== null}
+
             />
           </Grid>
           <Grid>
@@ -237,7 +292,6 @@ export default function ProductForm(): JSX.Element {
               fullWidth
               className={classes.textField}
               onChange={(e) => setGodownStock(e.target.value)}
-              disabled={productID !== null}
             />
           </Grid>
           <Grid style={{ marginTop: '30px' }}>

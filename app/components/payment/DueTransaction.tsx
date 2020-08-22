@@ -105,7 +105,7 @@ export default function DueTransaction(): JSX.Element {
 
   const createDuePayment = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
 
     db.run(
       `INSERT INTO Transactions(client, client_name, transaction_type,

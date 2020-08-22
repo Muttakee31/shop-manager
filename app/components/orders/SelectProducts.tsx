@@ -197,7 +197,11 @@ export default function SelectProducts(props: {
 
   const createOrder = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
+    const temp = new Date();
+    temp.setHours(0,0,0,0);
+    const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
+
     let id:number;
         // console.log(JSON.stringify(props.selectedCustomer));
     db.run(
@@ -251,6 +255,23 @@ export default function SelectProducts(props: {
                       }
                     }
                   );
+
+                  const storage =
+                    instant.store === '0'
+                      ? 'current_shop_stock'
+                      : 'current_godown_stock';
+                  db.run(
+                    `UPDATE StockHistory SET ${storage} = ${storage} - ?,
+                    date_updated = ? WHERE product = ? AND date_created = ?`,
+                    [instant.quantity, date, instant.product_id, midnight],
+                    function(err:Error) {
+                      if (err) {
+                        console.log(err.message);
+                      }
+                      else {
+                        //history.goBack();
+                      }
+                    });
                 }
               }
             );
@@ -275,7 +296,7 @@ export default function SelectProducts(props: {
 
   const createTransaction = (order_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
     let due = totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer) <= 0 ?
       0 : totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer);
     // insert one row into the langs table

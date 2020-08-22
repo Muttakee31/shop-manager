@@ -176,6 +176,9 @@ export default function OverviewPage() {
   const insertDailyStockUpdate = () => {
     const sqlite3 = require('sqlite3').verbose();
     const db = new sqlite3.Database(dbpath.dbPath);
+    const temp = new Date();
+    temp.setHours(0,0,0,0);
+    const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
     try {
       db.all(
         'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 1',
@@ -205,7 +208,7 @@ export default function OverviewPage() {
                         stmt.run(
                           product.id,
                           product.title,
-                          date,
+                          midnight,
                           date,
                           product.shop_stock_count,
                           product.shop_stock_count,

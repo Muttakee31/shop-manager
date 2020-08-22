@@ -90,7 +90,7 @@ export default function OtherExpenseForm(): JSX.Element {
 
   const createOtherExpense = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
 
     db.run(
       `INSERT INTO Transactions(transaction_type,

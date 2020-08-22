@@ -184,7 +184,7 @@ export default function SelectProducts(props: {
 
   const createSupply = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
     let id = -1;
     // console.log(JSON.stringify(props.selectedSupplier));
     db.run(
@@ -203,8 +203,14 @@ export default function SelectProducts(props: {
           id = this.lastID;
           createTransaction(id);
 
+          const temp = new Date();
+          temp.setHours(0,0,0,0);
+          const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
+
           const stmt = db.prepare(
-            `INSERT INTO SupplyItem(supply_id, product, product_title, quantity, price, storage) VALUES (?, ?, ?, ?, ?, ?) `
+            `INSERT INTO SupplyItem(
+            supply_id, product, product_title, quantity, price, storage)
+             VALUES (?, ?, ?, ?, ?, ?) `
           );
           supplyItemList.map((instant) => {
             console.log(instant);
@@ -225,7 +231,7 @@ export default function SelectProducts(props: {
                       ? 'shop_stock_count'
                       : 'godown_stock_count';
                   db.run(
-                    `UPDATE Product set ${dest}=${dest}  + ? where id=?`,
+                    `UPDATE Product set ${dest} = ${dest} + ? where id=?`,
                     [instant.quantity, instant.product_id],
                     function (error_1: Error) {
                       if (error_1) {
@@ -235,6 +241,22 @@ export default function SelectProducts(props: {
                       }
                     }
                   );
+                  const storage =
+                    instant.store === '0'
+                      ? 'current_shop_stock'
+                      : 'current_godown_stock';
+                  db.run(
+                    `UPDATE StockHistory SET ${storage} = ${storage} + ?,
+                    date_updated = ? WHERE product = ? AND date_created = ?`,
+                    [instant.quantity, date, instant.product_id, midnight],
+                    function(err:Error) {
+                      if (err) {
+                        console.log(err.message);
+                      }
+                      else {
+                        //history.goBack();
+                      }
+                    });
                 }
               }
             );
@@ -249,7 +271,7 @@ export default function SelectProducts(props: {
 
   const createTransaction = (supply_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
 
     let due = totalPrice + Number(labourCost) - Number(paidToSupplier) <= 0 ?
       0 : totalPrice + Number(labourCost) - Number(paidToSupplier);
