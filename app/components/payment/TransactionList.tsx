@@ -17,6 +17,8 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
 import Chip from '@material-ui/core/Chip';
+import EditIcon from '@material-ui/icons/Edit';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -195,15 +197,14 @@ export default function TransactionList(): JSX.Element {
                 <TableCell className={classes.texts}>Type</TableCell>
                 <TableCell className={classes.texts}>Cost</TableCell>
                 <TableCell className={classes.texts}>Paid amount</TableCell>
-                <TableCell className={classes.texts}>Labour cost</TableCell>
-                <TableCell className={classes.texts}>Discount</TableCell>
                 <TableCell className={classes.texts}>Due amount</TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
               {visibleTransactionList.length === 0 ?
                 <TableRow>
-                  <TableCell colSpan={7} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                  <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
                     No items
                   </TableCell>
                 </TableRow>
@@ -221,14 +222,21 @@ export default function TransactionList(): JSX.Element {
                   <TableCell align="left" className={classes.texts}>
                     {row.paid_amount}
                   </TableCell>
-                  <TableCell align="left" className={classes.texts}>
+                  {/*<TableCell align="left" className={classes.texts}>
                     {row.labour_cost !== null ? "N/A" : row.labour_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.discount === null ? 'N/A' : row.discount}
-                  </TableCell>
+                  </TableCell>*/}
                   <TableCell align="left" className={classes.texts}>
                     {row.due_amount === null ? 'N/A' : row.due_amount}
+                  </TableCell>
+                  <TableCell align="center" className={classes.texts}>
+                    <VisibilityIcon
+                      onClick={() => history.push(`/transaction-details/${row.id}`)}
+                      style={{padding: '0 8px'}}
+                    />
+                    <EditIcon onClick={() =>history.push(`/update-transaction/${row.id}`)} />
                   </TableCell>
                 </TableRow>
               ))}
