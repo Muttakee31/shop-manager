@@ -182,15 +182,16 @@ export default function OverviewPage() {
     try {
       db.all(
         'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 1',
-        (err: Error, instant) => {
+        (err: Error, instant:any) => {
           if (err) {
             console.log(err);
           } else {
             console.log(instant);
+            console.log(dayjs(instant.date_created).isBefore(midnight));
             const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
 
             if (instant.length === 0 ||
-              dayjs(instant.date_created).format('DD-MM-YYYY') < dayjs(new Date()).format('DD-MM-YYYY')) {
+              dayjs(instant.date_created).isBefore(midnight)) {
               try {
                 db.all(
                   'SELECT * FROM Product',

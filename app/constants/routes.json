@@ -18,5 +18,5 @@
   "DUE_PAYMENT": "/due-payment",
   "STOCK_HISTORY": "/stock-history",
   "TRANSACTION_DETAILS": "/transaction-details/:id",
-  "UPDATE_TRANSACTION": "update-transaction/:id"
+  "UPDATE_TRANSACTION": "/update-transaction/:id"
 }
