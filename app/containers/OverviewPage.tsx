@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Customers from '../components/users/Customers';
 import Sidebar from './Sidebar';
 import * as dbpath from '../constants/config';
 import dayjs from 'dayjs';
+import HomePage from './HomePage';
 
 const sqlite3 = require('sqlite3').verbose();
+const CryptoJS = require("crypto-js");
 
 interface Product {
   id: number;
@@ -20,6 +21,7 @@ interface Product {
 
 export default function OverviewPage() {
   useEffect(() => {
+    console.log(CryptoJS.SHA256("eucsu-204").toString());
     try {
       const db = new sqlite3.Database(dbpath.dbPath);
       // const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
@@ -187,11 +189,12 @@ export default function OverviewPage() {
             console.log(err);
           } else {
             console.log(instant);
-            console.log(dayjs(instant.date_created).isBefore(midnight));
+            console.log(midnight);
+            console.log(dayjs(midnight).isBefore(instant.date_created));
             const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
 
             if (instant.length === 0 ||
-              dayjs(instant.date_created).isBefore(midnight)) {
+              dayjs(midnight).isBefore(instant.date_created)) {
               try {
                 db.all(
                   'SELECT * FROM Product',
@@ -249,8 +252,8 @@ export default function OverviewPage() {
       <Grid item xs={4} md={3}>
         <Sidebar />
       </Grid>
-      <Grid item xs={4} md={3}>
-        <Customers />
+      <Grid item xs={8} md={9}>
+        <HomePage />
       </Grid>
     </Grid>
   );
