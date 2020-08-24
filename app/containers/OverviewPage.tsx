@@ -36,10 +36,10 @@ export default function OverviewPage() {
           else {
             if (instant.length === 0) {
               db.run("CREATE TABLE \"User\" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " `name` TEXT, `address` TEXT," +
-                " `phone` TEXT, `is_customer` INTEGER DEFAULT 0," +
-                " `is_supplier` INTEGER DEFAULT 0," +
-                " `has_due_bill` INTEGER DEFAULT 0, `due_amount` REAL )", (err: Error) => {
+                " `name` TEXT, `address` TEXT, `phone` TEXT, `is_customer` INTEGER DEFAULT 0," +
+                " `is_supplier` INTEGER DEFAULT 0, `has_due_bill` INTEGER DEFAULT 0," +
+                " `due_amount` REAL, `password` TEXT, `is_admin` INTEGER DEFAULT 0 )",
+                (err: Error) => {
                 if (err) {
                   console.log(err);
                 }
@@ -54,9 +54,8 @@ export default function OverviewPage() {
                       else {
                         if (instant.length === 0) {
                           db.run("CREATE TABLE \"Product\" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            " `title` TEXT NOT NULL, `price` REAL," +
-                            " `shop_stock_count` INTEGER DEFAULT 0, `unit` TEXT," +
-                            " `godown_stock_count` INTEGER DEFAULT 0," +
+                            " `title` TEXT NOT NULL, `price` REAL, `shop_stock_count` INTEGER DEFAULT 0," +
+                            " `unit` TEXT, `godown_stock_count` INTEGER DEFAULT 0," +
                             " `code` TEXT UNIQUE )", (err: Error) => {
                             if (err) {
                               console.log(err);
@@ -96,13 +95,12 @@ export default function OverviewPage() {
                                                     }
                                                     else {
                                                       console.log("Supplier added.");
-                                                      db.run("CREATE TABLE \"OrderedItem\" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                                        "`product` INTEGER, `order_id` INTEGER," +
-                                                        " `price` REAL, `quantity` INTEGER," +
-                                                        " FOREIGN KEY(`product`) REFERENCES `Product`(`id`)" +
-                                                        " ON DELETE CASCADE ON UPDATE NO ACTION," +
-                                                        " FOREIGN KEY(`order_id`) REFERENCES `Orders`(`id`)" +
-                                                        " ON DELETE CASCADE ON UPDATE NO ACTION )", (err: Error) => {
+                                                      db.run("CREATE TABLE \"OrderedItem\" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                                        " `product` INTEGER, `order_id` INTEGER, `price` REAL," +
+                                                        " `quantity` INTEGER, `product_title` TEXT," +
+                                                        " `storage` TEXT DEFAULT \"0\", FOREIGN KEY(`order_id`) " +
+                                                        "REFERENCES `Orders`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION, FOREIGN KEY(`product`)" +
+                                                        " REFERENCES `Product`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION )", (err: Error) => {
                                                         if (err) {
                                                           console.log(err);
                                                         }
@@ -111,11 +109,11 @@ export default function OverviewPage() {
                                                         }
                                                       });
 
-                                                      db.run("CREATE TABLE `SupplyItem` ( `supply_id` INTEGER," +
-                                                        " `id` INTEGER PRIMARY KEY AUTOINCREMENT, `product` INTEGER," +
-                                                        " `quantity` INTEGER, `price` REAL," +
-                                                        " FOREIGN KEY(`product`) REFERENCES `Product`(`id`)" +
-                                                        " ON DELETE SET NULL ON UPDATE NO ACTION," +
+                                                      db.run("CREATE TABLE \"SupplyItem\" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                                        " `supply_id` INTEGER, `product` INTEGER, `price` NUMERIC," +
+                                                        " `quantity` INTEGER, `product_title` TEXT," +
+                                                        " `storage` TEXT DEFAULT \"0\", FOREIGN KEY(`product`)" +
+                                                        " REFERENCES `Product`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION," +
                                                         " FOREIGN KEY(`supply_id`) REFERENCES `SupplyItem`(`id`)" +
                                                         " ON DELETE CASCADE ON UPDATE NO ACTION )", (err: Error) => {
                                                         if (err) {
@@ -126,16 +124,18 @@ export default function OverviewPage() {
                                                         }
                                                       });
 
-                                                      db.run("CREATE TABLE \"Transactions\"" +
-                                                        " ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `client` INTEGER," +
-                                                        " `order_id` INTEGER, `paid_amount` REAL, `client_name` TEXT," +
-                                                        " `supply_cost` REAL, `order_cost` REAL, `labour_cost` REAL," +
-                                                        " `discount` REAL, `type` TEXT, " +
-                                                        "`due_amount` REAL," +
-                                                        " `supply_id` INTEGER, FOREIGN KEY(`order_id`)" +
-                                                        " REFERENCES `Orders`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION," +
-                                                        " FOREIGN KEY(`client`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION," +
-                                                        " FOREIGN KEY(`supply_id`) REFERENCES `Supply`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION )", (err: Error) => {
+                                                      db.run("CREATE TABLE \"Transactions\" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                                        " `transaction_type` INTEGER, `client` INTEGER, `order_id` INTEGER," +
+                                                        " `supply_id` INTEGER, `paid_amount` REAL," +
+                                                        " `client_name` TEXT, `supply_cost` REAL," +
+                                                        " `order_cost` REAL, `labour_cost` REAL," +
+                                                        " `discount` REAL, `payment_type` TEXT," +
+                                                        " `due_amount` REAL, `description` TEXT DEFAULT null," +
+                                                        " `timestamp` TEXT, FOREIGN KEY(`supply_id`) REFERENCES" +
+                                                        " `Supply`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION, FOREIGN KEY(`client`)" +
+                                                        " REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION," +
+                                                        " FOREIGN KEY(`order_id`) REFERENCES `Orders`(`id`)" +
+                                                        " ON DELETE SET NULL ON UPDATE NO ACTION )", (err: Error) => {
                                                         if (err) {
                                                           console.log(err);
                                                         }
@@ -144,6 +144,31 @@ export default function OverviewPage() {
                                                         }
                                                       });
 
+                                                      db.run("CREATE TABLE \"StockHistory\" ( `id` INTEGER, `product` INTEGER," +
+                                                        " `product_title` TEXT, `date_created` TEXT," +
+                                                        " `date_updated` TEXT, `prev_shop_stock` INTEGER," +
+                                                        " `current_shop_stock` INTEGER, `prev_godown_stock` INTEGER," +
+                                                        " `current_godown_stock` INTEGER, PRIMARY KEY(`id`)," +
+                                                        " FOREIGN KEY(`product`) REFERENCES `Product`(`id`)" +
+                                                        " ON DELETE SET NULL ON UPDATE NO ACTION )", (err: Error) => {
+                                                        if (err) {
+                                                          console.log(err);
+                                                        }
+                                                        else {
+                                                          console.log("stock history added.");
+                                                        }
+                                                      });
+                                                      db.run(
+                                                        `INSERT INTO User(name, phone, address, password, is_admin) VALUES(?,?,?,?) `,
+                                                        ["Shop Admin", null, null, CryptoJS.SHA256('EUCSU-204').toString() , 1],
+                                                        function (err: Error) {
+                                                          if (err) {
+                                                            console.log(err.message);
+                                                          }
+                                                          else {
+                                                            console.log('super user added.');
+                                                          }
+                                                        });
                                                     }
                                                   })
                                                 }
@@ -188,9 +213,9 @@ export default function OverviewPage() {
           if (err) {
             console.log(err);
           } else {
-            console.log(instant);
-            console.log(midnight);
-            console.log(dayjs(midnight).isBefore(instant.date_created));
+            //console.log(instant);
+            //console.log(midnight);
+
             const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
 
             if (instant.length === 0 ||
