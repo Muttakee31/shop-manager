@@ -71,6 +71,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+
 export default function StockHistoryList(): JSX.Element {
   const classes = useStyles();
   const [stockHistoryList, setStockHistoryList] = useState<StockHistory[]>([]);
@@ -79,24 +80,24 @@ export default function StockHistoryList(): JSX.Element {
   // console.log('Connected to the shop database.');
   useEffect(() => {
     getStockHistoryByDate();
-  }, []);
+  }, [selectedDate]);
 
-  const changeDate = async (e:React.ChangeEvent) => {
+  const changeDate = (e:React.ChangeEvent) => {
     // @ts-ignore
     const value: string = e.target.value;
-    await setSelectedDate(value);
-    //console.log(value);
-    await getStockHistoryByDate();
+    setSelectedDate(value);
   }
 
   const getStockHistoryByDate = () => {
     try {
       const sqlite3 = require('sqlite3').verbose();
       const db = new sqlite3.Database(dbpath.dbPath);
-      // const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
-      // const db = new sqlite3.Database(dbpath.dbPath);
+
+      const dateFilter = dayjs(selectedDate).format('YYYY-MM-DDThh:mm:ss[Z]');
+
       db.all(
-        'SELECT * FROM StockHistory',
+        'SELECT * FROM StockHistory WHERE date_created = ?',
+        [dateFilter],
         (err: Error, instant: StockHistory[]) => {
           if (err) {
             console.log(err);
