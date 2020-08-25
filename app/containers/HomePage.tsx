@@ -13,6 +13,7 @@ import { isAuthenticated, logOutUser, setAuthToken } from '../features/auth/auth
 
 const sqlite3 = require('sqlite3').verbose();
 const CryptoJS = require("crypto-js");
+const jwt = require('jsonwebtoken');
 
 
 const CssTextField = withStyles({
@@ -47,6 +48,7 @@ const useStyles = makeStyles(() =>
     },
     paper: {
       border: '2px solid #000',
+      background: '#232c39',
       boxShadow: '3px 3px 20px #010101',
       padding: 15,
       margin: 15,
@@ -110,7 +112,9 @@ export default function HomePage() {
           else {
             const hashedPass : string =  CryptoJS.SHA256(password).toString();
             if (instant.length !== 0 && instant[0].password == hashedPass) {
-              dispatch(setAuthToken(""));
+              const token = jwt.sign({ username }, dbpath.SECRET_KEY, { expiresIn: '5m' });
+              //console.log(token);
+              dispatch(setAuthToken({token, username}));
               handleClose();
             }
             else {

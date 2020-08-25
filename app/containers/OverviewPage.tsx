@@ -220,7 +220,7 @@ export default function OverviewPage() {
             //console.log(dayjs(midnight).isSameOrBefore(instant.date_created));
             //console.log(dayjs(midnight).isBefore(instant[0].date_created));
             if (instant.length === 0 ||
-              dayjs(midnight).isBefore(instant[0].date_created)) {
+              dayjs(instant[0].date_created).isBefore(midnight)) {
               try {
                 db.all(
                   'SELECT * FROM Product',

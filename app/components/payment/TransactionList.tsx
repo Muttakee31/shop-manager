@@ -202,7 +202,7 @@ export default function TransactionList(): JSX.Element {
                 <TableCell className={classes.texts}>Cost</TableCell>
                 <TableCell className={classes.texts}>Paid amount</TableCell>
                 <TableCell className={classes.texts}>Due amount</TableCell>
-                {authFlag && <TableCell />}
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -235,15 +235,15 @@ export default function TransactionList(): JSX.Element {
                   <TableCell align="left" className={classes.texts}>
                     {row.due_amount === null ? 'N/A' : row.due_amount}
                   </TableCell>
-                  {authFlag &&
                     <TableCell align="center" className={classes.texts}>
                       <VisibilityIcon
                         onClick={() => history.push(`/transaction-details/${row.id}`)}
                         style={{ padding: '0 8px' }}
                       />
+                      {authFlag &&
                       <EditIcon onClick={() => history.push(`/update-transaction/${row.id}`)}/>
+                      }
                     </TableCell>
-                  }
                 </TableRow>
               ))}
             </TableBody>

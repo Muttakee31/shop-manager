@@ -14,3 +14,5 @@ export const transactionType = {
   "due": 3,
   "other": 4,
 }
+
+export const SECRET_KEY = "Baneshwar1405";

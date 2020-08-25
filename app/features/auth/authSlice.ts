@@ -4,24 +4,27 @@ import { AppThunk, RootState } from '../../store';
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: { isAuthenticated: false, token: null },
+  initialState: { isAuthenticated: false, token: null, username: null },
   reducers: {
-    sign_in: (state, token:any) => {
+    sign_in: (state, action:any) => {
       state.isAuthenticated = true;
-      state.token = token;
+      state.token = action.payload.token;
+      state.username = action.payload.username;
     },
     sign_out: (state) => {
       state.isAuthenticated = false;
       state.token = null;
+      state.username = null;
     },
   },
 });
 
 export const { sign_in, sign_out } = authSlice.actions;
 
-export const setAuthToken = (token:string): AppThunk => {
+export const setAuthToken = (data:any): AppThunk => {
   return (dispatch) => {
-    dispatch(sign_in(token));
+    dispatch(sign_in(data));
+    //console.log(data);
   };
 };
 
@@ -34,4 +37,5 @@ export const logOutUser = (): AppThunk => {
 export default authSlice.reducer;
 
 export const authToken = (state: RootState) => state.auth.token;
+export const userName = (state: RootState) => state.auth.username;
 export const isAuthenticated = (state: RootState) => state.auth.isAuthenticated;
