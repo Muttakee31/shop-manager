@@ -275,10 +275,10 @@ export default function OverviewPage() {
 
   return (
     <Grid container>
-      <Grid item xs={4} md={3}>
+      <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>
-      <Grid item xs={8} md={9}>
+      <Grid item xs={8} lg={9}>
         <HomePage />
       </Grid>
     </Grid>

@@ -10,6 +10,11 @@ import * as dbpath from '../constants/config';
 import Alert from '@material-ui/lab/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAuthenticated, logOutUser, setAuthToken } from '../features/auth/authSlice';
+import Chart from 'react-apexcharts';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
 
 const sqlite3 = require('sqlite3').verbose();
 const CryptoJS = require("crypto-js");
@@ -87,6 +92,8 @@ export default function HomePage() {
   const [open, setOpen] = useState(false);
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const [alert, setAlert] = useState<string | null>(null);
 
   const dispatch = useDispatch();
@@ -97,8 +104,13 @@ export default function HomePage() {
   };
 
   const handleClose = () => {
+    setAlert(null);
     setOpen(false);
   };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(prevState => !prevState);
+  }
 
   const signIn = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
@@ -119,7 +131,7 @@ export default function HomePage() {
             }
             else {
               console.log('did not match');
-              setAlert("Username or password did not match");
+              setAlert("Username or password did not match!");
             }
           }
         })
@@ -171,15 +183,30 @@ export default function HomePage() {
               <CssTextField
                 id="standard-basic"
                 label="Password"
-                type='password'
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 fullWidth
                 className={classes.textField}
                 onChange={(e) => setPassword(e.target.value)}
+                InputProps = {{ endAdornment :
+                  <InputAdornment position="end">
+                    <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    >
+                      {!showPassword ?
+                        <VisibilityIcon className={classes.texts}/> :
+                        <VisibilityIconOff className={classes.texts}/>}
+                    </IconButton>
+                  </InputAdornment>
+                }}
               />
             </Grid>
             {alert !== null &&
-            <Alert severity="error" className={classes.gridMargin}>{alert}</Alert>}
+            <Alert severity="error" className={classes.gridMargin}>
+              {alert}
+            </Alert>
+            }
             <Grid>
               <Button
                 variant="contained"
