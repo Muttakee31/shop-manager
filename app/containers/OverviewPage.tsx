@@ -213,13 +213,15 @@ export default function OverviewPage() {
           if (err) {
             console.log(err);
           } else {
-            //console.log(instant);
-            //console.log(midnight);
+            // console.log(instant[0].date_created);
+            // console.log(midnight);
 
             const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
-
+            //console.log(dayjs(midnight).isBefore(instant.date_created));
+            //console.log(dayjs(midnight).isSameOrBefore(instant.date_created));
+            //console.log(dayjs(midnight).isBefore(instant[0].date_created));
             if (instant.length === 0 ||
-              dayjs(midnight).isBefore(instant.date_created)) {
+              dayjs(midnight).isBefore(instant[0].date_created)) {
               try {
                 db.all(
                   'SELECT * FROM Product',
