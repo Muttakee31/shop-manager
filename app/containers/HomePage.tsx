@@ -8,6 +8,8 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import * as dbpath from '../constants/config';
 import Alert from '@material-ui/lab/Alert';
+import { useDispatch, useSelector } from 'react-redux';
+import { isAuthenticated, logOutUser, setAuthToken } from '../features/auth/authSlice';
 
 const sqlite3 = require('sqlite3').verbose();
 const CryptoJS = require("crypto-js");
@@ -85,6 +87,9 @@ export default function HomePage() {
   const [password, setPassword] = useState('');
   const [alert, setAlert] = useState<string | null>(null);
 
+  const dispatch = useDispatch();
+  const authFlag= useSelector(isAuthenticated);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -105,6 +110,7 @@ export default function HomePage() {
           else {
             const hashedPass : string =  CryptoJS.SHA256(password).toString();
             if (instant.length !== 0 && instant[0].password == hashedPass) {
+              dispatch(setAuthToken(""));
               handleClose();
             }
             else {
@@ -121,9 +127,15 @@ export default function HomePage() {
 
   return (
     <Grid>
-      <Button color='primary' variant='contained' onClick={handleOpen}>
-        View as Admin
-      </Button>
+      {!authFlag ?
+        <Button color='primary' variant='contained' onClick={handleOpen}>
+          View as Admin
+        </Button>
+        :
+        <Button color='primary' variant='contained' onClick={()=> dispatch(logOutUser())}>
+          Log out
+        </Button>
+      }
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

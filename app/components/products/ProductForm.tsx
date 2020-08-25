@@ -8,6 +8,8 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import dayjs from 'dayjs';
+import { useSelector } from 'react-redux';
+import { isAuthenticated } from '../../features/auth/authSlice';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -82,6 +84,7 @@ export default function ProductForm(): JSX.Element {
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
+  const authFlag= useSelector(isAuthenticated);
 
   useEffect(() => {
     // @ts-ignore
@@ -281,7 +284,7 @@ export default function ProductForm(): JSX.Element {
               fullWidth
               className={classes.textField}
               onChange={(e) => setShopStock(e.target.value)}
-
+              disabled={!authFlag}
             />
           </Grid>
           <Grid>
@@ -292,6 +295,7 @@ export default function ProductForm(): JSX.Element {
               fullWidth
               className={classes.textField}
               onChange={(e) => setGodownStock(e.target.value)}
+              disabled={!authFlag}
             />
           </Grid>
           <Grid style={{ marginTop: '30px' }}>

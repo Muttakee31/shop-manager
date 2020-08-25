@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import { useSelector } from 'react-redux';
+import { isAuthenticated } from '../../features/auth/authSlice';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -79,6 +81,7 @@ export default function TransactionForm(): JSX.Element {
   const history = useHistory();
   const classes = useStyles();
   const match = useRouteMatch();
+  const authFlag= useSelector(isAuthenticated);
 
   useEffect(() => {
     // @ts-ignore
@@ -217,6 +220,7 @@ export default function TransactionForm(): JSX.Element {
                 e.preventDefault();
                 updateTransaction();
               }}
+              disabled={!authFlag}
             >
               Update
             </Button>

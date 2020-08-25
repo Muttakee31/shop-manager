@@ -19,6 +19,8 @@ import dayjs from 'dayjs';
 import Chip from '@material-ui/core/Chip';
 import EditIcon from '@material-ui/icons/Edit';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import { useSelector } from 'react-redux';
+import { isAuthenticated } from '../../features/auth/authSlice';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -100,6 +102,8 @@ const CssTextField = withStyles({
 export default function TransactionList(): JSX.Element {
   const classes = useStyles();
   const history = useHistory();
+  const authFlag= useSelector(isAuthenticated);
+
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
@@ -198,7 +202,7 @@ export default function TransactionList(): JSX.Element {
                 <TableCell className={classes.texts}>Cost</TableCell>
                 <TableCell className={classes.texts}>Paid amount</TableCell>
                 <TableCell className={classes.texts}>Due amount</TableCell>
-                <TableCell />
+                {authFlag && <TableCell />}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -231,13 +235,15 @@ export default function TransactionList(): JSX.Element {
                   <TableCell align="left" className={classes.texts}>
                     {row.due_amount === null ? 'N/A' : row.due_amount}
                   </TableCell>
-                  <TableCell align="center" className={classes.texts}>
-                    <VisibilityIcon
-                      onClick={() => history.push(`/transaction-details/${row.id}`)}
-                      style={{padding: '0 8px'}}
-                    />
-                    <EditIcon onClick={() =>history.push(`/update-transaction/${row.id}`)} />
-                  </TableCell>
+                  {authFlag &&
+                    <TableCell align="center" className={classes.texts}>
+                      <VisibilityIcon
+                        onClick={() => history.push(`/transaction-details/${row.id}`)}
+                        style={{ padding: '0 8px' }}
+                      />
+                      <EditIcon onClick={() => history.push(`/update-transaction/${row.id}`)}/>
+                    </TableCell>
+                  }
                 </TableRow>
               ))}
             </TableBody>

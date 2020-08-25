@@ -21,7 +21,6 @@ interface Product {
 
 export default function OverviewPage() {
   useEffect(() => {
-    console.log(CryptoJS.SHA256("eucsu-204").toString());
     try {
       const db = new sqlite3.Database(dbpath.dbPath);
       // const dbPath = (process.env.NODE_ENV === 'development') ? 'shopdb.sqlite3' : path.resolve(app.getPath('userData'), 'shopdb.sqlite3');
