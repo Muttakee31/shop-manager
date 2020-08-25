@@ -8,9 +8,12 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { useSelector } from 'react-redux';
-import { isAuthenticated } from '../../features/auth/authSlice';
+import { authToken, isAuthenticated, logOutUser, userName } from '../../features/auth/authSlice';
+import Alert from '@material-ui/lab/Alert';
 
 const sqlite3 = require('sqlite3').verbose();
+const jwt = require('jsonwebtoken');
+
 
 const CssTextField = withStyles({
   root: {
@@ -76,12 +79,15 @@ export default function TransactionForm(): JSX.Element {
   const [labourCost, setLabourCost] = useState('');
   const [discount, setDiscount] = useState('');
   const [totalCost, setTotalCost] = useState('');
+  const [alert, setAlert] = useState<string | null>(null);
 
   // const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
   const match = useRouteMatch();
   const authFlag= useSelector(isAuthenticated);
+  const user= useSelector(userName);
+  const token= useSelector(authToken);
 
   useEffect(() => {
     // @ts-ignore
@@ -110,34 +116,46 @@ export default function TransactionForm(): JSX.Element {
   }, []);
 
   const updateTransaction = () => {
-    const db = new sqlite3.Database(dbpath.dbPath);
+    try {
+      setAlert(null);
+      const decoded = jwt.verify(token, dbpath.SECRET_KEY);
+      const db = new sqlite3.Database(dbpath.dbPath);
+      if (decoded.username === user) {
+        db.run(
+          `UPDATE Transactions SET paid_amount = ?, order_cost = ?,
+           discount = ?, labour_cost = ? `,
+          [
+            paidAmount,
+            totalCost,
+            discount,
+            labourCost
+          ],
+          function(err: Error) {
+            if (err) {
+              console.log(err.message);
+              setAlert("Something went wrong!");
+            } else {
+              // @ts-ignore
+              history.goBack();
+            }
+            // get the last insert id
+            // console.log(`A row has been inserted`);
+          }
+        );
 
-    // insert one row into the langs table
-    db.run(
-      `UPDATE SET Transactions
-      (paidAmount, total_cost, discount, labour_cost)
-       VALUES(?,?,?,?,?,?) `,
-      [
-        paidAmount,
-        totalCost,
-        discount,
-        labourCost
-      ],
-      function (err: Error) {
-        if (err) {
-          console.log(err.message);
-        }
-        else {
-          // @ts-ignore
-          history.goBack();
-        }
-        // get the last insert id
-        // console.log(`A row has been inserted`);
+        // close the database connection
+        db.close();
       }
-    );
-
-    // close the database connection
-    db.close();
+      else {
+        logOutUser();
+        setAlert("Your session has expired. Please sign in again!")
+      }
+    }
+    catch (e) {
+      console.log(e);
+      logOutUser();
+      setAlert("Your session has expired. Please sign in again!")
+    }
   };
 
   return (
@@ -200,6 +218,12 @@ export default function TransactionForm(): JSX.Element {
               onChange={(e) => setDiscount(e.target.value)}
             />
           </Grid>
+
+          {alert !== null &&
+          <Alert severity="error" style={{margin: '12px 0'}}>
+            {alert}
+          </Alert>
+          }
 
           <Grid style={{ marginTop: '30px' }}>
             <Button

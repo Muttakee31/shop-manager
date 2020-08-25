@@ -8,10 +8,12 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import dayjs from 'dayjs';
+import { authToken, isAuthenticated, logOutUser, userName } from '../../features/auth/authSlice';
+import Alert from '@material-ui/lab/Alert';
 import { useSelector } from 'react-redux';
-import { isAuthenticated } from '../../features/auth/authSlice';
 
 const sqlite3 = require('sqlite3').verbose();
+const jwt = require('jsonwebtoken');
 
 const CssTextField = withStyles({
   root: {
@@ -80,11 +82,14 @@ export default function ProductForm(): JSX.Element {
   const [unit, setUnit] = useState('');
   const [shopStock, setShopStock] = useState('');
   const [godownStock, setGodownStock] = useState('');
+  const [alert, setAlert] = useState<string | null>(null);
 
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
   const authFlag= useSelector(isAuthenticated);
+  const user= useSelector(userName);
+  const token= useSelector(authToken);
 
   useEffect(() => {
     // @ts-ignore
@@ -162,59 +167,68 @@ export default function ProductForm(): JSX.Element {
   };
 
   const updateProduct = () => {
-    const db = new sqlite3.Database(dbpath.dbPath);
     const temp = new Date();
-    temp.setHours(0,0,0,0);
+    temp.setHours(0, 0, 0, 0);
     const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
 
     // insert one row into the langs table
-    db.run(
-      `UPDATE Product SET title = ?, price = ?, code = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE id=?`,
-      [
-        productName,
-        price,
-        productCode,
-        unit,
-        shopStock,
-        godownStock,
-        productID,
-      ],
-      function (err: Error) {
-        if (err) {
-          console.log(err.message);
-        }
-        else {
-          const state: any = location.state;
-          const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    try {
+      setAlert(null);
+      const decoded = jwt.verify(token, dbpath.SECRET_KEY);
+      const db = new sqlite3.Database(dbpath.dbPath);
+      if (decoded.username === user) {
+        db.run(
+          `UPDATE Product SET title = ?, price = ?,
+       code = ?, unit = ?, shop_stock_count = ?, godown_stock_count = ? WHERE id=?`,
+          [
+            productName,
+            price,
+            productCode,
+            unit,
+            shopStock,
+            godownStock,
+            productID,
+          ],
+          function(err: Error) {
+            if (err) {
+              console.log(err.message);
+            } else {
+              const state: any = location.state;
+              const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
-          console.log(state);
-          if (shopStock !== state.product.shop_stock_count || godownStock !== state.product.godown_stock_count) {
-            db.run(`UPDATE StockHistory SET current_shop_stock = ?, current_godown_stock = ?,
+              console.log(state);
+              if (shopStock !== state.product.shop_stock_count || godownStock !== state.product.godown_stock_count) {
+                db.run(`UPDATE StockHistory SET current_shop_stock = ?, current_godown_stock = ?,
             date_updated = ? WHERE product = ? and date_created = ?`,
-              [shopStock, godownStock, today, state.product.id, midnight],
-              function(err:Error) {
-              if (err) {
-                console.log(err.message);
-              }
-              else {
+                  [shopStock, godownStock, today, state.product.id, midnight],
+                  function(err: Error) {
+                    if (err) {
+                      console.log(err.message);
+                    } else {
+                      history.goBack();
+                    }
+                  });
+              } else {
                 history.goBack();
               }
-            });
-          }
-          else {
-            history.goBack();
-          }
-        }
-        // get the last insert id
-
-        // console.log(`A row has been inserted`);
+            }
+          });
       }
-    );
+      else {
+        logOutUser();
+        setAlert("Your session has expired. Please sign in again!");
+      }
+      db.close();
+    } catch (e) {
+      console.log(e);
+      logOutUser();
+      setAlert("Your session has expired. Please sign in again!");
+    }
+  }
 
     // close the database connection
     // disabled={productID !== null}
-    db.close();
-  };
+
 
   return (
     <Grid container direction="row">
@@ -298,6 +312,13 @@ export default function ProductForm(): JSX.Element {
               disabled={!authFlag}
             />
           </Grid>
+
+          {alert !== null &&
+          <Alert severity="error" style={{margin: '12px 0'}}>
+            {alert}
+          </Alert>
+          }
+
           <Grid style={{ marginTop: '30px' }}>
             <Button
               variant="contained"
