@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router-dom';
-import AssessmentIcon from '@material-ui/icons/Assessment';
+import TimelineIcon from '@material-ui/icons/Timeline';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import StoreIcon from '@material-ui/icons/Store';
 import EmojiFoodBeverageIcon from '@material-ui/icons/EmojiFoodBeverage';
@@ -11,6 +11,9 @@ import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import routes from '../constants/routes.json';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import StorageIcon from '@material-ui/icons/Storage';
+import SwapVertIcon from '@material-ui/icons/SwapVert';
+
 
 const useStyles = makeStyles({
   links: {
@@ -56,7 +59,7 @@ const Sidebar: React.FC = () => {
         role="presentation"
       >
         <div className={classes.sideBarChild}>
-          <AssessmentIcon className={classes.icons} />
+          <TimelineIcon className={classes.icons} />
           <span className={classes.sideText}>Overview</span>
         </div>
       </Grid>
@@ -106,7 +109,7 @@ const Sidebar: React.FC = () => {
         role="presentation"
       >
         <div className={classes.sideBarChild}>
-          <ShoppingCartIcon className={classes.icons} />
+          <SwapVertIcon className={classes.icons} />
           <span className={classes.sideText}>Transactions</span>
         </div>
       </Grid>
@@ -155,7 +158,7 @@ const Sidebar: React.FC = () => {
         role="presentation"
       >
         <div className={classes.sideBarChild}>
-          <EmojiFoodBeverageIcon className={classes.icons} />
+          <StorageIcon className={classes.icons} />
           <span className={classes.sideText}>Stock History</span>
         </div>
       </Grid>
