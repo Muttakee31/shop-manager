@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import Grid from '@material-ui/core/Grid';
@@ -7,6 +7,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import * as dbpath from '../constants/config';
+import { transactionType } from '../constants/config';
 import Alert from '@material-ui/lab/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAuthenticated, logOutUser, setAuthToken } from '../features/auth/authSlice';
@@ -22,6 +23,22 @@ const sqlite3 = require('sqlite3').verbose();
 const CryptoJS = require("crypto-js");
 const jwt = require('jsonwebtoken');
 
+interface Transaction {
+  id: number;
+  client: number;
+  order_id: number;
+  paid_amount: number;
+  client_name: string;
+  supply_cost: number;
+  order_cost: number;
+  labour_cost: number;
+  discount: number | null;
+  payment_type: number;
+  transaction_type: number;
+  due_amount: number | null;
+  supply_id: number;
+  timestamp: string;
+}
 
 const CssTextField = withStyles({
   root: {
@@ -119,6 +136,10 @@ export default function HomePage() {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [orderCount, setOrderCount] = useState(0);
+  const [totalSale, setTotalSale] = useState(0);
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [totalDue, setTotalDue] = useState(0);
 
   const [alert, setAlert] = useState<string | null>(null);
   /*const [options, setOption] = useState({
@@ -138,6 +159,10 @@ export default function HomePage() {
 
   const dispatch = useDispatch();
   const authFlag= useSelector(isAuthenticated);
+
+  useEffect(()=> {
+    getTransactionCount();
+  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -181,6 +206,54 @@ export default function HomePage() {
     }
   }
 
+  const getTransactionCount = () => {
+    try {
+      const db = new sqlite3.Database(dbpath.dbPath);
+      db.all(
+        'SELECT * FROM Transactions',
+        (_err: Error, instant: Transaction[]) => {
+          if (_err) {
+            console.log(_err)
+          } else {
+            let orderSum: number = 0;
+            let saleSum: number = 0;
+            let orderCount:number = 0;
+            instant.map(item => {
+              if (item.transaction_type === transactionType["order"]) {
+                orderSum += Number(item.order_cost);
+                orderCount++;
+              }
+              if (item.transaction_type === transactionType["supply"] ||
+                item.transaction_type === transactionType["other"]) saleSum += Number(item.supply_cost);
+            });
+            setTotalSale(orderSum);
+            setTotalExpense(saleSum);
+            setOrderCount(orderCount);
+          }
+        }
+      );
+
+      db.all(
+        'SELECT * FROM User',
+        (_err: Error, instant: any[]) => {
+          if (_err) {
+            console.log(_err)
+          } else {
+            let dues = 0;
+            instant.map(item => {
+              if (item.due_amount !== null && item.due_amount > 0) dues += Number(item.due_amount);
+            });
+            setTotalDue(dues);
+          }
+        }
+      );
+      db.close();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Grid className={classes.grid}>
 
@@ -203,14 +276,14 @@ export default function HomePage() {
       <Grid className={classes.cardContainer}>
         <Card className={classes.card} variant="outlined" style={{background: '#018af8'}}>
           <CardContent className={classes.content}>
-            <span className={classes.title}>Total transaction</span>
-             <span className={classes.amount}>123234</span>
+            <span className={classes.title}>Total orders</span>
+             <span className={classes.amount}>{orderCount}</span>
           </CardContent>
         </Card>
         <Card className={classes.card} variant="outlined" style={{background: '#2fa758'}}>
           <CardContent className={classes.content}>
             <span className={classes.title}>Total sales</span>
-            <span className={classes.amount}>123234</span>
+            <span className={classes.amount}>{totalSale}</span>
           </CardContent>
         </Card>
       </Grid>
@@ -219,13 +292,13 @@ export default function HomePage() {
         <Card className={classes.card} variant="outlined" style={{background: '#1abfaa'}}>
           <CardContent className={classes.content}>
             <span className={classes.title}>Total expense</span>
-            <span className={classes.amount}>123234</span>
+            <span className={classes.amount}>{totalExpense}</span>
           </CardContent>
         </Card>
         <Card className={classes.card} variant="outlined" style={{background: '#dc0835'}}>
           <CardContent className={classes.content}>
             <span className={classes.title}>Payments due</span>
-            <span className={classes.amount}>123234</span>
+            <span className={classes.amount}>{totalDue}</span>
           </CardContent>
         </Card>
       </Grid>
