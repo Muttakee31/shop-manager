@@ -130,7 +130,10 @@ export default function ProductForm(): JSX.Element {
         else {
           // @ts-ignore
           const id = this.lastID;
-          const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+          const today = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
+          const temp = new Date();
+          temp.setHours(0,0,0,0);
+          const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
 
           db.run(
             `INSERT INTO StockHistory(product, product_title, date_created, date_updated,
@@ -139,7 +142,7 @@ export default function ProductForm(): JSX.Element {
             [
               id,
               productName,
-              today,
+              midnight,
               today,
               shopStock,
               shopStock,
