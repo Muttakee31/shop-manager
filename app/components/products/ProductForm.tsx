@@ -199,7 +199,7 @@ export default function ProductForm(): JSX.Element {
               const state: any = location.state;
               const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
-              console.log(state);
+              //console.log(state);
               if (shopStock !== state.product.shop_stock_count || godownStock !== state.product.godown_stock_count) {
                 db.run(`UPDATE StockHistory SET current_shop_stock = ?, current_godown_stock = ?,
             date_updated = ? WHERE product = ? and date_created = ?`,

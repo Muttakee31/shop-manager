@@ -99,7 +99,7 @@ export default function OrderList(): JSX.Element {
                     {row.total_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {dayjs(row.timestamp).format('MMM DD, YYYY [at] hh:mm a')}
+                    {dayjs(row.timestamp.split('Z')[0]).format('MMM DD, YYYY [at] hh:mm a')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     <VisibilityIcon

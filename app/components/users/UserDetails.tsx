@@ -230,7 +230,7 @@ export default function UserDetails(): JSX.Element {
                       {row.total_cost}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {dayjs(row.timestamp).format(
+                      {dayjs(row.timestamp.split('Z')[0]).format(
                         'MMMM DD, YYYY [a]t hh:mm a'
                       )}
                     </TableCell>

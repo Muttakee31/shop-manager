@@ -169,7 +169,7 @@ export default function StockHistoryList(): JSX.Element {
                       {row.prev_godown_stock} / {row.current_godown_stock}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {dayjs(row.date_updated).format('MMMM DD, YYYY [a]t hh:mm A')}
+                      {dayjs(row.date_updated.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
                     </TableCell>
 
                   </TableRow>

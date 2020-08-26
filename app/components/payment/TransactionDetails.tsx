@@ -123,7 +123,7 @@ export default function TransactionDetails(): JSX.Element {
               {' '}
             </Grid>
             <Grid item xs={6}>
-              {dayjs(transactionInfo.timestamp).format("MMMM DD, YYYY [a]t hh:mm A")}
+              {dayjs(transactionInfo.timestamp.split('Z')[0]).format("MMMM DD, YYYY [a]t hh:mm A")}
             </Grid>
           </Grid>
 

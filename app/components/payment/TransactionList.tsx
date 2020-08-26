@@ -132,9 +132,6 @@ export default function TransactionList(): JSX.Element {
     setSelectedDate(value);
     //console.log(value);
     const filtered = transactionList.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === value);
-    transactionList.map(item => {
-      console.log(dayjs(item.timestamp).format('YYYY-MM-DD hh:mm A'));
-    })
     setVisibleTransactionList(filtered);
   }
 
