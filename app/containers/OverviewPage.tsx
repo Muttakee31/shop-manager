@@ -158,7 +158,7 @@ export default function OverviewPage() {
                                                         }
                                                       });
                                                       db.run(
-                                                        `INSERT INTO User(name, phone, address, password, is_admin) VALUES(?,?,?,?) `,
+                                                        `INSERT INTO User(name, phone, address, password, is_admin) VALUES(?,?,?,?,?) `,
                                                         ["Shop Admin", null, null, CryptoJS.SHA256('EUCSU-204').toString() , 1],
                                                         function (err: Error) {
                                                           if (err) {
