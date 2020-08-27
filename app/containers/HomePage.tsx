@@ -172,8 +172,9 @@ export default function HomePage() {
     },
     yaxis: {
       labels: {
+        trim: true,
         style: {
-          colors: 'whitesmoke'
+          colors: 'whitesmoke',
         }
       }
     },
@@ -215,18 +216,8 @@ export default function HomePage() {
     colors: ['rgb(0,143,251)', 'rgb(255,69,96)', 'rgb(0, 227, 150)'],
   });
 
-  const [series, setSeries] = useState(
-    [{
-              name: 'Current Stock',
-              data: [44, 55, 41, 67, 22, 43]
-            }, {
-              name: 'Net sold',
-              data: [13, 23, 0, 8, 0, 27]
-            }, {
-              name: 'Net added',
-              data: [11, 17, 15, 0, 21, 0]
-            }
-            ],)
+  const [shopSeries, setShopSeries] = useState([]);
+  const [godownSeries, setGodownSeries] = useState([]);
 
   const dispatch = useDispatch();
   const authFlag= useSelector(isAuthenticated);
@@ -282,36 +273,41 @@ export default function HomePage() {
     try {
       const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
-        'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 10',
+        'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 9',
         (_err: Error, instant: StockHistory[]) => {
           if (_err) {
             console.log(_err);
           } else {
-            console.log(instant);
+            //console.log(instant);
             let productNames: string[] = [];
-            let lBar: number[] = [];
-            let mBar:number[] = [];
-            let tBar:number[] = [];
+            let lBar: number[] = [], lBar2: number[] = [];
+            let mBar:number[] = [], mBar2: number[] = [];
+            let tBar:number[] = [], tBar2: number[] = [];
             instant.map(item => {
               productNames.push(item.product_title);
               if (item.current_shop_stock < item.prev_shop_stock) {
                 lBar.push(item.current_shop_stock);
                 mBar.push(item.prev_shop_stock - item.current_shop_stock);
                 tBar.push(0);
+
+                lBar2.push(item.current_godown_stock);
+                mBar2.push(item.prev_godown_stock - item.current_godown_stock);
+                tBar2.push(0);
               }
               else {
                 lBar.push(item.prev_shop_stock);
                 mBar.push(0);
                 tBar.push(item.current_shop_stock - item.prev_shop_stock);
+
+                lBar2.push(item.current_godown_stock);
+                mBar2.push(0);
+                tBar2.push(item.current_godown_stock - item.prev_godown_stock);
               }
             });
-            console.log(lBar);
-            console.log(mBar);
-            console.log(tBar);
             // setlowBar(lBar);
             // setMidBar(mBar);
             // setTopBar(tBar);
-            setSeries([{
+            setShopSeries([{
               name: 'Current Stock',
               data: lBar
             }, {
@@ -322,19 +318,34 @@ export default function HomePage() {
               data: tBar
             }
             ]);
+            setGodownSeries([{
+              name: 'Current Stock',
+              data: lBar2
+            }, {
+              name: 'Net sold',
+              data: mBar2
+            }, {
+              name: 'Net added',
+              data: tBar2
+            }
+            ]);
 
-            setOption( prevState => ({
-              ...prevState,
-              xaxis: {
-                type: 'string',
-                categories: productNames,
-                labels: {
-                  style: {
-                    colors: "whitesmoke"
+            // @ts-ignore
+            setOption( prevState => {
+              return ({
+                ...prevState,
+                xaxis: {
+                  type: 'string',
+                  categories: productNames,
+                  labels: {
+                    trim: true,
+                    style: {
+                      colors: 'whitesmoke'
+                    }
                   }
                 }
-              }
-            }))
+              });
+            })
           }
         }
       );
@@ -450,11 +461,11 @@ export default function HomePage() {
 
       <Grid id='chart' className={classes.cardContainer}>
         <ReactApexChart options={options}
-                        series={series}
+                        series={shopSeries}
                         type="bar" height={300} width={375} />
 
         <ReactApexChart options={options}
-                        series={series}
+                        series={godownSeries}
                         type="bar" height={300} width={375} />
       </Grid>
 
