@@ -75,7 +75,7 @@ export default function SelectSupplier(props: {
   useEffect(() => {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
-      'SELECT * FROM USER',
+      'SELECT * FROM USER where is_admin is NULL',
       (_err: Error, instant: User[]) => {
         setUserList(instant);
       }

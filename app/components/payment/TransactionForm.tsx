@@ -116,6 +116,7 @@ export default function TransactionForm(): JSX.Element {
   }, []);
 
   const updateTransaction = () => {
+    // @ts-ignore
     const id: number = match.params.id;
     try {
       setAlert(null);
