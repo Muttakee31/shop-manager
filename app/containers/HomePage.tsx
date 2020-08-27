@@ -17,6 +17,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import ReactApexChart from 'react-apexcharts';
 
 
 const sqlite3 = require('sqlite3').verbose();
@@ -38,6 +39,18 @@ interface Transaction {
   due_amount: number | null;
   supply_id: number;
   timestamp: string;
+}
+
+interface StockHistory {
+  id: number;
+  product: number;
+  product_title: string;
+  prev_shop_stock: number;
+  current_shop_stock: number;
+  prev_godown_stock: number;
+  current_godown_stock: number;
+  date_created: string;
+  date_updated: string;
 }
 
 const CssTextField = withStyles({
@@ -77,7 +90,7 @@ const useStyles = makeStyles(() =>
       padding: 15,
       margin: 15,
       width: 400,
-      height: 300,
+      height: 330,
     },
     texts: {
       color: 'whitesmoke',
@@ -142,26 +155,85 @@ export default function HomePage() {
   const [totalDue, setTotalDue] = useState(0);
 
   const [alert, setAlert] = useState<string | null>(null);
-  /*const [options, setOption] = useState({
+  const [options, setOption] = useState({
     chart: {
-      id: 'line-example'
+      type: 'bar',
+      height: 300,
+      stacked: true,
+      toolbar: {
+        show: false
+      },
+      zoom: {
+        enabled: true
+      }
+    },
+    tooltip: {
+      theme: 'dark'
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: 'whitesmoke'
+        }
+      }
+    },
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        legend: {
+          position: 'bottom',
+          offsetX: -10,
+          offsetY: 0
+        }
+      }
+    }],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+      },
     },
     xaxis: {
-      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-    }
-  });*/
+      type: 'string',
+      categories: [],
+    },
+    legend: {
+      position: 'top',
+      offsetY: 20,
+      labels: {
+        useSeriesColors: true
+      },
+      dataLabels: {
+        style: {
+        color: '#000'
+        }
+      }
+    },
+    fill: {
+      colors: ['rgb(0,143,251)', 'rgb(255,69,96)', 'rgb(0, 227, 150)'],
+      opacity: 1
+    },
+    colors: ['rgb(0,143,251)', 'rgb(255,69,96)', 'rgb(0, 227, 150)'],
+  });
 
-  /*const [series, setSeries] = useState(
+  const [series, setSeries] = useState(
     [{
-      name: 'series-1',
-      data: [30, 40, 45, 50, 49, 60, 70, 91]
-    }])*/
+              name: 'Current Stock',
+              data: [44, 55, 41, 67, 22, 43]
+            }, {
+              name: 'Net sold',
+              data: [13, 23, 0, 8, 0, 27]
+            }, {
+              name: 'Net added',
+              data: [11, 17, 15, 0, 21, 0]
+            }
+            ],)
 
   const dispatch = useDispatch();
   const authFlag= useSelector(isAuthenticated);
 
   useEffect(()=> {
     getTransactionCount();
+    getStockRecordToday();
   }, []);
 
   const handleOpen = () => {
@@ -205,6 +277,74 @@ export default function HomePage() {
       console.log(e);
     }
   }
+
+  const getStockRecordToday = () => {
+    try {
+      const db = new sqlite3.Database(dbpath.dbPath);
+      db.all(
+        'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 10',
+        (_err: Error, instant: StockHistory[]) => {
+          if (_err) {
+            console.log(_err);
+          } else {
+            console.log(instant);
+            let productNames: string[] = [];
+            let lBar: number[] = [];
+            let mBar:number[] = [];
+            let tBar:number[] = [];
+            instant.map(item => {
+              productNames.push(item.product_title);
+              if (item.current_shop_stock < item.prev_shop_stock) {
+                lBar.push(item.current_shop_stock);
+                mBar.push(item.prev_shop_stock - item.current_shop_stock);
+                tBar.push(0);
+              }
+              else {
+                lBar.push(item.prev_shop_stock);
+                mBar.push(0);
+                tBar.push(item.current_shop_stock - item.prev_shop_stock);
+              }
+            });
+            console.log(lBar);
+            console.log(mBar);
+            console.log(tBar);
+            // setlowBar(lBar);
+            // setMidBar(mBar);
+            // setTopBar(tBar);
+            setSeries([{
+              name: 'Current Stock',
+              data: lBar
+            }, {
+              name: 'Net sold',
+              data: mBar
+            }, {
+              name: 'Net added',
+              data: tBar
+            }
+            ]);
+
+            setOption( prevState => ({
+              ...prevState,
+              xaxis: {
+                type: 'string',
+                categories: productNames,
+                labels: {
+                  style: {
+                    colors: "whitesmoke"
+                  }
+                }
+              }
+            }))
+          }
+        }
+      );
+
+      db.close();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  };
 
   const getTransactionCount = () => {
     try {
@@ -304,14 +444,18 @@ export default function HomePage() {
       </Grid>
 
       <Grid className={classes.header}>
-        <h3>Transaction of last 30 days</h3>
+        <h3>Product stock updates</h3>
       </Grid>
 
 
-      <Grid className={classes.cardContainer}>
-       {/* <Chart options={options}
-               series={series}
-               type="line" width={620} height={320} />*/}
+      <Grid id='chart' className={classes.cardContainer}>
+        <ReactApexChart options={options}
+                        series={series}
+                        type="bar" height={300} width={375} />
+
+        <ReactApexChart options={options}
+                        series={series}
+                        type="bar" height={300} width={375} />
       </Grid>
 
 
