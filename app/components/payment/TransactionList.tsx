@@ -30,7 +30,6 @@ interface Transaction {
   order_id: number;
   paid_amount: number;
   client_name: string;
-  supply_cost: number;
   order_cost: number;
   labour_cost: number;
   discount: number | null;
@@ -218,7 +217,7 @@ export default function TransactionList(): JSX.Element {
                     {getChip(row.transaction_type)}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.supply_id !== null ? row.supply_cost : row.order_cost}
+                    {row.order_cost}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.paid_amount}

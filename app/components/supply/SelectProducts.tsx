@@ -116,7 +116,6 @@ const sqlite3 = require('sqlite3').verbose();
 export default function SelectProducts(props: {
   selectedSupplier: User;
   setSupplyState: SetStateAction<any>;
-  setSupplyDetails: SetStateAction<any>;
 }): JSX.Element {
   const [productList, setProductList] = useState<Product[]>([]);
   const [selectedProductID, setSelectedProductID] = useState<Product | string>(
@@ -277,7 +276,7 @@ export default function SelectProducts(props: {
       0 : totalPrice + Number(labourCost) - Number(paidToSupplier);
     // insert one row into the langs table
     db.run(
-      `INSERT INTO Transactions(supply_id, supply_cost, client, client_name, transaction_type,
+      `INSERT INTO Transactions(supply_id, order_cost, client, client_name, transaction_type,
        payment_type, due_amount, paid_amount, labour_cost, discount, timestamp)
        VALUES(?,?,?,?,?,?,?,?,?,?,?) `,
       [

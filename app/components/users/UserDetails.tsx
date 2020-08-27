@@ -31,7 +31,6 @@ interface Transaction {
   order_id: number;
   paid_amount: number;
   client_name: string;
-  supply_cost: number;
   order_cost: number;
   labour_cost: number;
   discount: number | null;
@@ -281,7 +280,7 @@ export default function UserDetails(): JSX.Element {
                         })}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.supply_id !== null ? row.supply_cost : row.order_cost}
+                        {row.order_cost}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.paid_amount}

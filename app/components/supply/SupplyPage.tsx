@@ -3,21 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import Sidebar from '../../containers/Sidebar';
 import SelectSupplier from './SelectSupplier';
 import SelectProducts from './SelectProducts';
-import EnterPayment from './EnterPayment';
 import StepperComponent from './StepperComponent';
 
-interface SupplyItem {
-  supply_id: number;
-  price: number;
-  supplier_name: string;
-  supplier: number;
-  date: string;
-}
 
 export default function SupplyPage(): JSX.Element {
   const [supplyState, setSupplyState] = useState(0);
   const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [supplyDetails, setSupplyDetails] = useState<SupplyItem | {}>({});
   // setOrderState(1);
   /*  useEffect(() => {
     // setOrderState(0);
@@ -39,13 +30,6 @@ export default function SupplyPage(): JSX.Element {
           <SelectProducts
             setSupplyState={setSupplyState}
             selectedSupplier={selectedUser}
-            setSupplyDetails={setSupplyDetails}
-          />
-        )}
-        {supplyState === 2 && (
-          <EnterPayment
-            selectedSupplier={selectedUser}
-            supplyDetails={supplyDetails}
           />
         )}
       </Grid>

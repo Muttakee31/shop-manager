@@ -116,6 +116,7 @@ export default function TransactionForm(): JSX.Element {
   }, []);
 
   const updateTransaction = () => {
+    const id: number = match.params.id;
     try {
       setAlert(null);
       const decoded = jwt.verify(token, dbpath.SECRET_KEY);
@@ -123,12 +124,13 @@ export default function TransactionForm(): JSX.Element {
       if (decoded.username === user) {
         db.run(
           `UPDATE Transactions SET paid_amount = ?, order_cost = ?,
-           discount = ?, labour_cost = ? `,
+           discount = ?, labour_cost = ? WHERE id = ?`,
           [
             paidAmount,
             totalCost,
             discount,
-            labourCost
+            labourCost,
+            id
           ],
           function(err: Error) {
             if (err) {

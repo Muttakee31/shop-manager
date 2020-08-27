@@ -224,7 +224,7 @@ export default function HomePage() {
                 orderCount++;
               }
               if (item.transaction_type === transactionType["supply"] ||
-                item.transaction_type === transactionType["other"]) saleSum += Number(item.supply_cost);
+                item.transaction_type === transactionType["other"]) saleSum += Number(item.order_cost);
             });
             setTotalSale(orderSum);
             setTotalExpense(saleSum);
@@ -303,16 +303,16 @@ export default function HomePage() {
         </Card>
       </Grid>
 
-      {/*<Grid className={classes.header}>
+      <Grid className={classes.header}>
         <h3>Transaction of last 30 days</h3>
-      </Grid>*/}
+      </Grid>
 
 
-      {/*<Grid className={classes.cardContainer}>
-        <Chart options={options}
+      <Grid className={classes.cardContainer}>
+       {/* <Chart options={options}
                series={series}
-               type="line" width={620} height={320} />
-      </Grid>*/}
+               type="line" width={620} height={320} />*/}
+      </Grid>
 
 
 

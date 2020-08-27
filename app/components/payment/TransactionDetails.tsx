@@ -143,7 +143,7 @@ export default function TransactionDetails(): JSX.Element {
               {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.supply_cost !== null ? transactionInfo.supply_cost : transactionInfo.order_cost}
+              {transactionInfo.order_cost}
             </Grid>
           </Grid>
 
