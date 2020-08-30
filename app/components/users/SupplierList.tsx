@@ -90,7 +90,14 @@ export default function SupplierList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {supplierList.map((row) => (
+              {supplierList.length === 0 ?
+                <TableRow>
+                  <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                    No items
+                  </TableCell>
+                </TableRow>
+                :
+                supplierList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.name}
@@ -102,7 +109,7 @@ export default function SupplierList(): JSX.Element {
                     {row.address}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.due_amount}
+                    {row.due_amount > 0 ? 0 : -1 * row.due_amount}
                   </TableCell>
                   <TableCell align="center" className={classes.texts}>
                     <VisibilityIcon onClick={() => viewSupplier(row)} />

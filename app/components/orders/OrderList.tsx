@@ -90,24 +90,33 @@ export default function OrderList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orderList.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell align="left" className={classes.texts}>
-                    {row.customer_name}
-                  </TableCell>
-                  <TableCell align="left" className={classes.texts}>
-                    {row.total_cost}
-                  </TableCell>
-                  <TableCell align="left" className={classes.texts}>
-                    {dayjs(row.timestamp.split('Z')[0]).format('MMM DD, YYYY [at] hh:mm a')}
-                  </TableCell>
-                  <TableCell align="left" className={classes.texts}>
-                    <VisibilityIcon
-                      onClick={() => history.push(`/order/${row.id}`)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {orderList.length === 0 ?
+                  <TableRow>
+                    <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                      No orders yet.
+                    </TableCell>
+                  </TableRow>
+                  :
+                  orderList.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell align="left" className={classes.texts}>
+                      {row.customer_name}
+                    </TableCell>
+                    <TableCell align="left" className={classes.texts}>
+                      {row.total_cost}
+                    </TableCell>
+                    <TableCell align="left" className={classes.texts}>
+                      {dayjs(row.timestamp.split('Z')[0]).format('MMM DD, YYYY [at] hh:mm a')}
+                    </TableCell>
+                    <TableCell align="left" className={classes.texts}>
+                      <VisibilityIcon
+                        onClick={() => history.push(`/order/${row.id}`)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                  )
+                )
+              }
             </TableBody>
           </Table>
         </TableContainer>

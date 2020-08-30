@@ -111,7 +111,14 @@ export default function ProductList(): JSX.Element {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {productList.map((row) => (
+                {productList.length === 0 ?
+                  <TableRow>
+                    <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                      No items
+                    </TableCell>
+                  </TableRow>
+                  :
+                  productList.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="left" className={classes.texts}>
                       {row.title}

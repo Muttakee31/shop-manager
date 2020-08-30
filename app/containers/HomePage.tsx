@@ -18,6 +18,7 @@ import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ReactApexChart from 'react-apexcharts';
+import dayjs from 'dayjs';
 
 
 const sqlite3 = require('sqlite3').verbose();
@@ -51,6 +52,11 @@ interface StockHistory {
   current_godown_stock: number;
   date_created: string;
   date_updated: string;
+}
+
+interface SeriesData {
+  name: string;
+  data: number[];
 }
 
 const CssTextField = withStyles({
@@ -154,6 +160,9 @@ export default function HomePage() {
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalDue, setTotalDue] = useState(0);
 
+  const [shopSeries, setShopSeries] = useState<SeriesData[]>([]);
+  const [godownSeries, setGodownSeries] = useState<SeriesData[]>([]);
+
   const [alert, setAlert] = useState<string | null>(null);
   const [options, setOption] = useState({
     chart: {
@@ -165,6 +174,14 @@ export default function HomePage() {
       },
       zoom: {
         enabled: true
+      }
+    },
+    title: {
+      text: "",
+      align: 'center',
+      margin: 0,
+      style: {
+        color: 'whitesmoke'
       }
     },
     tooltip: {
@@ -199,7 +216,7 @@ export default function HomePage() {
     },
     legend: {
       position: 'top',
-      offsetY: 20,
+      offsetY: 10,
       labels: {
         useSeriesColors: true
       },
@@ -215,9 +232,6 @@ export default function HomePage() {
     },
     colors: ['rgb(0,143,251)', 'rgb(255,69,96)', 'rgb(0, 227, 150)'],
   });
-
-  const [shopSeries, setShopSeries] = useState([]);
-  const [godownSeries, setGodownSeries] = useState([]);
 
   const dispatch = useDispatch();
   const authFlag= useSelector(isAuthenticated);
@@ -308,7 +322,7 @@ export default function HomePage() {
             // setMidBar(mBar);
             // setTopBar(tBar);
             setShopSeries([{
-              name: 'Current Stock',
+              name: '',
               data: lBar
             }, {
               name: 'Net sold',
@@ -319,7 +333,7 @@ export default function HomePage() {
             }
             ]);
             setGodownSeries([{
-              name: 'Current Stock',
+              name: '',
               data: lBar2
             }, {
               name: 'Net sold',

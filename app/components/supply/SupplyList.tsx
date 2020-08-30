@@ -90,7 +90,14 @@ export default function SupplyList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {supplyList.map((row) => (
+              {supplyList.length === 0 ?
+                <TableRow>
+                  <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                    No supply event yet.
+                  </TableCell>
+                </TableRow>
+                :
+                supplyList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.supplier_name}

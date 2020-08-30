@@ -127,8 +127,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 export default function SelectProducts(props: {
   selectedCustomer: User;
-  setOrderState: SetStateAction<any>;
-  setOrderDetails: SetStateAction<any>;
+  setOrderState: SetStateAction<any>
 }): JSX.Element {
   const [productList, setProductList] = useState<Product[]>([]);
   const [selectedProductID, setSelectedProductID] = useState<Product | string>('');

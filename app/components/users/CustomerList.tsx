@@ -81,7 +81,14 @@ export default function CustomerList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customerList.map((row: Customer) => (
+              {customerList.length === 0 ?
+                <TableRow>
+                  <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
+                    No items
+                  </TableCell>
+                </TableRow>
+                :
+                customerList.map((row: Customer) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.name}
@@ -93,7 +100,7 @@ export default function CustomerList(): JSX.Element {
                     {row.address}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.due_amount}
+                    {row.due_amount > 0 ? row.due_amount : 0}
                   </TableCell>
                   <TableCell align="center" className={classes.texts}>
                     <VisibilityIcon onClick={() => viewCustomer(row)} />
