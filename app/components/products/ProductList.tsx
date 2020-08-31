@@ -13,6 +13,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
 import * as dbpath from '../../constants/config';
 import Sidebar from '../../containers/Sidebar';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
+
+const sqlite3 = require('sqlite3').verbose();
+
 
 interface Product {
   id: number;
@@ -35,14 +41,58 @@ const useStyles = makeStyles({
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    border: '2px solid #000',
+    background: '#232c39',
+    boxShadow: '3px 3px 20px #010101',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 400,
+    height: 170,
+    margin: 15
+  },
+  textField: {
+    color: 'white',
+    borderColor: 'white',
+    margin: '0 0 16px 0',
+  },
+  gridMargin: {
+    margin: '10px 0'
+  },
+  deleteButton: {
+    background: '#ca263d',
+    marginRight: 15,
+    color: 'floralwhite',
+    '&:hover' : {
+      background: '#d7495d',
+      color: 'floralwhite',
+    },
+    '&:focus' : {
+      background: '#d94056',
+      color: 'floralwhite',
+    },
+  },
 });
 
 export default function ProductList(): JSX.Element {
   const classes = useStyles();
   const [productList, setProductList] = useState<Product[]>([]);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [toBeDeleted, setToBeDeleted] = useState(-1);
   const history = useHistory();
   // console.log('Connected to the shop database.');
   useEffect(() => {
+    getProductList();
+  }, []);
+
+  const getProductList = () => {
     try {
       const sqlite3 = require('sqlite3').verbose();
       const db = new sqlite3.Database(dbpath.dbPath);
@@ -63,7 +113,7 @@ export default function ProductList(): JSX.Element {
     } catch (e) {
       console.log(e);
     }
-  }, []);
+  }
 
   const editProduct = (instant: Product) => {
     history.push({
@@ -71,6 +121,34 @@ export default function ProductList(): JSX.Element {
       state: { product: instant },
     });
   };
+
+  const openDeleteProduct = (instant: Product) => {
+    setDeleteModal(true);
+    setToBeDeleted(instant.id);
+  }
+
+  const deleteProduct = () => {
+    try {
+      const db = new sqlite3.Database(dbpath.dbPath);
+      db.run(
+        'DELETE FROM Product WHERE id = ?', [toBeDeleted],
+        (_err: Error) => {
+          if (_err) {
+            console.log(_err);
+          }
+          else {
+            setDeleteModal(false);
+            getProductList();
+          }
+        }
+      );
+      db.close();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  };
+
 
   return (
     <Grid container>
@@ -139,7 +217,8 @@ export default function ProductList(): JSX.Element {
                       {row.unit === null ? 'N/A' : row.unit}
                     </TableCell>
                     <TableCell align="center" className={classes.texts}>
-                      <EditIcon onClick={() => editProduct(row)} />
+                      <EditIcon onClick={() => editProduct(row)} style={{padding: '0 5px'}}/>
+                      <DeleteIcon onClick={() => openDeleteProduct(row)} style={{padding: '0 5px'}}/>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -148,6 +227,42 @@ export default function ProductList(): JSX.Element {
           </TableContainer>
         </Grid>
       </Grid>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={deleteModal}
+        onClose={()=> setDeleteModal(false)}
+        closeAfterTransition
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={deleteModal}>
+          <div className={classes.paper}>
+
+            <Grid style={{textAlign: 'center'}}>
+              <h3>
+                Are you sure?
+              </h3>
+            </Grid>
+
+            <Grid>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                className={classes.deleteButton}
+                onClick={() => {
+                  deleteProduct();
+                }}
+              >
+                Delete
+              </Button>
+            </Grid>
+          </div>
+        </Fade>
+      </Modal>
     </Grid>
   );
 }
