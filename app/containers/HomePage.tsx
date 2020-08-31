@@ -18,7 +18,6 @@ import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ReactApexChart from 'react-apexcharts';
-import dayjs from 'dayjs';
 
 
 const sqlite3 = require('sqlite3').verbose();
