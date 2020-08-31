@@ -205,7 +205,6 @@ export default function OverviewPage() {
     const temp = new Date();
     temp.setHours(0,0,0,0);
     const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
-    const midnight1 = dayjs(temp).format('YYYY-MM-DDTHH:mm:ss[Z]');
     try {
       db.all(
         'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 1',
@@ -216,7 +215,7 @@ export default function OverviewPage() {
             // console.log(instant[0].date_created);
             // console.log(midnight);
 
-            const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+            const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
             //console.log(dayjs(midnight).isBefore(instant.date_created));
             //console.log(dayjs(midnight).isSameOrBefore(instant.date_created));
             //console.log(dayjs(midnight).isBefore(instant[0].date_created));
@@ -239,7 +238,7 @@ export default function OverviewPage() {
                         stmt.run(
                           product.id,
                           product.title,
-                          midnight1,
+                          midnight,
                           date,
                           product.shop_stock_count,
                           product.shop_stock_count,

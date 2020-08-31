@@ -137,6 +137,12 @@ const useStyles = makeStyles(() =>
       margin: 17,
       borderRadius: 9
     },
+    graphHeader: {
+      textAlign: 'center',
+      fontSize: 14,
+      textDecoration: 'underline',
+      textUnderlinePosition: 'under',
+    },
     title: {
       fontSize: 14
     },
@@ -467,8 +473,13 @@ export default function HomePage() {
         </Card>
       </Grid>
 
-      <Grid className={classes.header}>
-        <h3>Product stock updates</h3>
+      <Grid container>
+        <Grid item xs={6} className={classes.graphHeader}>
+          <h3>Shop</h3>
+        </Grid>
+        <Grid item xs={6} className={classes.graphHeader}>
+          <h3>Godown</h3>
+        </Grid>
       </Grid>
 
 
