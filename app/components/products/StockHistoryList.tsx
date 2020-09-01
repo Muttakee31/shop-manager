@@ -71,6 +71,11 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+function compare(a:StockHistory, b:StockHistory) {
+  if (dayjs(a.date_updated).isBefore(b.date_updated)) return 1;
+  if (dayjs(a.date_updated).isAfter(b.date_updated)) return -1;
+  return 0;
+}
 
 export default function StockHistoryList(): JSX.Element {
   const classes = useStyles();
@@ -102,7 +107,7 @@ export default function StockHistoryList(): JSX.Element {
           if (err) {
             console.log(err);
           } else {
-            setStockHistoryList(instant);
+            setStockHistoryList(instant.sort(compare));
             console.log(instant);
           }
         }

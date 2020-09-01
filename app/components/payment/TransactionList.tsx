@@ -100,6 +100,12 @@ const useStyles = makeStyles({
   '2': 'Both',
 };*/
 
+function compare(a:Transaction, b:Transaction) {
+  if (dayjs(a.timestamp).isBefore(b.timestamp)) return 1;
+  if (dayjs(a.timestamp).isAfter(b.timestamp)) return -1;
+  return 0;
+}
+
 const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c']
 
 const CssTextField = withStyles({
@@ -164,7 +170,7 @@ export default function TransactionList(): JSX.Element {
        (_err: Error, instant: Transaction[]) => {
          setTransactionList(instant);
          setVisibleTransactionList(
-           instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate))
+           instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate).sort(compare))
        }
      );
      db.close();
