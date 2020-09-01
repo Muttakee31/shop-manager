@@ -14,6 +14,11 @@ import dayjs from 'dayjs';
 import routes from '../../constants/routes.json';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import { useSelector } from 'react-redux';
+import { isAuthenticated } from '../../features/auth/authSlice';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -34,26 +39,93 @@ const useStyles = makeStyles({
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    border: '2px solid #000',
+    background: '#232c39',
+    boxShadow: '3px 3px 20px #010101',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 400,
+    height: 170,
+    margin: 15
+  },
+  deleteButton: {
+    background: '#ca263d',
+    marginRight: 15,
+    color: 'floralwhite',
+    '&:hover' : {
+      background: '#d7495d',
+      color: 'floralwhite',
+    },
+    '&:focus' : {
+      background: '#d94056',
+      color: 'floralwhite',
+    },
+  },
 });
 
 export default function SupplyList(): JSX.Element {
   const classes = useStyles();
   const [supplyList, setSupplyList] = useState<Supply[]>([]);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [toBeDeleted, setToBeDeleted] = useState(-1);
   const history = useHistory();
+  const authFlag= useSelector(isAuthenticated);
+
   // console.log('Connected to the shop database.');
   // const [SupplyList, setSupplyList] = useState([]);
 
   useEffect(() => {
     // add db.all function to get all Supplys
-    const db = new sqlite3.Database(dbpath.dbPath);
-    db.all(
-      'SELECT * FROM Supply',
-      (_err: Error, instant: Supply[]) => {
-        setSupplyList(instant);
-      }
-    );
-    db.close();
+    getSupplies();
   }, []);
+
+  const openDeleteSupply = (instant: Supply) => {
+    setDeleteModal(true);
+    setToBeDeleted(instant.id);
+  }
+
+  const getSupplies = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    try {
+      db.all(
+        'SELECT * FROM Supply',
+        (_err: Error, instant: Supply[]) => {
+          setSupplyList(instant);
+        }
+      );
+      db.close();
+    }
+    catch (e) {
+    }
+  };
+
+  const deleteSupply = () => {
+    try {
+      const db = new sqlite3.Database(dbpath.dbPath);
+      db.run(
+        'DELETE FROM Supply WHERE id = ?', [toBeDeleted],
+        (_err: Error) => {
+          if (_err) {
+            console.log(_err);
+          } else {
+            setDeleteModal(false);
+            getSupplies();
+          }
+        }
+      );
+      db.close();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   return (
     <Grid container>
@@ -109,9 +181,12 @@ export default function SupplyList(): JSX.Element {
                     {dayjs(row.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm a')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    <VisibilityIcon
+                    <VisibilityIcon style={{ padding: '0 5px' }}
                       onClick={() => history.push(`/supply/${row.id}`)}
                     />
+                    {authFlag &&
+                    <DeleteIcon onClick={() => openDeleteSupply(row)} style={{ padding: '0 5px' }}/>
+                    }
                   </TableCell>
                 </TableRow>
               ))}
@@ -119,6 +194,42 @@ export default function SupplyList(): JSX.Element {
           </Table>
         </TableContainer>
       </Grid>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={deleteModal}
+        onClose={()=> setDeleteModal(false)}
+        closeAfterTransition
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={deleteModal}>
+          <div className={classes.paper}>
+
+            <Grid style={{textAlign: 'center'}}>
+              <h3>
+                Are you sure?
+              </h3>
+            </Grid>
+
+            <Grid>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                className={classes.deleteButton}
+                onClick={() => {
+                  deleteSupply();
+                }}
+              >
+                Delete
+              </Button>
+            </Grid>
+          </div>
+        </Fade>
+      </Modal>
     </Grid>
   );
 }

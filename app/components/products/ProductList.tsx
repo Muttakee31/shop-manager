@@ -16,6 +16,8 @@ import Sidebar from '../../containers/Sidebar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
+import { useSelector } from 'react-redux';
+import { isAuthenticated } from '../../features/auth/authSlice';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -87,6 +89,8 @@ export default function ProductList(): JSX.Element {
   const [deleteModal, setDeleteModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState(-1);
   const history = useHistory();
+  const authFlag= useSelector(isAuthenticated);
+
   // console.log('Connected to the shop database.');
   useEffect(() => {
     getProductList();
@@ -218,7 +222,9 @@ export default function ProductList(): JSX.Element {
                     </TableCell>
                     <TableCell align="center" className={classes.texts}>
                       <EditIcon onClick={() => editProduct(row)} style={{padding: '0 5px'}}/>
-                      <DeleteIcon onClick={() => openDeleteProduct(row)} style={{padding: '0 5px'}}/>
+                      {authFlag &&
+                      <DeleteIcon onClick={() => openDeleteProduct(row)} style={{ padding: '0 5px' }}/>
+                      }
                     </TableCell>
                   </TableRow>
                 ))}

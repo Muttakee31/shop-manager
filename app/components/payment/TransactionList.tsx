@@ -21,6 +21,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { useSelector } from 'react-redux';
 import { isAuthenticated } from '../../features/auth/authSlice';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -58,7 +61,37 @@ const useStyles = makeStyles({
   topbin: {
     display: 'flex',
     justifyContent: 'space-between',
-  }
+  },
+  deleteButton: {
+    background: '#ca263d',
+    marginRight: 15,
+    color: 'floralwhite',
+    '&:hover' : {
+      background: '#d7495d',
+      color: 'floralwhite',
+    },
+    '&:focus' : {
+      background: '#d94056',
+      color: 'floralwhite',
+    },
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    border: '2px solid #000',
+    background: '#232c39',
+    boxShadow: '3px 3px 20px #010101',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 400,
+    height: 170,
+    margin: 15
+  },
 });
 
 /*const type = {
@@ -104,6 +137,8 @@ export default function TransactionList(): JSX.Element {
   const authFlag= useSelector(isAuthenticated);
 
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [toBeDeleted, setToBeDeleted] = useState(-1);
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   const [visibleTransactionList, setVisibleTransactionList] = useState<Transaction[]>([]);
@@ -113,17 +148,50 @@ export default function TransactionList(): JSX.Element {
 
   useEffect(() => {
     // add db.all function to get all transactions
-    const db = new sqlite3.Database(dbpath.dbPath);
-    db.all(
-      'SELECT * FROM Transactions',
-      (_err: Error, instant: Transaction[]) => {
-        setTransactionList(instant);
-        setVisibleTransactionList(
-          instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate))
-      }
-    );
-    db.close();
+    getTransactionList();
   }, []);
+
+  const openDeleteTransaction = (instant: Transaction) => {
+    setDeleteModal(true);
+    setToBeDeleted(instant.id);
+  };
+
+  const getTransactionList = () => {
+   try {
+     const db = new sqlite3.Database(dbpath.dbPath);
+     db.all(
+       'SELECT * FROM Transactions',
+       (_err: Error, instant: Transaction[]) => {
+         setTransactionList(instant);
+         setVisibleTransactionList(
+           instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate))
+       }
+     );
+     db.close();
+  } catch (e) {
+
+   }
+  }
+
+  const deleteTransaction = () => {
+    try {
+      const db = new sqlite3.Database(dbpath.dbPath);
+      db.run(
+        'DELETE FROM Transactions WHERE id = ?', [toBeDeleted],
+        (_err: Error) => {
+          if (_err) {
+            console.log(_err);
+          } else {
+            setDeleteModal(false);
+            getTransactionList();
+          }
+        }
+      );
+      db.close();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const changeDate = (e:React.ChangeEvent) => {
     // @ts-ignore
@@ -133,6 +201,8 @@ export default function TransactionList(): JSX.Element {
     const filtered = transactionList.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === value);
     setVisibleTransactionList(filtered);
   }
+
+
 
   const getChip = (type : number) => {
     const text = Object.keys(transactionType).filter(item => {
@@ -234,10 +304,13 @@ export default function TransactionList(): JSX.Element {
                     <TableCell align="center" className={classes.texts}>
                       <VisibilityIcon
                         onClick={() => history.push(`/transaction-details/${row.id}`)}
-                        style={{ padding: '0 8px' }}
+                        style={{ padding: '0 5px' }}
                       />
                       {authFlag &&
-                      <EditIcon onClick={() => history.push(`/update-transaction/${row.id}`)}/>
+                        <>
+                          <EditIcon onClick={() => history.push(`/update-transaction/${row.id}`)}/>
+                          <DeleteIcon onClick={() => openDeleteTransaction(row)} style={{ padding: '0 5px' }}/>
+                        </>
                       }
                     </TableCell>
                 </TableRow>
@@ -246,6 +319,42 @@ export default function TransactionList(): JSX.Element {
           </Table>
         </TableContainer>
       </Grid>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={deleteModal}
+        onClose={()=> setDeleteModal(false)}
+        closeAfterTransition
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={deleteModal}>
+          <div className={classes.paper}>
+
+            <Grid style={{textAlign: 'center'}}>
+              <h3>
+                Are you sure?
+              </h3>
+            </Grid>
+
+            <Grid>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                className={classes.deleteButton}
+                onClick={() => {
+                  deleteTransaction();
+                }}
+              >
+                Delete
+              </Button>
+            </Grid>
+          </div>
+        </Fade>
+      </Modal>
     </Grid>
   );
 }
