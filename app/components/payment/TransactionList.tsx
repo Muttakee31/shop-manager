@@ -160,7 +160,7 @@ export default function TransactionList(): JSX.Element {
    try {
      const db = new sqlite3.Database(dbpath.dbPath);
      db.all(
-       'SELECT * FROM Transactions',
+       'SELECT * FROM Transactions ORDER BY id DESC',
        (_err: Error, instant: Transaction[]) => {
          setTransactionList(instant);
          setVisibleTransactionList(

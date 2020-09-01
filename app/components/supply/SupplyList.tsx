@@ -96,7 +96,7 @@ export default function SupplyList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     try {
       db.all(
-        'SELECT * FROM Supply',
+        'SELECT * FROM Supply ORDER BY id DESC',
         (_err: Error, instant: Supply[]) => {
           setSupplyList(instant);
         }

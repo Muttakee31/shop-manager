@@ -96,7 +96,7 @@ export default function OrderList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     try {
       db.all(
-        'SELECT * FROM Orders',
+        'SELECT * FROM Orders ORDER BY id DESC',
         (_err: Error, instant: Order[]) => {
           setOrderList(instant);
         }
