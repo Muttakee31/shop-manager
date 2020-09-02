@@ -91,8 +91,8 @@ export default function SelectCustomer(props: {
 
     // insert one row into the langs table
     db.run(
-      `INSERT INTO User(name, phone, address, is_customer) VALUES(?,?,?,?) `,
-      [userName, userPhone, userAddress, 1],
+      `INSERT INTO User(name, phone, address, is_customer, due_amount) VALUES(?,?,?,?,?) `,
+      [userName, userPhone, userAddress, 1, 0],
       function (err: Error) {
         if (err) {
           console.log(err.message);

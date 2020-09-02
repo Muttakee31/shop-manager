@@ -224,7 +224,7 @@ export default function SelectProducts(props: {
                 if (error) {
                   console.log(error.message);
                 } else {
-                  console.log(`supply item added.${instant.store}`);
+                  //console.log(`supply item added.${instant.store}`);
                   const dest =
                     instant.store === '0'
                       ? 'shop_stock_count'
@@ -298,7 +298,7 @@ export default function SelectProducts(props: {
         } else if (due> 0 ||
           props.selectedSupplier.is_supplier !== 1) {
           db.run(
-            `UPDATE User set due_amount = due_amount - ?, has_due_bill = ?, is_customer = ? WHERE id = ?`,
+            `UPDATE User set due_amount = due_amount - ?, has_due_bill = ?, is_supplier = ? WHERE id = ?`,
             [due, due>0?1:0, 1, props.selectedSupplier.id],
             function (error: Error) {
               if (error) {

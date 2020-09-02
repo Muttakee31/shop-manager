@@ -89,8 +89,8 @@ export default function SelectSupplier(props: {
 
     // insert one row into the langs table
     db.run(
-      `INSERT INTO User(name, phone, address, is_supplier) VALUES(?,?,?,?) `,
-      [userName, userPhone, userAddress, 1],
+      `INSERT INTO User(name, phone, address, is_supplier, due_amount) VALUES(?,?,?,?,?) `,
+      [userName, userPhone, userAddress, 1, 0],
       function (err: Error) {
         if (err) {
           console.log(err.message);
