@@ -98,7 +98,7 @@ export default function StockHistoryList(): JSX.Element {
       const sqlite3 = require('sqlite3').verbose();
       const db = new sqlite3.Database(dbpath.dbPath);
 
-      const dateFilter = dayjs(selectedDate).format('YYYY-MM-DDThh:mm:ss[Z]');
+      const dateFilter = dayjs(selectedDate).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
       db.all(
         'SELECT * FROM StockHistory WHERE date_created = ?',

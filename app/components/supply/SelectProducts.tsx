@@ -183,7 +183,7 @@ export default function SelectProducts(props: {
 
   const createSupply = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     let id = -1;
     // console.log(JSON.stringify(props.selectedSupplier));
     db.run(
@@ -204,7 +204,7 @@ export default function SelectProducts(props: {
 
           const temp = new Date();
           temp.setHours(0,0,0,0);
-          const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
+          const midnight = dayjs(temp).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
           const stmt = db.prepare(
             `INSERT INTO SupplyItem(
@@ -270,7 +270,7 @@ export default function SelectProducts(props: {
 
   const createTransaction = (supply_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
     let due = totalPrice + Number(labourCost) - Number(paidToSupplier) <= 0 ?
       0 : totalPrice + Number(labourCost) - Number(paidToSupplier);

@@ -196,10 +196,10 @@ export default function SelectProducts(props: {
 
   const createOrder = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     const temp = new Date();
     temp.setHours(0,0,0,0);
-    const midnight = dayjs(temp).format('YYYY-MM-DDThh:mm:ss[Z]');
+    const midnight = dayjs(temp).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
     let id:number;
         // console.log(JSON.stringify(props.selectedCustomer));
@@ -295,7 +295,7 @@ export default function SelectProducts(props: {
 
   const createTransaction = (order_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
-    const date = dayjs(new Date()).format('YYYY-MM-DDThh:mm:ss[Z]');
+    const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     let due = totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer) <= 0 ?
       0 : totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer);
     // insert one row into the langs table
