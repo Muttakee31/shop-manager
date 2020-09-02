@@ -99,7 +99,7 @@ const useStyles = makeStyles({
   selectField: {
     color: 'white',
     borderColor: 'white',
-    width: '20vw',
+    width: '210px',
     margin: 10,
   },
   total: {
@@ -367,7 +367,7 @@ export default function SelectProducts(props: {
           />
         </Grid>
       </Grid>
-      <Grid direction="row">
+      <Grid style={{margin: '0 20px'}}>
         <FormControl component="fieldset">
           <FormLabel component="legend">Select storage</FormLabel>
           <RadioGroup
@@ -375,6 +375,7 @@ export default function SelectProducts(props: {
             name="store"
             value={store}
             onChange={handleRadioChange}
+            row
           >
             <FormControlLabel
               value="0"
@@ -389,7 +390,7 @@ export default function SelectProducts(props: {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid>
+      <Grid style={{margin: '0 20px'}}>
         <Button
           color="primary"
           variant="contained"
@@ -455,51 +456,54 @@ export default function SelectProducts(props: {
         </Grid>
       )}
 
-      <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
-        <Grid>
-          <FormControl className={classes.selectField}>
-            <InputLabel id="demo-simple-select-label">Payment type</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={type}
-              onChange={handleChange}
-            >
-              <MenuItem value="0">Paid</MenuItem>
-              <MenuItem value="1">Due</MenuItem>
-              <MenuItem value="2">Both</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+      <Grid item style={{width: '250px', margin: '20px auto'}}>
+        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+          <Grid>
+            <FormControl className={classes.selectField}>
+              <InputLabel id="demo-simple-select-label">Payment type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={type}
+                onChange={handleChange}
+              >
+                <MenuItem value="0">Paid</MenuItem>
+                <MenuItem value="1">Due</MenuItem>
+                <MenuItem value="2">Both</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid>
+            <CssTextField
+              id="standard-basic"
+              label="Labour cost"
+              value={labourCost}
+              className={classes.textField}
+              onChange={(e) => setLabourCost(e.target.value)}
+            />
+          </Grid>
+
+          <Grid>
+            <CssTextField
+              id="standard-required"
+              label="Paid to supplier"
+              value={paidToSupplier}
+              className={classes.textField}
+              onChange={(e) => setPaidToSupplier(e.target.value)}
+            />
+          </Grid>
+
+        </form>
 
         <Grid>
-          <CssTextField
-            id="standard-basic"
-            label="Labour cost"
-            value={labourCost}
-            fullWidth
-            className={classes.textField}
-            onChange={(e) => setLabourCost(e.target.value)}
-          />
-        </Grid>
-
-        <Grid>
-          <CssTextField
-            id="standard-required"
-            label="Paid to supplier"
-            value={paidToSupplier}
-            className={classes.textField}
-            fullWidth
-            onChange={(e) => setPaidToSupplier(e.target.value)}
-          />
-        </Grid>
-
-      </form>
-
-      <Grid>
-        <Button variant="contained" color="primary" onClick={createSupply}>
-          Confirm
-        </Button>
+          <Button variant="contained" color="primary"
+                  onClick={createSupply}
+                  style={{ margin: '20px auto', width: '220px' }}
+                  disabled={supplyItemList.length === 0}>
+            Confirm
+          </Button>
+        </Grid>`
       </Grid>
     </>
   );

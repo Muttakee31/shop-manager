@@ -50,7 +50,7 @@ const useStyles = makeStyles({
   textField: {
     color: 'white',
     borderColor: 'white',
-    margin: 10,
+    margin: '10px 0',
   },
   selectField: {
     color: 'white',
@@ -122,8 +122,13 @@ export default function SelectSupplier(props: {
   };
 
   return (
-    <Grid container>
-      <Grid item xs={12}>
+    <Grid container direction='column'>
+
+      <Grid className={classes.header}>
+        <h3>Choose a supplier</h3>
+      </Grid>
+
+      <Grid>
         <Autocomplete
           id="combo-box-demo"
           options={userList}
@@ -133,12 +138,12 @@ export default function SelectSupplier(props: {
             setSelectedUser(newValue);
           }}
           renderInput={(params) => (
-            <CssTextField {...params} label="Select supplier" />
+            <CssTextField {...params} label="Find a supplier" />
           )}
         />
       </Grid>
 
-      <Grid>
+      <Grid  style={{margin: '12px auto'}}>
         <Button
           variant="contained"
           color="primary"
@@ -148,7 +153,11 @@ export default function SelectSupplier(props: {
         </Button>
       </Grid>
 
-      <Grid>
+      <Grid className={classes.header}>
+        <h3>Or,<br/> Create a customer</h3>
+      </Grid>
+
+      <Grid item style={{width: '250px', margin: '0 auto'}}>
         <form>
           <Grid>
             <CssTextField
@@ -181,13 +190,14 @@ export default function SelectSupplier(props: {
               onChange={(e) => setAddress(e.target.value)}
             />
           </Grid>
-          <Grid>
+          <Grid style={{marginTop: '12px'}}>
             <Button
               variant="contained"
               color="primary"
               onClick={(e) => createSupplier(e)}
+              fullWidth
             >
-              Create
+              Create supplier
             </Button>
           </Grid>
         </form>

@@ -104,7 +104,7 @@ const useStyles = makeStyles({
     fontSize: '20px',
   },
   selectField: {
-    width: '20vw',
+    width: '210px',
     margin: 10,
     '&:input' : {
       color: 'white',
@@ -383,7 +383,7 @@ export default function SelectProducts(props: {
           />
         </Grid>
       </Grid>
-      <Grid direction="row">
+      <Grid direction="row" style={{margin: '0 20px'}}>
         <FormControl component="fieldset">
           <FormLabel component="legend">Select storage</FormLabel>
           <RadioGroup
@@ -391,6 +391,7 @@ export default function SelectProducts(props: {
             name="store"
             value={store}
             onChange={handleRadioChange}
+            row
           >
             <FormControlLabel
               value="0"
@@ -405,7 +406,7 @@ export default function SelectProducts(props: {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid>
+      <Grid style={{margin: '0 20px'}}>
         <Button
           color="primary"
           variant="contained"
@@ -472,7 +473,7 @@ export default function SelectProducts(props: {
       )}
 
       <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
-        <Grid>
+        <Grid style={{margin: '20px auto'}}>
           <FormControl style={{color: 'white'}}>
             <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
             <Select
@@ -494,7 +495,6 @@ export default function SelectProducts(props: {
             id="standard-basic"
             label="Labour cost"
             value={labourCost}
-            fullWidth
             className={classes.textField}
             onChange={(e) => setLabourCost(e.target.value)}
           />
@@ -506,7 +506,6 @@ export default function SelectProducts(props: {
             label="Discount"
             value={discount}
             className={classes.textField}
-            fullWidth
             onChange={(e) => setDiscount(e.target.value)}
           />
         </Grid>
@@ -517,7 +516,6 @@ export default function SelectProducts(props: {
             label="Paid by customer"
             value={paidByCustomer}
             className={classes.textField}
-            fullWidth
             onChange={(e) => setPaidByCustomer(e.target.value)}
           />
         </Grid>
@@ -548,7 +546,7 @@ export default function SelectProducts(props: {
           </Grid>
         </Grid>*/}
 
-        <Grid style={{ marginTop: '30px' }}>
+        <Grid style={{ margin: '20px auto', width: '240px' }}>
           <Button
             variant="contained"
             color="primary"
@@ -556,6 +554,7 @@ export default function SelectProducts(props: {
               e.preventDefault();
               createOrder();
             }}
+            disabled={orderItemList.length === 0}
           >
             Create Order
           </Button>
