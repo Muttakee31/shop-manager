@@ -259,7 +259,7 @@ export default function OverviewPage() {
                 );
               }
               catch (e) {
-                console.log('sldfsldkf');
+                console.log(e);
               }
             }
           }

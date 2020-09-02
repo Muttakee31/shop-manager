@@ -308,16 +308,19 @@ export default function HomePage() {
                 lBar.push(item.current_shop_stock);
                 mBar.push(item.prev_shop_stock - item.current_shop_stock);
                 tBar.push(0);
-
-                lBar2.push(item.current_godown_stock);
-                mBar2.push(item.prev_godown_stock - item.current_godown_stock);
-                tBar2.push(0);
               }
               else {
                 lBar.push(item.prev_shop_stock);
                 mBar.push(0);
                 tBar.push(item.current_shop_stock - item.prev_shop_stock);
+              }
 
+              if (item.current_godown_stock < item.prev_godown_stock) {
+                lBar2.push(item.current_godown_stock);
+                mBar2.push(item.prev_godown_stock - item.current_godown_stock);
+                tBar2.push(0);
+              }
+              else {
                 lBar2.push(item.current_godown_stock);
                 mBar2.push(0);
                 tBar2.push(item.current_godown_stock - item.prev_godown_stock);
