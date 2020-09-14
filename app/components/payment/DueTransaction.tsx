@@ -60,7 +60,7 @@ const useStyles = makeStyles({
   textField: {
     color: 'white',
     borderColor: 'white',
-    margin: 10,
+    margin: '10px 0',
   },
   input: {
     color: 'white',
@@ -93,7 +93,7 @@ export default function DueTransaction(): JSX.Element {
   useEffect(() => {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
-      'SELECT * FROM USER',
+      'SELECT * FROM USER WHERE is_admin is NULL',
       (err: Error, instant: User[]) => {
         if (!err) {
           setUserList(instant);
@@ -132,7 +132,7 @@ export default function DueTransaction(): JSX.Element {
               if (error) {
                 console.log(error.message);
               } else {
-                console.log('updated');
+                //console.log('updated');
                 history.push(routes.TRANSACTIONS);
               }
             }
