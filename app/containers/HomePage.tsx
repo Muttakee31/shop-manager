@@ -61,19 +61,14 @@ interface SeriesData {
 const CssTextField = withStyles({
   root: {
     '& label': {
-      color: 'floralwhite',
     },
     '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
     },
     '& label.Mui-focused': {
-      color: 'lightblue',
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
     },
     '& input': {
-      color: 'floralwhite',
     },
     '& .MuiFormLabel-root.Mui-disabled': {
       color: '#c1bbae',
@@ -89,20 +84,20 @@ const useStyles = makeStyles(() =>
       justifyContent: 'center',
     },
     paper: {
-      border: '2px solid #000',
-      background: '#232c39',
-      boxShadow: '3px 3px 20px #010101',
+      border: '2px solid #eaeaea',
+      background: '#d9dfe8',
+      boxShadow: '3px 3px 20px #ccc',
       padding: 15,
       margin: 15,
       width: 400,
       height: 330,
     },
     texts: {
-      color: 'whitesmoke',
+      color: '#232c39',
     },
     header: {
       textAlign: 'center',
-      color: 'white',
+      color: '#232c39',
       textDecoration: 'underline',
       textUnderlinePosition: 'under',
     },
@@ -110,19 +105,19 @@ const useStyles = makeStyles(() =>
       marginTop: 40,
     },
     textField: {
-      color: 'white',
+      color: '#232c39',
       borderColor: 'white',
       margin: '0 0 16px 0',
     },
     input: {
-      color: 'white',
+      color: '#232c39',
     },
     gridMargin: {
       margin: '10px 0'
     },
     card: {
       width: 290,
-      boxShadow: '5px 5px 15px #010101'
+      boxShadow: '5px 5px 15px #98b9b3'
     },
     content: {
       display: 'flex',
@@ -132,7 +127,7 @@ const useStyles = makeStyles(() =>
     cardContainer: {
       display: 'flex',
       flexDirection: 'row',
-      color: 'white',
+      color: '#232c39',
       justifyContent: 'space-evenly',
       margin: 17,
       borderRadius: 9
@@ -186,7 +181,7 @@ export default function HomePage() {
       align: 'center',
       margin: 0,
       style: {
-        color: 'whitesmoke'
+        color: '#232c39'
       }
     },
     tooltip: {
@@ -292,7 +287,7 @@ export default function HomePage() {
     try {
       const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
-        'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 9',
+        'SELECT * FROM StockHistory ORDER BY date_updated DESC LIMIT 15',
         (_err: Error, instant: StockHistory[]) => {
           if (_err) {
             console.log(_err);

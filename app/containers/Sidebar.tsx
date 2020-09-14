@@ -27,7 +27,7 @@ const useStyles = makeStyles({
     padding: 14,
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,
-    // color: 'black',
+    color: 'whitesmoke',
   },
   icons: {
     fontSize: 42,
