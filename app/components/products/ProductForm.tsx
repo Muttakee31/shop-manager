@@ -18,33 +18,30 @@ const jwt = require('jsonwebtoken');
 const CssTextField = withStyles({
   root: {
     '& label': {
-      color: 'floralwhite',
+
     },
     '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
+
     },
     '& label.Mui-focused': {
-      color: 'lightblue',
+      color: '#277ea7',
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
+      borderBottomColor: '#277ea7',
     },
     '& input': {
-      color: 'floralwhite',
     },
     '& .MuiFormLabel-root.Mui-disabled': {
-      color: '#c1bbae',
+      color: '#524c41',
     }
   },
 })(TextField);
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
@@ -52,12 +49,9 @@ const useStyles = makeStyles({
     marginTop: 40,
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: 10,
   },
   input: {
-    color: 'white',
   },
   deleteButton: {
     background: '#ca263d',
@@ -80,8 +74,8 @@ export default function ProductForm(): JSX.Element {
   const [productCode, setProductCode] = useState('');
   const [price, setPrice] = useState('');
   const [unit, setUnit] = useState('');
-  const [shopStock, setShopStock] = useState('');
-  const [godownStock, setGodownStock] = useState('');
+  const [shopStock, setShopStock] = useState('0');
+  const [godownStock, setGodownStock] = useState('0');
   const [alert, setAlert] = useState<string | null>(null);
 
   const location = useLocation();

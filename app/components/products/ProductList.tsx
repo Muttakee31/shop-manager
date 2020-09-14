@@ -35,11 +35,9 @@ interface Product {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
@@ -61,8 +59,6 @@ const useStyles = makeStyles({
     margin: 15
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: '0 0 16px 0',
   },
   gridMargin: {

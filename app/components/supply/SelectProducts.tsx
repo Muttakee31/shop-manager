@@ -55,50 +55,45 @@ interface SupplyItem {
 const CssTextField = withStyles({
   root: {
     '& label': {
-      color: 'floralwhite',
+
     },
     '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
     },
     '& label.Mui-focused': {
-      color: 'lightblue',
+      color: '#277ea7',
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
+      borderBottomColor: '#277ea7',
     },
     '& input': {
-      color: 'floralwhite',
+
     },
     '& .MuiInputBase-root': {
-      color: 'floralwhite',
+
     },
     '& .MuiFormLabel-root': {
-      color: 'floralwhite',
+
     },
     '& .MuiSelect-select.MuiSelect-select': {
-      color: 'floralwhite',
+
     },
   },
 })(TextField);
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
+
   },
   header: {
     textAlign: 'center',
-    color: 'white',
+
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: 10,
   },
   selectField: {
-    color: 'white',
-    borderColor: 'white',
     width: '210px',
     margin: 10,
   },

@@ -41,7 +41,6 @@ interface Transaction {
 
 const useStyles1 = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   details: {
     margin: 10,
@@ -50,7 +49,6 @@ const useStyles1 = makeStyles({
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },

@@ -106,7 +106,6 @@ const useStyles = makeStyles(() =>
     },
     textField: {
       color: '#232c39',
-      borderColor: 'white',
       margin: '0 0 16px 0',
     },
     input: {

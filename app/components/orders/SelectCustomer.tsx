@@ -20,41 +20,33 @@ interface User {
 const CssTextField = withStyles({
   root: {
     '& label': {
-      color: 'floralwhite',
     },
     '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
     },
     '& label.Mui-focused': {
-      color: 'lightblue',
+      color: '#277ea7',
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
+      borderBottomColor: '#277ea7',
     },
     '& input': {
-      color: 'floralwhite',
     },
   },
 })(TextField);
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
+
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: '10px 0',
   },
   selectField: {
-    color: 'white',
-    borderColor: 'white',
     minWidth: 320,
     margin: 10,
   },

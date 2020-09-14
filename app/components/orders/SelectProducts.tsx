@@ -55,45 +55,35 @@ interface OrderItem {
 const CssTextField = withStyles({
   root: {
     '& label': {
-      color: 'floralwhite',
     },
     '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
     },
     '& label.Mui-focused': {
-      color: 'lightblue',
+      color: '#277ea7',
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
+      borderBottomColor: '#277ea7',
     },
     '& input': {
-      color: 'floralwhite',
     },
     '& .MuiFormLabel-root': {
-      color: 'floralwhite !important',
     },
     '& .MuiSelect-select.MuiSelect-select': {
-      color: 'floralwhite',
     },
     '& .MuiInputBase-root': {
-      color: 'floralwhite',
     },
   },
 })(TextField);
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: 10,
   },
   total: {
@@ -107,18 +97,15 @@ const useStyles = makeStyles({
     width: '210px',
     margin: 10,
     '&:input' : {
-      color: 'white',
     },
     '&:before': {
-      borderColor: 'white',
-      color: 'white'
     },
     '&:after': {
-      borderColor: 'lightblue',
-      color: 'lightblue'
+      borderColor: '#277ea7',
+      color: '#277ea7'
     },
     icon: {
-      fill: 'white',
+      fill: 'black',
     },
   },
 });

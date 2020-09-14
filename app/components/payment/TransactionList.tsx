@@ -45,17 +45,13 @@ interface Transaction {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: 10,
   },
   topbin: {
@@ -111,28 +107,27 @@ const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c']
 const CssTextField = withStyles({
   root: {
     '& label': {
-      color: 'floralwhite',
+
     },
     '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
     },
     '& label.Mui-focused': {
-      color: 'lightblue',
+      color: '#277ea7',
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
+      borderBottomColor: '#277ea7',
     },
     '& input': {
-      color: 'floralwhite',
+
     },
     '& .MuiInputBase-root': {
-      color: 'floralwhite',
+
     },
     '& .MuiFormLabel-root': {
-      color: 'floralwhite',
+
     },
     '& .MuiSelect-select.MuiSelect-select': {
-      color: 'floralwhite',
+
     },
   },
 })(TextField);

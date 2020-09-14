@@ -23,11 +23,9 @@ interface Supplier {
 }
 const useStylesToo = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
