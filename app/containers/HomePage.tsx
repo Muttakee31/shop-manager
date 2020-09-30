@@ -18,6 +18,7 @@ import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ReactApexChart from 'react-apexcharts';
+import dayjs from 'dayjs';
 
 
 const sqlite3 = require('sqlite3').verbose();
@@ -381,9 +382,13 @@ export default function HomePage() {
 
   const getTransactionCount = () => {
     try {
+      const temp = new Date();
+      temp.setHours(0,0,0,0);
+      const midnight = dayjs(temp).format('YYYY-MM-DDTHH:mm:ss[Z]');
       const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
-        'SELECT * FROM Transactions',
+        'SELECT * FROM Transactions WHERE timestamp >= ?',
+        [midnight],
         (_err: Error, instant: Transaction[]) => {
           if (_err) {
             console.log(_err)
