@@ -46,3 +46,7 @@ a:hover {
   text-decoration: none;
   cursor: pointer;
 }
+
+.MuiTableCell-head,  .MuiTableCell-body {
+  font-family: 'Poppins', Sans-Arial, Helvetica, Helvetica Neue, serif;
+}
