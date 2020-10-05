@@ -57,6 +57,10 @@ const useStyles = makeStyles({
   topbin: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  btn: {
+    height: '40px'
   },
   deleteButton: {
     background: '#ca263d',
@@ -96,11 +100,11 @@ const useStyles = makeStyles({
   '2': 'Both',
 };*/
 
-function compare(a:Transaction, b:Transaction) {
+/*function compare(a:Transaction, b:Transaction) {
   if (dayjs(a.timestamp).isBefore(b.timestamp)) return 1;
   if (dayjs(a.timestamp).isAfter(b.timestamp)) return -1;
   return 0;
-}
+}*/
 
 const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c']
 
@@ -142,7 +146,7 @@ export default function TransactionList(): JSX.Element {
   const [toBeDeleted, setToBeDeleted] = useState(-1);
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
-  const [visibleTransactionList, setVisibleTransactionList] = useState<Transaction[]>([]);
+  //const [visibleTransactionList, setVisibleTransactionList] = useState<Transaction[]>([]);
   // const history = useHistory();
   // console.log('Connected to the shop database.');
   // const [transactionList, setTransactionList] = useState([]);
@@ -150,7 +154,7 @@ export default function TransactionList(): JSX.Element {
   useEffect(() => {
     // add db.all function to get all transactions
     getTransactionList();
-  }, []);
+  }, [selectedDate]);
 
   const openDeleteTransaction = (instant: Transaction) => {
     setDeleteModal(true);
@@ -159,13 +163,16 @@ export default function TransactionList(): JSX.Element {
 
   const getTransactionList = () => {
    try {
+     console.log(selectedDate);
      const db = new sqlite3.Database(dbpath.dbPath);
      db.all(
-       'SELECT * FROM Transactions ORDER BY id DESC',
+       `SELECT * FROM Transactions WHERE timestamp LIKE ?`,
+       [selectedDate  + "%"],
        (_err: Error, instant: Transaction[]) => {
          setTransactionList(instant);
-         setVisibleTransactionList(
-           instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate).sort(compare))
+         //setVisibleTransactionList(instant);
+         /*setVisibleTransactionList(
+           instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate).sort(compare))*/
        }
      );
      db.close();
@@ -199,8 +206,8 @@ export default function TransactionList(): JSX.Element {
     const value: string = e.target.value;
     setSelectedDate(value);
     //console.log(value);
-    const filtered = transactionList.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === value);
-    setVisibleTransactionList(filtered);
+    //const filtered = transactionList.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === value);
+    //setVisibleTransactionList(transactionList);
   }
 
 
@@ -239,6 +246,7 @@ export default function TransactionList(): JSX.Element {
           <Button
             variant="contained"
             color="primary"
+            className={classes.btn}
             onClick={() =>
               history.push({
                 pathname: routes.DUE_PAYMENT,
@@ -273,13 +281,13 @@ export default function TransactionList(): JSX.Element {
               </TableRow>
             </TableHead>
             <TableBody>
-              {visibleTransactionList.length === 0 ?
+              {transactionList.length === 0 ?
                 <TableRow>
                   <TableCell colSpan={6} align="left" className={classes.texts} style={{ textAlign: 'center' }}>
                     No items
                   </TableCell>
                 </TableRow>
-                :visibleTransactionList.map((row) => (
+                :transactionList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
                     {row.client_name === null ? 'N/A' : row.client_name}
