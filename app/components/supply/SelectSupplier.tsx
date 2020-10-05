@@ -30,7 +30,6 @@ const CssTextField = withStyles({
       borderBottomColor: '#277ea7',
     },
     '& input': {
-      color: 'floralwhite',
     },
   },
 })(TextField);
