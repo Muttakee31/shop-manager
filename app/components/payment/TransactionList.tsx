@@ -61,6 +61,10 @@ const useStyles = makeStyles({
   topbin: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  btn: {
+    height: '40px'
   },
   deleteButton: {
     background: '#ca263d',
@@ -247,6 +251,7 @@ export default function TransactionList(): JSX.Element {
           <Button
             variant="contained"
             color="primary"
+            className={classes.btn}
             onClick={() =>
               history.push({
                 pathname: routes.DUE_PAYMENT,

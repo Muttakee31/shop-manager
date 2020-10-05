@@ -101,11 +101,19 @@ const useStyles = makeStyles(() =>
     texts: {
       color: 'whitesmoke',
     },
+    btn: {
+      height: '40px'
+    },
     header: {
       textAlign: 'center',
       color: 'white',
       textDecoration: 'underline',
       textUnderlinePosition: 'under',
+    },
+    topbin: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
     grid: {
       marginTop: 40,
@@ -168,6 +176,8 @@ export default function HomePage() {
 
   const [shopSeries, setShopSeries] = useState<SeriesData[]>([]);
   const [godownSeries, setGodownSeries] = useState<SeriesData[]>([]);
+
+  const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
 
   const [alert, setAlert] = useState<string | null>(null);
   const [options, setOption] = useState({
@@ -243,7 +253,7 @@ export default function HomePage() {
   const authFlag= useSelector(isAuthenticated);
 
   useEffect(()=> {
-    getTransactionCount();
+    getTransactionCount(selectedDate);
     getStockRecordToday();
   }, []);
 
@@ -380,15 +390,12 @@ export default function HomePage() {
     }
   };
 
-  const getTransactionCount = () => {
+  const getTransactionCount = (date) => {
     try {
-      const temp = new Date();
-      temp.setHours(0,0,0,0);
-      const midnight = dayjs(temp).format('YYYY-MM-DDTHH:mm:ss[Z]');
       const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
-        'SELECT * FROM Transactions WHERE timestamp >= ?',
-        [midnight],
+        'SELECT * FROM Transactions WHERE timestamp LIKE ?',
+        [date + "%"],
         (_err: Error, instant: Transaction[]) => {
           if (_err) {
             console.log(_err)
@@ -432,6 +439,14 @@ export default function HomePage() {
     }
   };
 
+  const changeDate = async (e:React.ChangeEvent) => {
+    // @ts-ignore
+    const value: string = e.target.value;
+    await setSelectedDate(value);
+    await getTransactionCount(value);
+  }
+
+
   return (
     <Grid className={classes.grid}>
 
@@ -439,17 +454,32 @@ export default function HomePage() {
         <h3>Welcome to Shop Manager</h3>
       </Grid>
 
-      <Grid>
+      <Grid item xs={8} lg={9} className={classes.topbin}>
         {!authFlag ?
-          <Button color='primary' variant='contained' onClick={handleOpen}>
+          <Button color='primary' variant='contained'
+                  onClick={handleOpen} className={classes.btn}>
             View as Admin
           </Button>
           :
-          <Button color='primary' variant='contained' onClick={()=> dispatch(logOutUser())}>
+          <Button color='primary' variant='contained'
+                  className={classes.btn} onClick={()=> dispatch(logOutUser())}>
             Log out
           </Button>
         }
+
+        <CssTextField
+          id="date"
+          label="Date"
+          type="date"
+          className={classes.textField}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={selectedDate}
+          onChange={changeDate}
+        />
       </Grid>
+
 
       <Grid className={classes.cardContainer}>
         <Card className={classes.card} variant="outlined" style={{background: '#018af8'}}>
