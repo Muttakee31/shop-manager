@@ -325,7 +325,7 @@ export default function HomePage() {
             // setMidBar(mBar);
             // setTopBar(tBar);
             setShopSeries([{
-              name: '',
+              name: 'Base',
               data: lBar
             }, {
               name: 'Net sold',
@@ -336,7 +336,7 @@ export default function HomePage() {
             }
             ]);
             setGodownSeries([{
-              name: '',
+              name: 'Base',
               data: lBar2
             }, {
               name: 'Net sold',
