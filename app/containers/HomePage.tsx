@@ -107,7 +107,7 @@ const useStyles = makeStyles(() =>
     },
     topbin: {
       display: 'flex',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
       alignItems: 'center'
     },
     grid: {
@@ -448,7 +448,7 @@ export default function HomePage() {
         <h3>Welcome to Shop Manager</h3>
       </Grid>
 
-      <Grid item xs={8} lg={9} className={classes.topbin}>
+      <Grid item className={classes.topbin}>
         {!authFlag ?
           <Button color='primary' variant='contained'
                   onClick={handleOpen} className={classes.btn}>
