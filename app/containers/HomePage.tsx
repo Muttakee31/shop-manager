@@ -390,7 +390,7 @@ export default function HomePage() {
     }
   };
 
-  const getTransactionCount = (date) => {
+  const getTransactionCount = (date:string) => {
     try {
       const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
