@@ -1,7 +1,7 @@
 {
   "name": "store-manager",
   "productName": "Store manager",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "Save and view your order and supply history without hassle.",
   "main": "./main.prod.js",
   "author": {
