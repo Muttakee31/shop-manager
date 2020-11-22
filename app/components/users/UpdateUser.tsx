@@ -75,9 +75,10 @@ const useStyles = makeStyles({
 });
 
 export default function UpdateUser(): JSX.Element {
-  const [userName, setUserName] = useState('');
+  const [username, setUserName] = useState('');
   const [userPhone, setPhone] = useState('');
   const [userAddress, setAddress] = useState('');
+  const [dueAmount, setDueAmount] = useState('');
   const [alert, setAlert] = useState<string | null>(null);
 
   // const location = useLocation();
@@ -85,6 +86,7 @@ export default function UpdateUser(): JSX.Element {
   const classes = useStyles();
   const match = useRouteMatch();
   const authFlag= useSelector(isAuthenticated);
+  const user = useSelector(userName);
   const token= useSelector(authToken);
 
   useEffect(() => {
@@ -102,6 +104,7 @@ export default function UpdateUser(): JSX.Element {
           setUserName(instant.name);
           setAddress(instant.address);
           setPhone(instant.phone);
+          setDueAmount(instant.due_amount);
           console.log(instant);
         }
       }
@@ -122,11 +125,12 @@ export default function UpdateUser(): JSX.Element {
       if (decoded.username === user) {
         db.run(
           `UPDATE User SET name = ?, address = ?,
-           phone = ? WHERE id = ?`,
+           phone = ?, due_amount = ? WHERE id = ?`,
           [
-            userName,
+            username,
             userAddress,
             userPhone,
+            dueAmount,
             id
           ],
           function(err: Error) {
@@ -179,7 +183,7 @@ export default function UpdateUser(): JSX.Element {
             <CssTextField
               id="standard-required"
               label="Name"
-              value={userName}
+              value={username}
               className={classes.textField}
               fullWidth
               onChange={(e) => setUserName(e.target.value)}
@@ -204,6 +208,17 @@ export default function UpdateUser(): JSX.Element {
               className={classes.textField}
               fullWidth
               onChange={(e) => setAddress(e.target.value)}
+            />
+          </Grid>
+
+          <Grid>
+            <CssTextField
+              id="standard-required"
+              label="Due Amount"
+              value={dueAmount}
+              className={classes.textField}
+              fullWidth
+              onChange={(e) => setDueAmount(e.target.value)}
             />
           </Grid>
 
