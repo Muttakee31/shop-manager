@@ -58,9 +58,8 @@ const useStyles1 = makeStyles({
     justifyContent: 'center',
   },
   paper: {
-    border: '2px solid #000',
-    background: '#232c39',
-    boxShadow: '3px 3px 20px #010101',
+    background: '#ffffff',
+    boxShadow: '3px 3px 20px #f8fafe',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
