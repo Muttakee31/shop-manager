@@ -114,8 +114,8 @@ export default function ProductForm(): JSX.Element {
         price,
         unit,
         productCode,
-        Number(shopStock),
-        Number(godownStock),
+        shopStock || shopStock.length === 0 ? 0 : shopStock,
+        godownStock || godownStock.length === 0 ? 0 : godownStock,
       ],
       function (err: Error) {
         if (err) {

@@ -84,7 +84,7 @@ export default function DueTransaction(): JSX.Element {
   useEffect(() => {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
-      'SELECT * FROM USER WHERE is_admin is NULL',
+      'SELECT * FROM USER WHERE is_admin is NULL OR is_admin = 0',
       (err: Error, instant: User[]) => {
         if (!err) {
           setUserList(instant);

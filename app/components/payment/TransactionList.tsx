@@ -169,8 +169,9 @@ export default function TransactionList(): JSX.Element {
        `SELECT * FROM Transactions WHERE timestamp LIKE ?`,
        [selectedDate  + "%"],
        (_err: Error, instant: Transaction[]) => {
-         setTransactionList(instant);
-         //setVisibleTransactionList(instant);
+         if (instant !== undefined) {
+           setTransactionList(instant);
+         }         //setVisibleTransactionList(instant);
          /*setVisibleTransactionList(
            instant.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === selectedDate).sort(compare))*/
        }

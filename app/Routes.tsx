@@ -21,6 +21,7 @@ import DueTransaction from './components/payment/DueTransaction';
 import StockHistoryList from './components/products/StockHistoryList';
 import TransactionDetails from './components/payment/TransactionDetails';
 import TransactionForm from './components/payment/TransactionForm';
+import UpdateUser from './components/users/UpdateUser';
 // Lazily load routes and code split with webpacck
 const LazyCounterPage = React.lazy(() =>
   import(/* webpackChunkName: "CounterPage" */ './containers/CounterPage')
@@ -55,6 +56,7 @@ export default function Routes() {
         <Route path={routes.UPDATE_TRANSACTION} component={TransactionForm} />
         <Route path={routes.OTHER_EXPENSE} component={OtherExpenseForm} />
         <Route path={routes.USER_DETAILS} component={UserDetails} />
+        <Route path={routes.UPDATE_USER} component={UpdateUser} />
         <Route path={routes.DUE_PAYMENT} component={DueTransaction} />
 
         <Route path={routes.COUNTER} component={CounterPage} />

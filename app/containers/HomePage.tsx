@@ -384,7 +384,7 @@ export default function HomePage() {
     }
   };
 
-  const getTransactionCount = (date) => {
+  const getTransactionCount = (date:string) => {
     try {
       const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
@@ -394,20 +394,22 @@ export default function HomePage() {
           if (_err) {
             console.log(_err)
           } else {
-            let orderSum: number = 0;
-            let saleSum: number = 0;
-            let orderCount:number = 0;
-            instant.map(item => {
-              if (item.transaction_type === transactionType["order"]) {
-                orderSum += Number(item.order_cost);
-                orderCount++;
-              }
-              if (item.transaction_type === transactionType["supply"] ||
-                item.transaction_type === transactionType["other"]) saleSum += Number(item.order_cost);
-            });
-            setTotalSale(orderSum);
-            setTotalExpense(saleSum);
-            setOrderCount(orderCount);
+            if (instant !== undefined) {
+              let orderSum: number = 0;
+              let saleSum: number = 0;
+              let orderCount: number = 0;
+              instant.map(item => {
+                if (item.transaction_type === transactionType["order"]) {
+                  orderSum += Number(item.order_cost);
+                  orderCount++;
+                }
+                if (item.transaction_type === transactionType["supply"] ||
+                  item.transaction_type === transactionType["other"]) saleSum += Number(item.order_cost);
+              });
+              setTotalSale(orderSum);
+              setTotalExpense(saleSum);
+              setOrderCount(orderCount);
+            }
           }
         }
       );
