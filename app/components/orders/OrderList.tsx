@@ -146,6 +146,9 @@ export default function OrderList(): JSX.Element {
                 pathname: routes.PLACE_ORDERS,
                 state: { order: null },
               })}
+            style={{
+              marginLeft: '10px'
+            }}
           >
             Create an order
           </Button>
