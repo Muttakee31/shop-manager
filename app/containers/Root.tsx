@@ -20,6 +20,13 @@ const theme = createMuiTheme({
       contrastText: '#fff',
     },
   },
+  overrides: {
+    MuiTableCell: {
+      root: {
+        borderBottomColor: "#9cb9c7",
+      }
+    }
+  }
 });
 
 const Root = ({ store, history }: Props) => (
