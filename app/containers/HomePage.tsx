@@ -421,7 +421,7 @@ export default function HomePage() {
       );
 
       db.all(
-        'SELECT * FROM User',
+        'SELECT * FROM User WHERE is_customer = ?', [1],
         (_err: Error, instant: any[]) => {
           if (_err) {
             console.log(_err)
