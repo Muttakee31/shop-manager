@@ -9,10 +9,10 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import { transactionType } from '../../constants/config';
 import Button from '@material-ui/core/Button';
 import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
-import { transactionType } from '../../constants/config';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
@@ -168,7 +168,6 @@ export default function TransactionList(): JSX.Element {
 
   const getTransactionList = () => {
    try {
-     console.log(selectedDate);
      const db = new sqlite3.Database(dbpath.dbPath);
      db.all(
        `SELECT * FROM Transactions WHERE timestamp LIKE ?`,
