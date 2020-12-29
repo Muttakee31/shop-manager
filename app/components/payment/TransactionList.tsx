@@ -23,6 +23,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
 import CssTextField from '../snippets/CssTextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -95,6 +99,9 @@ const useStyles = makeStyles({
     height: 170,
     margin: 15
   },
+  selectField: {
+    width: 210
+  }
 });
 
 /*const type = {
@@ -120,6 +127,7 @@ export default function TransactionList(): JSX.Element {
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const [deleteModal, setDeleteModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [type, setType] = useState("-1");
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   //const [visibleTransactionList, setVisibleTransactionList] = useState<Transaction[]>([]);
@@ -130,7 +138,7 @@ export default function TransactionList(): JSX.Element {
   useEffect(() => {
     // add db.all function to get all transactions
     getTransactionList();
-  }, [selectedDate]);
+  }, [selectedDate, type]);
 
   const openDeleteTransaction = (instant: Transaction) => {
     setDeleteModal(true);
@@ -140,9 +148,18 @@ export default function TransactionList(): JSX.Element {
   const getTransactionList = () => {
    try {
      const db = new sqlite3.Database(dbpath.dbPath);
+     console.log(type);
+     let params = [];
+     params.push(selectedDate + "%");
+     let statement : string = `SELECT * FROM Transactions WHERE timestamp LIKE ?`;
+     if (type !== "-1") {
+       params.push(type);
+       statement += ` AND transaction_type = ?`;
+     }
+
      db.all(
-       `SELECT * FROM Transactions WHERE timestamp LIKE ?`,
-       [selectedDate  + "%"],
+       statement,
+       params,
        (_err: Error, instant: Transaction[]) => {
          if (instant !== undefined) {
            setTransactionList(instant);
@@ -194,7 +211,6 @@ export default function TransactionList(): JSX.Element {
      return transactionType[item] == type;
     })[0];
 
-    console.log(type);
     return (
       <Chip
         label={text}
@@ -218,7 +234,7 @@ export default function TransactionList(): JSX.Element {
           <h3>List of Transactions</h3>
         </Grid>
 
-        <Grid item xs={8} lg={9} className={classes.topbin}>
+        <Grid item xs={12} className={classes.topbin}>
           <Button
             variant="contained"
             color="primary"
@@ -230,6 +246,27 @@ export default function TransactionList(): JSX.Element {
           >
             Add due payment
           </Button>
+
+          <FormControl variant="outlined">
+            <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={type}
+              className={classes.selectField}
+              onChange={(event)=>
+                setType(event.target.value as string)}
+            >
+              <MenuItem value="-1">Show all</MenuItem>
+              {Object.keys(transactionType).map((type:string, index)=> {
+                return (
+                  <MenuItem value={String(transactionType[type])}>{type}</MenuItem>
+                )
+              })
+              }
+
+            </Select>
+          </FormControl>
 
           <CssTextField
             id="date"

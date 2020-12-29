@@ -444,7 +444,7 @@ export default function SelectProducts(props: {
 
       <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
         <Grid style={{margin: '20px auto'}}>
-          <FormControl style={{color: 'white'}}>
+          <FormControl variant='outlined' style={{color: 'white'}}>
             <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
             <Select
               labelId="demo-simple-select-label"
