@@ -13,8 +13,6 @@ import { transactionType } from '../../constants/config';
 import Button from '@material-ui/core/Button';
 import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
 import Chip from '@material-ui/core/Chip';
 import EditIcon from '@material-ui/icons/Edit';
@@ -24,6 +22,7 @@ import { isAuthenticated } from '../../features/auth/authSlice';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
+import CssTextField from '../snippets/CssTextField';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -112,34 +111,6 @@ const useStyles = makeStyles({
 
 const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c']
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-      color: 'floralwhite',
-    },
-    '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
-    },
-    '& label.Mui-focused': {
-      color: 'lightblue',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
-    },
-    '& input': {
-      color: 'floralwhite',
-    },
-    '& .MuiInputBase-root': {
-      color: 'floralwhite',
-    },
-    '& .MuiFormLabel-root': {
-      color: 'floralwhite',
-    },
-    '& .MuiSelect-select.MuiSelect-select': {
-      color: 'floralwhite',
-    },
-  },
-})(TextField);
 
 export default function TransactionList(): JSX.Element {
   const classes = useStyles();

@@ -1,11 +1,10 @@
 import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as dbpath from '../../constants/config';
+import CssTextField from '../snippets/CssTextField';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -16,26 +15,6 @@ interface User {
   address: string;
   is_supplier: number;
 }
-
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-      color: 'floralwhite',
-    },
-    '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
-    },
-    '& label.Mui-focused': {
-      color: 'lightblue',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
-    },
-    '& input': {
-      color: 'floralwhite',
-    },
-  },
-})(TextField);
 
 const useStyles = makeStyles({
   texts: {

@@ -4,8 +4,6 @@ import Modal from '@material-ui/core/Modal';
 import Grid from '@material-ui/core/Grid';
 import Fade from '@material-ui/core/Fade';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import * as dbpath from '../constants/config';
 import { transactionType } from '../constants/config';
 import Alert from '@material-ui/lab/Alert';
@@ -19,6 +17,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ReactApexChart from 'react-apexcharts';
 import dayjs from 'dayjs';
+import CssTextField from '../components/snippets/CssTextField';
 
 
 const sqlite3 = require('sqlite3').verbose();
@@ -58,29 +57,6 @@ interface SeriesData {
   name: string;
   data: number[];
 }
-
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-      color: 'floralwhite',
-    },
-    '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
-    },
-    '& label.Mui-focused': {
-      color: 'lightblue',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
-    },
-    '& input': {
-      color: 'floralwhite',
-    },
-    '& .MuiFormLabel-root.Mui-disabled': {
-      color: '#c1bbae',
-    }
-  },
-})(TextField);
 
 const useStyles = makeStyles(() =>
   createStyles({

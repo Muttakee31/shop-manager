@@ -2,8 +2,6 @@ import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -19,11 +17,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as dbpath from '../../constants/config';
-import { useHistory } from 'react-router';
 import { transactionType } from '../../constants/config';
+import { useHistory } from 'react-router';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CssTextField from '../snippets/CssTextField';
 
 interface Product {
   id: number;
@@ -51,35 +50,6 @@ interface SupplyItem {
   price: number;
   store: string;
 }
-
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-      color: 'floralwhite',
-    },
-    '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
-    },
-    '& label.Mui-focused': {
-      color: 'lightblue',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
-    },
-    '& input': {
-      color: 'floralwhite',
-    },
-    '& .MuiInputBase-root': {
-      color: 'floralwhite',
-    },
-    '& .MuiFormLabel-root': {
-      color: 'floralwhite',
-    },
-    '& .MuiSelect-select.MuiSelect-select': {
-      color: 'floralwhite',
-    },
-  },
-})(TextField);
 
 const useStyles = makeStyles({
   texts: {

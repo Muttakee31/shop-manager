@@ -1,42 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { useHistory, useRouteMatch } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { useSelector } from 'react-redux';
 import { authToken, isAuthenticated, logOutUser, userName } from '../../features/auth/authSlice';
 import Alert from '@material-ui/lab/Alert';
+import CssTextField from '../snippets/CssTextField';
 
 const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 
-
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-      color: 'floralwhite',
-    },
-    '& .MuiInput-underline:before': {
-      borderBottomColor: 'floralwhite',
-    },
-    '& label.Mui-focused': {
-      color: 'lightblue',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'lightblue',
-    },
-    '& input': {
-      color: 'floralwhite',
-    },
-    '& .MuiFormLabel-root.Mui-disabled': {
-      color: '#c1bbae',
-    }
-  },
-})(TextField);
 
 const useStyles = makeStyles({
   texts: {

@@ -15,6 +15,9 @@ const CssTextField = withStyles({
     '& .MuiInput-underline:after': {
       borderBottomColor: 'lightblue',
     },
+    '& .MuiInputBase-input': {
+      color: 'white'
+    },
     '& input': {
       color: 'floralwhite',
     },
@@ -27,6 +30,9 @@ const CssTextField = withStyles({
     '& .MuiSelect-select.MuiSelect-select': {
       color: 'floralwhite',
     },
+    '& .MuiFormLabel-root.Mui-disabled': {
+      color: '#c1bbae',
+    }
   },
 })(TextField);
 
