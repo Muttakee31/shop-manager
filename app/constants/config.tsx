@@ -13,6 +13,7 @@ export const transactionType = {
   "supply": 2,
   "due": 3,
   "other": 4,
+  "bill": 5,
 }
 
 export const SECRET_KEY = "Baneshwar1405";

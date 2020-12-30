@@ -13,7 +13,7 @@ import routes from '../constants/routes.json';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import StorageIcon from '@material-ui/icons/Storage';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
-
+import ReceiptIcon from '@material-ui/icons/Receipt';
 
 const useStyles = makeStyles({
   links: {
@@ -47,7 +47,7 @@ const Sidebar: React.FC = () => {
   const history = useHistory();
   const classes = useStyles();
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{top: 0, position: 'sticky', maxHeight: '100vh'}}>
       <Grid
         className={
           router.pathname === routes.OVERVIEW || router.pathname === routes.HOME
@@ -127,6 +127,22 @@ const Sidebar: React.FC = () => {
         <div className={classes.sideBarChild}>
           <AccountBalanceWalletIcon className={classes.icons} />
           <span className={classes.sideText}>Other expense</span>
+        </div>
+      </Grid>
+
+      <Grid
+        className={
+          router.pathname === routes.BILL_PAYMENT
+            ? classes.whiteWashedLinks
+            : classes.links
+        }
+        onClick={() => history.push(routes.BILL_PAYMENT)}
+        onKeyDown={() => history.push(routes.BILL_PAYMENT)}
+        role="presentation"
+      >
+        <div className={classes.sideBarChild}>
+          <ReceiptIcon className={classes.icons} />
+          <span className={classes.sideText}>Bill payment</span>
         </div>
       </Grid>
 

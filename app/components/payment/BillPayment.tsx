@@ -22,10 +22,11 @@ interface User {
 
 const useStyles = makeStyles({
   texts: {
-    color: '',
+    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
+    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
@@ -55,9 +56,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function DueTransaction(): JSX.Element {
+export default function BillPayment(): JSX.Element {
   const [amount, setAmount] = useState('');
-  const [customer, setCustomer] = useState<User | null>(null);
+  const [supplier, setSupplier] = useState<User | null>(null);
   const [description, setDescription] = useState('');
   const [userList, setUserList] = useState<User[]>([]);
 
@@ -68,7 +69,7 @@ export default function DueTransaction(): JSX.Element {
   useEffect(() => {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
-      'SELECT * FROM USER WHERE is_customer=?', [1],
+      'SELECT * FROM USER WHERE is_supplier = ?', [1],
       (err: Error, instant: User[]) => {
         if (!err) {
           setUserList(instant);
@@ -78,7 +79,7 @@ export default function DueTransaction(): JSX.Element {
     db.close();
   }, []);
 
-  const createDuePayment = () => {
+  const createBillPayment = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
@@ -87,9 +88,9 @@ export default function DueTransaction(): JSX.Element {
        payment_type, paid_amount, discount, description, timestamp)
        VALUES(?,?,?,?,?,?,?,?) `,
       [
-        customer.id,
-        customer.name,
-        transactionType['due'],
+        supplier.id,
+        supplier.name,
+        transactionType['bill'],
         1,
         amount,
         0,
@@ -101,8 +102,8 @@ export default function DueTransaction(): JSX.Element {
           console.log(err.message);
         } else {
           db.run(
-            `UPDATE User set due_amount = due_amount - ?, has_due_bill = ? WHERE id = ?`,
-            [amount, 0, customer.id],
+            `UPDATE User set due_amount = due_amount + ? WHERE id = ?`,
+            [amount, supplier.id],
             function (error: Error) {
               if (error) {
                 console.log(error.message);
@@ -117,7 +118,7 @@ export default function DueTransaction(): JSX.Element {
         // console.log(`A row has been inserted`);
       }
     );
-  db.close();
+    db.close();
   };
 
   return (
@@ -136,7 +137,7 @@ export default function DueTransaction(): JSX.Element {
         className={classes.grid}
       >
         <Grid className={classes.header}>
-          <h3>Add due payment</h3>
+          <h3>Add bill payment</h3>
         </Grid>
         <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
 
@@ -147,10 +148,10 @@ export default function DueTransaction(): JSX.Element {
               getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
               style={{ width: 320, margin: 'auto' }}
               onChange={(event: ChangeEvent<{}>, newValue: User) => {
-                setCustomer(newValue);
+                setSupplier(newValue);
               }}
               renderInput={(params) => (
-                <CssTextField {...params} label="Select customer" />
+                <CssTextField {...params} label="Select supplier" />
               )}
             />
           </Grid>
@@ -196,7 +197,7 @@ export default function DueTransaction(): JSX.Element {
               color="primary"
               onClick={(e) => {
                 e.preventDefault();
-                createDuePayment();
+                createBillPayment();
               }}
             >
               Submit
