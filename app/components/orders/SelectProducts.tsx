@@ -57,13 +57,10 @@ const useStyles = makeStyles({
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: 10,
   },
   total: {

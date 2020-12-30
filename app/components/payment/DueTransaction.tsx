@@ -22,11 +22,10 @@ interface User {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
+    color: '',
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
