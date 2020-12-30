@@ -48,7 +48,7 @@ interface Transaction {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
+    color: '',
   },
   header: {
     textAlign: 'center',
@@ -56,8 +56,7 @@ const useStyles = makeStyles({
     textUnderlinePosition: 'under'
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
+    borderColor: '',
     margin: 10,
   },
   topbin: {
@@ -87,9 +86,9 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   paper: {
-    border: '2px solid #000',
-    background: '#232c39',
-    boxShadow: '3px 3px 20px #010101',
+    border: '2px solid #fff',
+    background: '#fff',
+    boxShadow: '3px 3px 20px #fff',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -347,6 +346,7 @@ export default function TransactionList(): JSX.Element {
         open={deleteModal}
         onClose={()=> setDeleteModal(false)}
         closeAfterTransition
+        disableAutoFocus
         BackdropProps={{
           timeout: 500,
         }}

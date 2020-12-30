@@ -66,16 +66,15 @@ const useStyles = makeStyles(() =>
       justifyContent: 'center',
     },
     paper: {
-      border: '2px solid #000',
-      background: '#232c39',
-      boxShadow: '3px 3px 20px #010101',
+      border: '2px solid #fff',
+      background: '#fff',
+      boxShadow: '3px 3px 20px #f8fafe',
       padding: 15,
       margin: 15,
       width: 400,
       height: 330,
     },
     texts: {
-      color: 'whitesmoke',
     },
     btn: {
       height: '40px'
@@ -106,7 +105,7 @@ const useStyles = makeStyles(() =>
     },
     card: {
       width: 290,
-      boxShadow: '5px 5px 15px #010101'
+      boxShadow: '5px 5px 15px #c5cbcc'
     },
     content: {
       display: 'flex',
@@ -172,7 +171,6 @@ export default function HomePage() {
       align: 'center',
       margin: 0,
       style: {
-        color: 'whitesmoke'
       }
     },
     tooltip: {
@@ -182,7 +180,6 @@ export default function HomePage() {
       labels: {
         trim: true,
         style: {
-          colors: 'whitesmoke',
         }
       }
     },

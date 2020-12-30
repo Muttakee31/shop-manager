@@ -15,7 +15,6 @@ const jwt = require('jsonwebtoken');
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
@@ -26,8 +25,6 @@ const useStyles = makeStyles({
     marginTop: 40,
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: 10,
   },
   input: {

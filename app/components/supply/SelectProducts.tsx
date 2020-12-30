@@ -53,7 +53,6 @@ interface SupplyItem {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
@@ -66,10 +65,7 @@ const useStyles = makeStyles({
     margin: 10,
   },
   selectField: {
-    color: 'white',
-    borderColor: 'white',
     width: '210px',
-    margin: 10,
   },
   total: {
     display: 'flex',
@@ -428,12 +424,13 @@ export default function SelectProducts(props: {
       <Grid item style={{width: '250px', margin: '20px auto'}}>
         <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
           <Grid>
-            <FormControl variant='outlined' className={classes.selectField}>
+            <FormControl variant='outlined' className={classes.textField}>
               <InputLabel id="demo-simple-select-label">Payment type</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={type}
+                className={classes.selectField}
                 onChange={handleChange}
               >
                 <MenuItem value="0">Paid</MenuItem>

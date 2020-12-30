@@ -18,7 +18,6 @@ interface User {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
@@ -31,7 +30,6 @@ const useStyles = makeStyles({
     margin: '10px 0',
   },
   selectField: {
-    color: 'white',
     borderColor: 'white',
     minWidth: 320,
     margin: 10,

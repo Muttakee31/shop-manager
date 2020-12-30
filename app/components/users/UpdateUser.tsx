@@ -16,7 +16,6 @@ const jwt = require('jsonwebtoken');
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',

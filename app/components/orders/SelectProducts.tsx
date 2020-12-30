@@ -53,7 +53,6 @@ interface OrderItem {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
@@ -72,21 +71,6 @@ const useStyles = makeStyles({
   },
   selectField: {
     width: '210px',
-    margin: 10,
-    '&:input' : {
-      color: 'white',
-    },
-    '&:before': {
-      borderColor: 'white',
-      color: 'white'
-    },
-    '&:after': {
-      borderColor: 'lightblue',
-      color: 'lightblue'
-    },
-    icon: {
-      fill: 'white',
-    },
   },
 });
 
@@ -441,7 +425,7 @@ export default function SelectProducts(props: {
 
       <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
         <Grid style={{margin: '20px auto'}}>
-          <FormControl variant='outlined' style={{color: 'white'}}>
+          <FormControl variant='outlined'>
             <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
             <Select
               labelId="demo-simple-select-label"

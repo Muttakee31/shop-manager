@@ -14,7 +14,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
+    color: '',
   },
   header: {
     textAlign: 'center',
@@ -25,12 +25,7 @@ const useStyles = makeStyles({
     marginTop: 40,
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: 10,
-  },
-  input: {
-    color: 'white',
   },
   deleteButton: {
     background: '#ca263d',
