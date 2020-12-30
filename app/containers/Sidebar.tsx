@@ -16,15 +16,22 @@ import SwapVertIcon from '@material-ui/icons/SwapVert';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 
 const useStyles = makeStyles({
+  sidebarContainer: {
+    top: 0,
+    position: 'sticky',
+    height: '100vh',
+    maxHeight: '100vh',
+    boxShadow: '0 -2px 22px 0 rgba(0,0,0,.3)',
+  },
   links: {
     textDecoration: 'none',
-    padding: 14,
+    padding: 12,
     cursor: 'pointer',
   },
   whiteWashedLinks: {
     textDecoration: 'none',
     backgroundColor: '#277ea7',
-    padding: 14,
+    padding: 12,
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,
     // color: 'black',
@@ -47,7 +54,7 @@ const Sidebar: React.FC = () => {
   const history = useHistory();
   const classes = useStyles();
   return (
-    <div style={{top: 0, position: 'sticky', maxHeight: '100vh'}}>
+    <div className={classes.sidebarContainer}>
       <Grid
         className={
           router.pathname === routes.OVERVIEW || router.pathname === routes.HOME
