@@ -47,7 +47,7 @@ const Sidebar: React.FC = () => {
   const history = useHistory();
   const classes = useStyles();
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{top: 0, position: 'sticky', maxHeight: '100vh'}}>
       <Grid
         className={
           router.pathname === routes.OVERVIEW || router.pathname === routes.HOME
