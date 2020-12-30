@@ -2,8 +2,6 @@ import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -19,11 +17,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as dbpath from '../../constants/config';
-import { useHistory } from 'react-router';
 import { transactionType } from '../../constants/config';
+import { useHistory } from 'react-router';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CssTextField from '../snippets/CssTextField';
 
 interface Product {
   id: number;
@@ -52,48 +51,24 @@ interface SupplyItem {
   store: string;
 }
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-
-    },
-    '& .MuiInput-underline:before': {
-    },
-    '& label.Mui-focused': {
-      color: '#277ea7',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#277ea7',
-    },
-    '& input': {
-
-    },
-    '& .MuiInputBase-root': {
-
-    },
-    '& .MuiFormLabel-root': {
-
-    },
-    '& .MuiSelect-select.MuiSelect-select': {
-
-    },
-  },
-})(TextField);
-
 const useStyles = makeStyles({
   texts: {
-
+    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
-
+    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
+    color: 'white',
+    borderColor: 'white',
     margin: 10,
   },
   selectField: {
+    color: 'white',
+    borderColor: 'white',
     width: '210px',
     margin: 10,
   },
@@ -454,7 +429,7 @@ export default function SelectProducts(props: {
       <Grid item style={{width: '250px', margin: '20px auto'}}>
         <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
           <Grid>
-            <FormControl className={classes.selectField}>
+            <FormControl variant='outlined' className={classes.selectField}>
               <InputLabel id="demo-simple-select-label">Payment type</InputLabel>
               <Select
                 labelId="demo-simple-select-label"

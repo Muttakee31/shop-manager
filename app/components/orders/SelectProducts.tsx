@@ -2,8 +2,6 @@ import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -19,11 +17,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import dayjs from 'dayjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as dbpath from '../../constants/config';
+import { transactionType } from '../../constants/config';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useHistory } from 'react-router';
-import { transactionType } from '../../constants/config';
+import CssTextField from '../snippets/CssTextField';
 
 interface Product {
   id: number;
@@ -52,38 +51,19 @@ interface OrderItem {
   store: string;
 }
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-    },
-    '& .MuiInput-underline:before': {
-    },
-    '& label.Mui-focused': {
-      color: '#277ea7',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#277ea7',
-    },
-    '& input': {
-    },
-    '& .MuiFormLabel-root': {
-    },
-    '& .MuiSelect-select.MuiSelect-select': {
-    },
-    '& .MuiInputBase-root': {
-    },
-  },
-})(TextField);
-
 const useStyles = makeStyles({
   texts: {
+    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
+    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
+    color: 'white',
+    borderColor: 'white',
     margin: 10,
   },
   total: {
@@ -97,15 +77,18 @@ const useStyles = makeStyles({
     width: '210px',
     margin: 10,
     '&:input' : {
+      color: 'white',
     },
     '&:before': {
+      borderColor: 'white',
+      color: 'white'
     },
     '&:after': {
-      borderColor: '#277ea7',
-      color: '#277ea7'
+      borderColor: 'lightblue',
+      color: 'lightblue'
     },
     icon: {
-      fill: 'black',
+      fill: 'white',
     },
   },
 });
@@ -461,7 +444,7 @@ export default function SelectProducts(props: {
 
       <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
         <Grid style={{margin: '20px auto'}}>
-          <FormControl style={{color: 'white'}}>
+          <FormControl variant='outlined' style={{color: 'white'}}>
             <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
             <Select
               labelId="demo-simple-select-label"

@@ -4,8 +4,6 @@ import Modal from '@material-ui/core/Modal';
 import Grid from '@material-ui/core/Grid';
 import Fade from '@material-ui/core/Fade';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import * as dbpath from '../constants/config';
 import { transactionType } from '../constants/config';
 import Alert from '@material-ui/lab/Alert';
@@ -19,6 +17,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ReactApexChart from 'react-apexcharts';
 import dayjs from 'dayjs';
+import CssTextField from '../components/snippets/CssTextField';
 
 
 const sqlite3 = require('sqlite3').verbose();
@@ -59,24 +58,6 @@ interface SeriesData {
   data: number[];
 }
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-    },
-    '& .MuiInput-underline:before': {
-    },
-    '& label.Mui-focused': {
-    },
-    '& .MuiInput-underline:after': {
-    },
-    '& input': {
-    },
-    '& .MuiFormLabel-root.Mui-disabled': {
-      color: '#c1bbae',
-    }
-  },
-})(TextField);
-
 const useStyles = makeStyles(() =>
   createStyles({
     modal: {
@@ -85,47 +66,48 @@ const useStyles = makeStyles(() =>
       justifyContent: 'center',
     },
     paper: {
-      border: '2px solid #eaeaea',
-      background: '#d9dfe8',
-      boxShadow: '3px 3px 20px #ccc',
+      border: '2px solid #000',
+      background: '#232c39',
+      boxShadow: '3px 3px 20px #010101',
       padding: 15,
       margin: 15,
       width: 400,
       height: 330,
     },
     texts: {
-      color: '#232c39',
+      color: 'whitesmoke',
     },
     btn: {
       height: '40px'
     },
     header: {
       textAlign: 'center',
-      color: '#232c39',
+      color: 'white',
       textDecoration: 'underline',
       textUnderlinePosition: 'under',
     },
     topbin: {
       display: 'flex',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
       alignItems: 'center'
     },
     grid: {
       marginTop: 40,
     },
     textField: {
-      color: '#232c39',
+      color: 'white',
+      borderColor: 'white',
       margin: '0 0 16px 0',
     },
     input: {
-      color: '#232c39',
+      color: 'white',
     },
     gridMargin: {
       margin: '10px 0'
     },
     card: {
       width: 290,
-      boxShadow: '5px 5px 15px #98b9b3'
+      boxShadow: '5px 5px 15px #010101'
     },
     content: {
       display: 'flex',
@@ -135,7 +117,7 @@ const useStyles = makeStyles(() =>
     cardContainer: {
       display: 'flex',
       flexDirection: 'row',
-      color: '#232c39',
+      color: 'white',
       justifyContent: 'space-evenly',
       margin: 17,
       borderRadius: 9
@@ -191,7 +173,7 @@ export default function HomePage() {
       align: 'center',
       margin: 0,
       style: {
-        color: '#232c39'
+        color: 'whitesmoke'
       }
     },
     tooltip: {
@@ -297,7 +279,7 @@ export default function HomePage() {
     try {
       const db = new sqlite3.Database(dbpath.dbPath);
       db.all(
-        'SELECT * FROM StockHistory ORDER BY date_updated DESC LIMIT 15',
+        'SELECT * FROM StockHistory ORDER BY id DESC LIMIT 9',
         (_err: Error, instant: StockHistory[]) => {
           if (_err) {
             console.log(_err);
@@ -335,7 +317,7 @@ export default function HomePage() {
             // setMidBar(mBar);
             // setTopBar(tBar);
             setShopSeries([{
-              name: 'Base',
+              name: '',
               data: lBar
             }, {
               name: 'Net sold',
@@ -346,7 +328,7 @@ export default function HomePage() {
             }
             ]);
             setGodownSeries([{
-              name: 'Base',
+              name: '',
               data: lBar2
             }, {
               name: 'Net sold',
@@ -415,7 +397,7 @@ export default function HomePage() {
       );
 
       db.all(
-        'SELECT * FROM User',
+        'SELECT * FROM User WHERE is_customer = ?', [1],
         (_err: Error, instant: any[]) => {
           if (_err) {
             console.log(_err)
@@ -450,7 +432,7 @@ export default function HomePage() {
         <h3>Welcome to Shop Manager</h3>
       </Grid>
 
-      <Grid item className={classes.topbin}>
+      <Grid item xs={8} lg={9} className={classes.topbin}>
         {!authFlag ?
           <Button color='primary' variant='contained'
                   onClick={handleOpen} className={classes.btn}>

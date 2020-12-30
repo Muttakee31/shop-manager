@@ -19,6 +19,7 @@ import { isAuthenticated } from '../../features/auth/authSlice';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
+import CssTextField from '../snippets/CssTextField';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -37,6 +38,11 @@ const useStyles = makeStyles({
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
+  topbin: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   modal: {
     display: 'flex',
     alignItems: 'center',
@@ -52,6 +58,11 @@ const useStyles = makeStyles({
     width: 400,
     height: 170,
     margin: 15
+  },
+  textField: {
+    color: 'white',
+    borderColor: 'white',
+    margin: 10,
   },
   deleteButton: {
     background: '#ca263d',
@@ -73,6 +84,7 @@ export default function SupplyList(): JSX.Element {
   const [supplyList, setSupplyList] = useState<Supply[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const history = useHistory();
   const authFlag= useSelector(isAuthenticated);
 
@@ -82,7 +94,7 @@ export default function SupplyList(): JSX.Element {
   useEffect(() => {
     // add db.all function to get all Supplys
     getSupplies();
-  }, []);
+  }, [selectedDate]);
 
   const openDeleteSupply = (instant: Supply) => {
     setDeleteModal(true);
@@ -93,7 +105,8 @@ export default function SupplyList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     try {
       db.all(
-        'SELECT * FROM Supply ORDER BY id DESC',
+        'SELECT * FROM Supply WHERE timestamp LIKE ? ORDER BY id DESC',
+        [selectedDate  + "%"],
         (_err: Error, instant: Supply[]) => {
           setSupplyList(instant);
         }
@@ -103,6 +116,15 @@ export default function SupplyList(): JSX.Element {
     catch (e) {
     }
   };
+
+  const changeDate = (e:React.ChangeEvent) => {
+    // @ts-ignore
+    const value: string = e.target.value;
+    setSelectedDate(value);
+    //console.log(value);
+    //const filtered = transactionList.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === value);
+    //setVisibleTransactionList(transactionList);
+  }
 
   const deleteSupply = () => {
     try {
@@ -134,7 +156,7 @@ export default function SupplyList(): JSX.Element {
           <h3>List of Supply</h3>
         </Grid>
 
-        <Grid>
+        <Grid item xs={8} xl={9} className={classes.topbin}>
           <Button
             variant="contained"
             color="primary"
@@ -146,6 +168,18 @@ export default function SupplyList(): JSX.Element {
           >
             Add supply
           </Button>
+
+          <CssTextField
+            id="date"
+            label="Date"
+            type="date"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={selectedDate}
+            onChange={changeDate}
+          />
         </Grid>
 
         <TableContainer>

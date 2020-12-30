@@ -19,6 +19,7 @@ import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
 import { useSelector } from 'react-redux';
 import { isAuthenticated } from '../../features/auth/authSlice';
+import CssTextField from '../snippets/CssTextField';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -42,6 +43,11 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  topbin: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   paper: {
     background: '#ffffff',
     boxShadow: '3px 3px 20px #f8fafe',
@@ -52,6 +58,11 @@ const useStyles = makeStyles({
     width: 400,
     height: 170,
     margin: 15
+  },
+  textField: {
+    color: 'white',
+    borderColor: 'white',
+    margin: 10,
   },
   deleteButton: {
     background: '#ca263d',
@@ -73,6 +84,8 @@ export default function OrderList(): JSX.Element {
   const [orderList, setOrderList] = useState<Order[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
+
   const history = useHistory();
   const authFlag= useSelector(isAuthenticated);
 
@@ -82,7 +95,7 @@ export default function OrderList(): JSX.Element {
   useEffect(() => {
     // add db.all function to get all Orders
     getOrders();
-  }, []);
+  }, [selectedDate]);
 
   const openDeleteOrder = (instant: Order) => {
     setDeleteModal(true);
@@ -93,7 +106,8 @@ export default function OrderList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     try {
       db.all(
-        'SELECT * FROM Orders ORDER BY id DESC',
+        'SELECT * FROM Orders WHERE timestamp LIKE ? ORDER BY id DESC',
+        [selectedDate  + "%"],
         (_err: Error, instant: Order[]) => {
           setOrderList(instant);
         }
@@ -103,6 +117,16 @@ export default function OrderList(): JSX.Element {
     catch (e) {
     }
   };
+
+  const changeDate = (e:React.ChangeEvent) => {
+    // @ts-ignore
+    const value: string = e.target.value;
+    setSelectedDate(value);
+    //console.log(value);
+    //const filtered = transactionList.filter(item => dayjs(item.timestamp).format('YYYY-MM-DD') === value);
+    //setVisibleTransactionList(transactionList);
+  }
+
 
   const deleteOrder = () => {
     try {
@@ -134,7 +158,8 @@ export default function OrderList(): JSX.Element {
           <h3>List of Orders</h3>
         </Grid>
 
-        <Grid>
+        <Grid item xs={8} lg={9} className={classes.topbin}>
+
           <Button
             variant="contained"
             color="primary"
@@ -147,6 +172,18 @@ export default function OrderList(): JSX.Element {
           >
             Create an order
           </Button>
+
+          <CssTextField
+            id="date"
+            label="Date"
+            type="date"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={selectedDate}
+            onChange={changeDate}
+          />
         </Grid>
 
         <TableContainer>

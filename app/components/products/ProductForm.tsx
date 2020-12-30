@@ -1,47 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { useHistory, useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import dayjs from 'dayjs';
 import { authToken, isAuthenticated, logOutUser, userName } from '../../features/auth/authSlice';
 import Alert from '@material-ui/lab/Alert';
 import { useSelector } from 'react-redux';
+import CssTextField from '../snippets/CssTextField';
 
 const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-
-    },
-    '& .MuiInput-underline:before': {
-
-    },
-    '& label.Mui-focused': {
-      color: '#277ea7',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#277ea7',
-    },
-    '& input': {
-    },
-    '& .MuiFormLabel-root.Mui-disabled': {
-      color: '#524c41',
-    }
-  },
-})(TextField);
 
 const useStyles = makeStyles({
   texts: {
+    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
+    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
@@ -49,9 +29,12 @@ const useStyles = makeStyles({
     marginTop: 40,
   },
   textField: {
+    color: 'white',
+    borderColor: 'white',
     margin: 10,
   },
   input: {
+    color: 'white',
   },
   deleteButton: {
     background: '#ca263d',
@@ -74,8 +57,8 @@ export default function ProductForm(): JSX.Element {
   const [productCode, setProductCode] = useState('');
   const [price, setPrice] = useState('');
   const [unit, setUnit] = useState('');
-  const [shopStock, setShopStock] = useState('0');
-  const [godownStock, setGodownStock] = useState('0');
+  const [shopStock, setShopStock] = useState('');
+  const [godownStock, setGodownStock] = useState('');
   const [alert, setAlert] = useState<string | null>(null);
 
   const location = useLocation();

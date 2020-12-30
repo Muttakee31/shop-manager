@@ -9,12 +9,10 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import { transactionType } from '../../constants/config';
 import Button from '@material-ui/core/Button';
 import routes from '../../constants/routes.json';
 import { useHistory } from 'react-router';
-import { transactionType } from '../../constants/config';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
 import Chip from '@material-ui/core/Chip';
 import EditIcon from '@material-ui/icons/Edit';
@@ -24,6 +22,11 @@ import { isAuthenticated } from '../../features/auth/authSlice';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
+import CssTextField from '../snippets/CssTextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -45,13 +48,17 @@ interface Transaction {
 
 const useStyles = makeStyles({
   texts: {
+    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
+    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
+    color: 'white',
+    borderColor: 'white',
     margin: 10,
   },
   topbin: {
@@ -81,8 +88,9 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   paper: {
-    background: '#ffffff',
-    boxShadow: '3px 3px 20px #f8fafe',
+    border: '2px solid #000',
+    background: '#232c39',
+    boxShadow: '3px 3px 20px #010101',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -91,6 +99,9 @@ const useStyles = makeStyles({
     height: 170,
     margin: 15
   },
+  selectField: {
+    width: 210
+  }
 });
 
 /*const type = {
@@ -107,33 +118,6 @@ const useStyles = makeStyles({
 
 const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c']
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-
-    },
-    '& .MuiInput-underline:before': {
-    },
-    '& label.Mui-focused': {
-      color: '#277ea7',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#277ea7',
-    },
-    '& input': {
-
-    },
-    '& .MuiInputBase-root': {
-
-    },
-    '& .MuiFormLabel-root': {
-
-    },
-    '& .MuiSelect-select.MuiSelect-select': {
-
-    },
-  },
-})(TextField);
 
 export default function TransactionList(): JSX.Element {
   const classes = useStyles();
@@ -143,6 +127,7 @@ export default function TransactionList(): JSX.Element {
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const [deleteModal, setDeleteModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [type, setType] = useState("-1");
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   //const [visibleTransactionList, setVisibleTransactionList] = useState<Transaction[]>([]);
@@ -153,7 +138,7 @@ export default function TransactionList(): JSX.Element {
   useEffect(() => {
     // add db.all function to get all transactions
     getTransactionList();
-  }, [selectedDate]);
+  }, [selectedDate, type]);
 
   const openDeleteTransaction = (instant: Transaction) => {
     setDeleteModal(true);
@@ -162,11 +147,19 @@ export default function TransactionList(): JSX.Element {
 
   const getTransactionList = () => {
    try {
-     console.log(selectedDate);
      const db = new sqlite3.Database(dbpath.dbPath);
+     console.log(type);
+     let params = [];
+     params.push(selectedDate + "%");
+     let statement : string = `SELECT * FROM Transactions WHERE timestamp LIKE ?`;
+     if (type !== "-1") {
+       params.push(type);
+       statement += ` AND transaction_type = ?`;
+     }
+
      db.all(
-       `SELECT * FROM Transactions WHERE timestamp LIKE ?`,
-       [selectedDate  + "%"],
+       statement,
+       params,
        (_err: Error, instant: Transaction[]) => {
          if (instant !== undefined) {
            setTransactionList(instant);
@@ -218,7 +211,6 @@ export default function TransactionList(): JSX.Element {
      return transactionType[item] == type;
     })[0];
 
-    console.log(type);
     return (
       <Chip
         label={text}
@@ -242,7 +234,7 @@ export default function TransactionList(): JSX.Element {
           <h3>List of Transactions</h3>
         </Grid>
 
-        <Grid item xs={8} lg={9} className={classes.topbin}>
+        <Grid item xs={12} className={classes.topbin}>
           <Button
             variant="contained"
             color="primary"
@@ -254,6 +246,27 @@ export default function TransactionList(): JSX.Element {
           >
             Add due payment
           </Button>
+
+          <FormControl variant="outlined">
+            <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={type}
+              className={classes.selectField}
+              onChange={(event)=>
+                setType(event.target.value as string)}
+            >
+              <MenuItem value="-1">Show all</MenuItem>
+              {Object.keys(transactionType).map((type:string, index)=> {
+                return (
+                  <MenuItem value={String(transactionType[type])}>{type}</MenuItem>
+                )
+              })
+              }
+
+            </Select>
+          </FormControl>
 
           <CssTextField
             id="date"

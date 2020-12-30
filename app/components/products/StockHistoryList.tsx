@@ -10,8 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as dbpath from '../../constants/config';
 import Sidebar from '../../containers/Sidebar';
 import dayjs from 'dayjs';
-import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
+import CssTextField from '../snippets/CssTextField';
 
 interface StockHistory {
   id: number;
@@ -27,39 +26,21 @@ interface StockHistory {
 
 const useStyles = makeStyles({
   texts: {
+    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
+    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
   textField: {
+    color: 'white',
+    borderColor: 'white',
     margin: 10,
   },
 });
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-    },
-    '& .MuiInput-underline:before': {
-    },
-    '& label.Mui-focused': {
-      color: '#277ea7',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#277ea7',
-    },
-    '& input': {
-    },
-    '& .MuiInputBase-root': {
-    },
-    '& .MuiFormLabel-root': {
-    },
-    '& .MuiSelect-select.MuiSelect-select': {
-    },
-  },
-})(TextField);
 
 function compare(a:StockHistory, b:StockHistory) {
   if (dayjs(a.date_updated).isBefore(b.date_updated)) return 1;
