@@ -116,7 +116,7 @@ const useStyles = makeStyles({
   return 0;
 }*/
 
-const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c']
+const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c', '#541212']
 
 
 export default function TransactionList(): JSX.Element {
