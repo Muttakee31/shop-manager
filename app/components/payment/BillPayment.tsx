@@ -22,11 +22,9 @@ interface User {
 
 const useStyles = makeStyles({
   texts: {
-    color: 'whitesmoke',
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
@@ -34,12 +32,9 @@ const useStyles = makeStyles({
     marginTop: 40,
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: '10px 0',
   },
   input: {
-    color: 'white',
   },
   deleteButton: {
     background: '#ca263d',
