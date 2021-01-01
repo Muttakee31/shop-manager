@@ -20,6 +20,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
 import CssTextField from '../snippets/CssTextField';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -209,7 +210,9 @@ export default function SupplyList(): JSX.Element {
                     {row.supplier_name}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.total_cost}
+                    <NumberFormat value={row.total_cost} displayType={'text'}
+                                  thousandSeparator={true} thousandsGroupStyle="lakh"
+                                  decimalScale={2}/>
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {dayjs(row.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm a')}

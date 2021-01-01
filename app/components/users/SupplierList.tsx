@@ -18,6 +18,7 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import { useSelector } from 'react-redux';
 import { isAuthenticated } from '../../features/auth/authSlice';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -184,7 +185,10 @@ export default function SupplierList(): JSX.Element {
                     {row.address}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.due_amount > 0 ? 0 : -1 * row.due_amount}
+                    {row.due_amount > 0 ? 0 :
+                      <NumberFormat value={row.due_amount * -1} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>}
                   </TableCell>
                   <TableCell align="center" className={classes.texts}>
                     <VisibilityIcon onClick={() => viewSupplier(row)} />

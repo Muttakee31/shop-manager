@@ -23,6 +23,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CssTextField from '../snippets/CssTextField';
+import NumberFormat from 'react-number-format';
 
 interface Product {
   id: number;
@@ -397,7 +398,9 @@ export default function SelectProducts(props: {
                       {row.title}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.price}
+                      <NumberFormat value={row.price} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {row.quantity}
@@ -406,7 +409,9 @@ export default function SelectProducts(props: {
                       {row.store === '1' ? 'Godown' : 'Shop'}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.quantity * row.price}
+                      <NumberFormat value={row.quantity * row.price} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="center" className={classes.texts}>
                       <DeleteIcon onClick={() => deleteProduct(row)} />
