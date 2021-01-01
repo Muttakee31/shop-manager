@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -197,13 +198,17 @@ export default function SupplyDetails(): JSX.Element {
                         {row.product_title}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.price}
+                        <NumberFormat value={row.price} displayType={'text'}
+                                      thousandSeparator={true} thousandsGroupStyle="lakh"
+                                      decimalScale={2}/>
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.quantity}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.quantity * row.price}
+                        <NumberFormat value={row.quantity * row.price} displayType={'text'}
+                                      thousandSeparator={true} thousandsGroupStyle="lakh"
+                                      decimalScale={2}/>
                       </TableCell>
                     </TableRow>
                   ))

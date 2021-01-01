@@ -6,6 +6,7 @@ import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import dayjs from 'dayjs';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -141,7 +142,9 @@ export default function TransactionDetails(): JSX.Element {
               {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.order_cost}
+              <NumberFormat value={transactionInfo.order_cost} displayType={'text'}
+                            thousandSeparator={true} thousandsGroupStyle="lakh"
+                            decimalScale={2}/>
             </Grid>
           </Grid>
 

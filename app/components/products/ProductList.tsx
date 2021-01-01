@@ -18,6 +18,7 @@ import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
 import { useSelector } from 'react-redux';
 import { isAuthenticated } from '../../features/auth/authSlice';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -104,7 +105,6 @@ export default function ProductList(): JSX.Element {
             console.log(err);
           } else {
             setProductList(instant);
-            console.log(instant);
           }
         }
       );
@@ -204,7 +204,9 @@ export default function ProductList(): JSX.Element {
                       {row.code}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.price}
+                      <NumberFormat value={row.price} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {row.shop_stock_count}

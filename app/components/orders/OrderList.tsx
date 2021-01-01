@@ -20,6 +20,7 @@ import Modal from '@material-ui/core/Modal';
 import { useSelector } from 'react-redux';
 import { isAuthenticated } from '../../features/auth/authSlice';
 import CssTextField from '../snippets/CssTextField';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -210,7 +211,9 @@ export default function OrderList(): JSX.Element {
                       {row.customer_name}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.total_cost}
+                      <NumberFormat value={row.total_cost} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {dayjs(row.timestamp.split('Z')[0]).format('MMM DD, YYYY [at] hh:mm a')}

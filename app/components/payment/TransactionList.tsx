@@ -27,6 +27,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -307,10 +308,14 @@ export default function TransactionList(): JSX.Element {
                     {getChip(row.transaction_type)}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.order_cost}
+                    <NumberFormat value={row.order_cost} displayType={'text'}
+                                  thousandSeparator={true} thousandsGroupStyle="lakh"
+                                  decimalScale={2}/>
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {row.paid_amount}
+                    <NumberFormat value={row.paid_amount} displayType={'text'}
+                                  thousandSeparator={true} thousandsGroupStyle="lakh"
+                                  decimalScale={2}/>
                   </TableCell>
                   {/*<TableCell align="left" className={classes.texts}>
                     {row.labour_cost !== null ? "N/A" : row.labour_cost}
@@ -319,7 +324,11 @@ export default function TransactionList(): JSX.Element {
                     {row.discount === null ? 'N/A' : row.discount}
                   </TableCell>*/}
                   <TableCell align="left" className={classes.texts}>
-                    {row.due_amount === null ? 'N/A' : row.due_amount}
+                    {row.due_amount === null ?
+                      'N/A' :
+                      <NumberFormat value={row.due_amount} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>}
                   </TableCell>
                     <TableCell align="center" className={classes.texts}>
                       <VisibilityIcon

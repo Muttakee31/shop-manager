@@ -12,8 +12,9 @@ import dayjs from 'dayjs';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
-import BackButton from '../snippets/BackButton';
 import { transactionType } from '../../constants/config';
+import BackButton from '../snippets/BackButton';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -187,11 +188,14 @@ export default function UserDetails(): JSX.Element {
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
-            Due amount:
+            {type === '0' ? "Due of the Customer" : "Due to pay the supplier"}
 {' '}
           </Grid>
           <Grid item xs={6}>
-            {user.due_amount}
+            {user.due_amount ?
+              type === '0' ? user.due_amount : user.due_amount * -1
+            : 0
+            }
           </Grid>
         </Grid>
 
@@ -278,19 +282,28 @@ export default function UserDetails(): JSX.Element {
                         })}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.order_cost}
+                        <NumberFormat value={row.order_cost} displayType={'text'}
+                                      thousandSeparator={true} thousandsGroupStyle="lakh"
+                                      decimalScale={2}/>
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.paid_amount}
+                        <NumberFormat value={row.paid_amount} displayType={'text'}
+                                      thousandSeparator={true} thousandsGroupStyle="lakh"
+                                      decimalScale={2}/>
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.labour_cost}
+                        <NumberFormat value={row.labour_cost} displayType={'text'}
+                                      thousandSeparator={true} thousandsGroupStyle="lakh"
+                                      decimalScale={2}/>
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.discount === null ? 'N/A' : row.discount}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.due_amount === null ? 'N/A' : row.due_amount}
+                        {row.due_amount === null ? 'N/A' :
+                          <NumberFormat value={row.due_amount} displayType={'text'}
+                                        thousandSeparator={true} thousandsGroupStyle="lakh"
+                                        decimalScale={2}/>}
                       </TableCell>
                     </TableRow>
                   ))}

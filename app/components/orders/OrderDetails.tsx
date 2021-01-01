@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
+import NumberFormat from 'react-number-format';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -166,7 +167,8 @@ export default function OrderDetails(): JSX.Element {
 {' '}
           </Grid>
           <Grid item xs={6}>
-            {order.total_cost}
+            <NumberFormat value={order.total_cost} displayType={'text'}
+                          thousandSeparator={true} thousandsGroupStyle="lakh"/>
           </Grid>
         </Grid>
 
@@ -200,13 +202,17 @@ export default function OrderDetails(): JSX.Element {
                         {row.product_title}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.price}
+                        <NumberFormat value={row.price} displayType={'text'}
+                                      thousandSeparator={true} thousandsGroupStyle="lakh"
+                                      decimalScale={2}/>
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.quantity}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
-                        {row.quantity * row.price}
+                        <NumberFormat value={row.quantity * row.price} displayType={'text'}
+                                      thousandSeparator={true} thousandsGroupStyle="lakh"
+                                      decimalScale={2}/>
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         {row.storage === "0" ? "Shop" : "Godown"}
@@ -230,7 +236,9 @@ export default function OrderDetails(): JSX.Element {
 {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.paid_amount}
+              <NumberFormat value={transactionInfo.paid_amount} displayType={'text'}
+                            thousandSeparator={true} thousandsGroupStyle="lakh"
+                            decimalScale={2}/>
             </Grid>
           </Grid>
 
@@ -240,7 +248,9 @@ export default function OrderDetails(): JSX.Element {
 {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.due_amount}
+              <NumberFormat value={transactionInfo.due_amount} displayType={'text'}
+                            thousandSeparator={true} thousandsGroupStyle="lakh"
+                            decimalScale={2}/>
             </Grid>
           </Grid>
 
@@ -250,7 +260,9 @@ export default function OrderDetails(): JSX.Element {
 {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.labour_cost}
+              <NumberFormat value={transactionInfo.labour_cost} displayType={'text'}
+                            thousandSeparator={true} thousandsGroupStyle="lakh"
+                            decimalScale={2}/>
             </Grid>
           </Grid>
 
@@ -260,7 +272,9 @@ export default function OrderDetails(): JSX.Element {
 {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.discount}
+              <NumberFormat value={transactionInfo.discount} displayType='text'
+                            thousandSeparator={true} thousandsGroupStyle="lakh"
+                            decimalScale={2}/>
             </Grid>
           </Grid>
         </Grid>

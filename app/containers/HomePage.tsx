@@ -8,7 +8,7 @@ import * as dbpath from '../constants/config';
 import { transactionType } from '../constants/config';
 import Alert from '@material-ui/lab/Alert';
 import { useDispatch, useSelector } from 'react-redux';
-import { isAuthenticated, logOutUser, setAuthToken } from '../features/auth/authSlice';
+import { isAuthenticated, logOutUser, setAuthToken, userName } from '../features/auth/authSlice';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -18,6 +18,8 @@ import CardContent from '@material-ui/core/CardContent';
 import ReactApexChart from 'react-apexcharts';
 import dayjs from 'dayjs';
 import CssTextField from '../components/snippets/CssTextField';
+import NumberFormat from 'react-number-format';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 const sqlite3 = require('sqlite3').verbose();
@@ -154,6 +156,7 @@ export default function HomePage() {
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
 
   const [alert, setAlert] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState(false);
   const [options, setOption] = useState({
     chart: {
       type: 'bar',
@@ -223,6 +226,7 @@ export default function HomePage() {
 
   const dispatch = useDispatch();
   const authFlag= useSelector(isAuthenticated);
+  const loggedInUser = useSelector(userName);
 
   useEffect(()=> {
     getTransactionCount(selectedDate);
@@ -254,10 +258,11 @@ export default function HomePage() {
           else {
             const hashedPass : string =  CryptoJS.SHA256(password).toString();
             if (instant.length !== 0 && instant[0].password == hashedPass) {
-              const token = jwt.sign({ username }, dbpath.SECRET_KEY, { expiresIn: '24h' });
+              const token = jwt.sign({ username }, dbpath.SECRET_KEY, { expiresIn: '12h' });
               //console.log(token);
               dispatch(setAuthToken({token, username}));
               handleClose();
+              setSuccessMessage(true);
             }
             else {
               console.log('did not match');
@@ -424,6 +429,17 @@ export default function HomePage() {
   return (
     <Grid className={classes.grid}>
 
+      <Snackbar open={successMessage} autoHideDuration={6000}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                onClose={()=> setSuccessMessage(false)}>
+        <Alert onClose={()=> setSuccessMessage(false)} severity="success">
+          Welcome, {loggedInUser}
+        </Alert>
+      </Snackbar>
+
       <Grid className={classes.header}>
         <h3>Welcome to Shop Manager</h3>
       </Grid>
@@ -465,7 +481,10 @@ export default function HomePage() {
         <Card className={classes.card} variant="outlined" style={{background: '#2fa758'}}>
           <CardContent className={classes.content}>
             <span className={classes.title}>Total sales</span>
-            <span className={classes.amount}>{totalSale}</span>
+            <span className={classes.amount}>
+              <NumberFormat value={totalSale} displayType={'text'}
+                            thousandSeparator={true} thousandsGroupStyle="lakh"/>
+            </span>
           </CardContent>
         </Card>
       </Grid>
@@ -474,13 +493,19 @@ export default function HomePage() {
         <Card className={classes.card} variant="outlined" style={{background: '#1abfaa'}}>
           <CardContent className={classes.content}>
             <span className={classes.title}>Total expense</span>
-            <span className={classes.amount}>{totalExpense}</span>
+            <span className={classes.amount}>
+              <NumberFormat value={totalExpense} displayType={'text'}
+                            thousandSeparator={true} thousandsGroupStyle="lakh"/>
+            </span>
           </CardContent>
         </Card>
         <Card className={classes.card} variant="outlined" style={{background: '#dc0835'}}>
           <CardContent className={classes.content}>
             <span className={classes.title}>Payments due</span>
-            <span className={classes.amount}>{totalDue}</span>
+            <span className={classes.amount}>
+              <NumberFormat value={totalDue} displayType={'text'}
+                            thousandSeparator={true} thousandsGroupStyle="lakh"/>
+            </span>
           </CardContent>
         </Card>
       </Grid>

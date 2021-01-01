@@ -23,6 +23,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useHistory } from 'react-router';
 import CssTextField from '../snippets/CssTextField';
+import NumberFormat from 'react-number-format';
 
 interface Product {
   id: number;
@@ -160,7 +161,7 @@ export default function SelectProducts(props: {
         props.selectedCustomer.id,
         props.selectedCustomer.name,
         date,
-        Number(totalPrice),
+        Math.floor(totalPrice),
       ],
       function (err: Error) {
         if (err) {
@@ -247,8 +248,8 @@ export default function SelectProducts(props: {
   const createTransaction = (order_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
-    let due = totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer) <= 0 ?
-      0 : totalPrice + Number(labourCost) - Number(discount) - Number(paidByCustomer);
+    let due = Math.floor(totalPrice) + Number(labourCost) - Number(discount) - Number(paidByCustomer) <= 0 ?
+      0 : Math.floor(totalPrice) + Number(labourCost) - Number(discount) - Number(paidByCustomer);
     // insert one row into the langs table
     db.run(
       `INSERT INTO Transactions(order_id, order_cost, client, client_name, transaction_type,
@@ -256,7 +257,7 @@ export default function SelectProducts(props: {
        VALUES(?,?,?,?,?,?,?,?,?,?,?) `,
       [
         order_id,
-        totalPrice + Number(labourCost) - Number(discount),
+        Math.floor(totalPrice) + Number(labourCost) - Number(discount),
         props.selectedCustomer.id,
         props.selectedCustomer.name,
         transactionType['order'],
@@ -394,7 +395,9 @@ export default function SelectProducts(props: {
                       {row.title}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.price}
+                      <NumberFormat value={row.price} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {row.quantity}
@@ -403,7 +406,9 @@ export default function SelectProducts(props: {
                       {row.store === '1' ? 'Godown' : 'Shop'}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.quantity * row.price}
+                      <NumberFormat value={row.quantity * row.price} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="center" className={classes.texts}>
                       <DeleteIcon onClick={() => deleteProduct(row)} />
@@ -419,7 +424,11 @@ export default function SelectProducts(props: {
       {orderItemList.length > 0 && (
         <Grid className={classes.total}>
           <div>Total</div>
-          <div>{totalPrice}</div>
+          <div>
+            <NumberFormat value={Math.floor(totalPrice)} displayType={'text'}
+                          thousandSeparator={true} thousandsGroupStyle="lakh"
+                          />
+          </div>
         </Grid>
       )}
 

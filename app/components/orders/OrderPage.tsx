@@ -5,18 +5,9 @@ import SelectCustomer from './SelectCustomer';
 import SelectProducts from './SelectProducts';
 import StepperComponent from './StepperComponent';
 
-interface OrderItem {
-  order_id: number;
-  price: number;
-  customer_name: string;
-  customer: number;
-  date: string;
-}
-
 export default function OrderPage(): JSX.Element {
   const [orderState, setOrderState] = useState(0);
   const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [orderDetails, setOrderDetails] = useState<OrderItem | {}>({});
   // setOrderState(1);
   /*  useEffect(() => {
     // setOrderState(0);
