@@ -163,7 +163,7 @@ export default function SelectProducts(props: {
         props.selectedSupplier.id,
         props.selectedSupplier.name,
         date,
-        Number(totalPrice),
+        Math.floor(totalPrice),
       ],
       function (err: Error) {
         if (err) {
@@ -243,8 +243,8 @@ export default function SelectProducts(props: {
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
-    let due = totalPrice + Number(labourCost) - Number(paidToSupplier) <= 0 ?
-      0 : totalPrice + Number(labourCost) - Number(paidToSupplier);
+    let due = Math.floor(totalPrice) + Number(labourCost) - Number(paidToSupplier) <= 0 ?
+      0 : Math.floor(totalPrice) + Number(labourCost) - Number(paidToSupplier);
     // insert one row into the langs table
     db.run(
       `INSERT INTO Transactions(supply_id, order_cost, client, client_name, transaction_type,
@@ -252,7 +252,7 @@ export default function SelectProducts(props: {
        VALUES(?,?,?,?,?,?,?,?,?,?,?) `,
       [
         supply_id,
-        totalPrice + Number(labourCost),
+        Math.floor(totalPrice) + Number(labourCost),
         props.selectedSupplier.id,
         props.selectedSupplier.name,
         transactionType['supply'],
@@ -427,7 +427,9 @@ export default function SelectProducts(props: {
       {supplyItemList.length > 0 && (
         <Grid className={classes.total}>
           <div>Total</div>
-          <div>{totalPrice}</div>
+          <div><NumberFormat value={Math.floor(totalPrice)} displayType={'text'}
+                             thousandSeparator={true} thousandsGroupStyle="lakh"
+                             decimalScale={2}/></div>
         </Grid>
       )}
 
