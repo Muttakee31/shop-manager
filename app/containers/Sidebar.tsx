@@ -19,6 +19,7 @@ const useStyles = makeStyles({
   sidebarContainer: {
     top: 0,
     position: 'sticky',
+    height: '100vh',
     maxHeight: '100vh',
     boxShadow: '0 -2px 22px 0 rgba(0,0,0,.1)',
   },
