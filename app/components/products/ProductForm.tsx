@@ -10,6 +10,7 @@ import { authToken, isAuthenticated, logOutUser, userName } from '../../features
 import Alert from '@material-ui/lab/Alert';
 import { useSelector } from 'react-redux';
 import CssTextField from '../snippets/CssTextField';
+import routes from '../../constants/routes.json';
 
 const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
@@ -81,6 +82,7 @@ export default function ProductForm(): JSX.Element {
       setGodownStock(String(state.product.godown_stock_count));
       setShopStock(String(state.product.shop_stock_count));
     }
+    console.log(state.verticalScrollHeight);
     /* if (location.state.instant !== undefined) {
       console.log(location.state.instant);
     } */
@@ -132,7 +134,10 @@ export default function ProductForm(): JSX.Element {
                 console.log(err.message);
               }
               // get the last insert id
-              history.goBack();
+              history.replace({
+                pathname: routes.PRODUCTS,
+                state: {  verticalScrollHeight: location && location.state && location.state.verticalScrollHeight },
+              })
               // console.log(`A row has been inserted`);
             }
           );
@@ -186,11 +191,17 @@ export default function ProductForm(): JSX.Element {
                     if (err) {
                       console.log(err.message);
                     } else {
-                      history.goBack();
+                      history.replace({
+                        pathname: routes.PRODUCTS,
+                        state: {  verticalScrollHeight: location && location.state && location.state.verticalScrollHeight },
+                      })
                     }
                   });
               } else {
-                history.goBack();
+                history.replace({
+                  pathname: routes.PRODUCTS,
+                  state: {  verticalScrollHeight: location && location.state && location.state.verticalScrollHeight },
+                })
               }
             }
           });
@@ -221,7 +232,6 @@ export default function ProductForm(): JSX.Element {
         sm={8}
         lg={9}
         direction="column"
-        justify="center"
         className={classes.grid}
       >
         <Grid className={classes.header}>
@@ -306,7 +316,10 @@ export default function ProductForm(): JSX.Element {
               className={classes.deleteButton}
               onClick={(e) => {
                 e.preventDefault();
-                history.goBack();
+                history.replace({
+                  pathname: routes.PRODUCTS,
+                  state: {  verticalScrollHeight: location && location.state && location.state.verticalScrollHeight },
+                })
               }}
             >
               Cancel
