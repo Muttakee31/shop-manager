@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useHistory, useLocation, useRouteMatch } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { authToken, isAuthenticated, logOutUser, userName } from '../../features/auth/authSlice';
 import Alert from '@material-ui/lab/Alert';
 import CssTextField from '../snippets/CssTextField';
+import routes from '../../constants/routes.json';
 
 const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
@@ -55,7 +56,7 @@ export default function UpdateUser(): JSX.Element {
   const [dueAmount, setDueAmount] = useState('');
   const [alert, setAlert] = useState<string | null>(null);
 
-  // const location = useLocation();
+  const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
   const match = useRouteMatch();
@@ -113,7 +114,7 @@ export default function UpdateUser(): JSX.Element {
               setAlert("Something went wrong!");
             } else {
               // @ts-ignore
-              history.goBack();
+              returnToPreviousPage();
             }
             // get the last insert id
             // console.log(`A row has been inserted`);
@@ -134,6 +135,13 @@ export default function UpdateUser(): JSX.Element {
       setAlert("Your session has expired. Please sign in again!")
     }
   };
+
+  const returnToPreviousPage = () => {
+    history.replace({
+      pathname: match.params.type === '0' ? routes.CUSTOMERS : routes.SUPPLIERS,
+      state: {  verticalScrollHeight: location.state.verticalScrollHeight },
+    })
+  }
 
   return (
     <Grid container direction="row">
@@ -208,7 +216,7 @@ export default function UpdateUser(): JSX.Element {
               className={classes.deleteButton}
               onClick={(e) => {
                 e.preventDefault();
-                history.goBack();
+                returnToPreviousPage();
               }}
             >
               Cancel

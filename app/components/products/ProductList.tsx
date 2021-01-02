@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
 import * as dbpath from '../../constants/config';
@@ -64,6 +64,10 @@ const useStyles = makeStyles({
   gridMargin: {
     margin: '10px 0'
   },
+  btn: {
+    height: '40px',
+    marginLeft: 10
+  },
   deleteButton: {
     background: '#ca263d',
     marginRight: 15,
@@ -84,13 +88,26 @@ export default function ProductList(): JSX.Element {
   const [productList, setProductList] = useState<Product[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState(-1);
+
   const history = useHistory();
+  const location = useLocation();
+  const listRef = useRef(null);
   const authFlag= useSelector(isAuthenticated);
 
   // console.log('Connected to the shop database.');
   useEffect(() => {
     getProductList();
+    //window.scrollTo(location.state.verticalScrollHeight);
   }, []);
+
+  useLayoutEffect(()=> {
+    if (location.state) {
+      window.scrollTo({
+        left: 0,
+        top: location.state.verticalScrollHeight,
+      })
+    }
+  })
 
   const getProductList = () => {
     try {
@@ -117,7 +134,7 @@ export default function ProductList(): JSX.Element {
   const editProduct = (instant: Product) => {
     history.push({
       pathname: routes.ADD_PRODUCTS,
-      state: { product: instant },
+      state: { product: instant, verticalScrollHeight: window.scrollY },
     });
   };
 
@@ -154,7 +171,7 @@ export default function ProductList(): JSX.Element {
       <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>
-      <Grid item xs={8} lg={9}>
+      <Grid item xs={8} lg={9} ref={listRef}>
         <Grid className={classes.header}>
           <h3>List of Products</h3>
         </Grid>
@@ -166,8 +183,9 @@ export default function ProductList(): JSX.Element {
             onClick={() =>
               history.push({
                 pathname: routes.ADD_PRODUCTS,
-                state: { product: null },
+                state: { product: null, verticalScrollHeight: window.scrollY },
               })}
+            className={classes.btn}
           >
             Add product
           </Button>

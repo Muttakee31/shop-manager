@@ -49,6 +49,10 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  btn: {
+    height: '40px',
+    marginLeft: 10
+  },
   paper: {
     background: '#ffffff',
     boxShadow: '3px 3px 20px #f8fafe',
@@ -166,6 +170,7 @@ export default function SupplyList(): JSX.Element {
                 pathname: routes.ADD_SUPPLY,
                 state: { product: null },
               })}
+            className={classes.btn}
           >
             Add supply
           </Button>

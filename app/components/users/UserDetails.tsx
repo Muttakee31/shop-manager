@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useHistory, useLocation, useRouteMatch } from 'react-router';
 import dayjs from 'dayjs';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
@@ -15,6 +15,7 @@ import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
+import routes from '../../constants/routes.json';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -79,6 +80,7 @@ export default function UserDetails(): JSX.Element {
   const [orderList, setOrderList] = useState<Order[]>([]);
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   const history = useHistory();
+  const location = useLocation();
   const match = useRouteMatch();
   // @ts-ignore
   const type: string = match.params.type;
@@ -143,6 +145,13 @@ export default function UserDetails(): JSX.Element {
     type === '0' ? history.push(`/order/${id}`) : history.push(`/supply/${id}`);
   };
 
+  const returnToPreviousPage = () => {
+    history.replace({
+      pathname: type === '0' ? routes.CUSTOMERS : routes.SUPPLIERS,
+      state: {  verticalScrollHeight: location.state.verticalScrollHeight },
+    })
+  }
+
   return (
     <Grid container>
       <Grid item xs={4} lg={3}>
@@ -154,7 +163,7 @@ export default function UserDetails(): JSX.Element {
           <h3>User Details</h3>
         </Grid>
 
-        <BackButton />
+        <BackButton customGoBack={returnToPreviousPage} />
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
@@ -188,7 +197,7 @@ export default function UserDetails(): JSX.Element {
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
-            {type === '0' ? "Due of the Customer" : "Due to pay the supplier"}
+            {type === '0' ? "Due of the customer" : "Due to pay the supplier"}
 {' '}
           </Grid>
           <Grid item xs={6}>

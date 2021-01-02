@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
@@ -70,23 +70,35 @@ const useStylesToo = makeStyles({
 
 export default function SupplierList(): JSX.Element {
   const classes = useStylesToo();
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [toBeDeleted, setToBeDeleted] = useState(-1);
   const [supplierList, setSupplierList] = useState<Supplier[]>([]);
-
 
   const authFlag= useSelector(isAuthenticated);
   const history = useHistory();
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const location = useLocation();
+
   // console.log('Connected to the shop database.');
   useEffect(() => {
     // add db.all function to get all suppliers
     getSupplierList();
   }, []);
+
   const viewSupplier = (instant: Supplier) => {
     history.push({
       pathname: `/user-details/1/${instant.id}`,
+      state: {verticalScrollHeight: window.scrollY}
     });
   };
+
+  useLayoutEffect(()=> {
+    if (location.state) {
+      window.scrollTo({
+        left: 0,
+        top: location.state.verticalScrollHeight,
+      })
+    }
+  })
 
   const getSupplierList = () => {
     try {
@@ -142,7 +154,7 @@ export default function SupplierList(): JSX.Element {
   );
   */
   return (
-    <Grid container direction="row">
+    <Grid container direction="row" style={{height: '140vh'}}>
       <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>
@@ -191,7 +203,10 @@ export default function SupplierList(): JSX.Element {
                     <VisibilityIcon onClick={() => viewSupplier(row)} />
                     {authFlag &&
                     <>
-                      <EditIcon onClick={() => history.push(`/update-user/${row.id}`)}
+                      <EditIcon onClick={() => history.push({
+                        pathname: `/update-user/1/${row.id}`,
+                        state: {verticalScrollHeight: window.scrollY}
+                      })}
                                 style={{ padding: '0 5px'}} />
                       <DeleteIcon onClick={() => openDeleteSupplier(row)} />
                     </>

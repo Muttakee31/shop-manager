@@ -104,7 +104,7 @@ export default function TransactionDetails(): JSX.Element {
 
         <BackButton />
 
-        <Grid style={{border: '1px solid #ccc', margin: '20px'}}>
+        <Grid style={{border: '1px solid #ccc', margin: '10px'}}>
 
           <Grid className={classes.details}>
             <Grid item xs={6}>
