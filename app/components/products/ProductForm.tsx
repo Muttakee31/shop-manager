@@ -88,7 +88,7 @@ export default function ProductForm(): JSX.Element {
 
   const createProduct = () => {
     const db = new sqlite3.Database(dbpath.dbPath);
-
+    setAlert(null);
     // insert one row into the langs table
     db.run(
       `INSERT INTO Product(title, price, unit, code, shop_stock_count, godown_stock_count) VALUES(?,?,?,?,?,?) `,
@@ -103,6 +103,7 @@ export default function ProductForm(): JSX.Element {
       function (err: Error) {
         if (err) {
           console.log(err.message);
+          setAlert("Product Code is not unique. Enter a unique code.");
         }
         else {
           // @ts-ignore
@@ -128,7 +129,6 @@ export default function ProductForm(): JSX.Element {
             ],
             function (err: Error) {
               if (err) {
-                console.log(productID);
                 console.log(err.message);
               }
               // get the last insert id
@@ -172,6 +172,7 @@ export default function ProductForm(): JSX.Element {
           function(err: Error) {
             if (err) {
               console.log(err.message);
+              setAlert("Product Code is not unique. Enter a unique code.");
             } else {
               const state: any = location.state;
               const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
@@ -224,7 +225,7 @@ export default function ProductForm(): JSX.Element {
         className={classes.grid}
       >
         <Grid className={classes.header}>
-          <h3>Add a product</h3>
+          <h3>{productID === null ? "Add a product" : `Update ${location.state.product.title}`}</h3>
         </Grid>
 
         <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
