@@ -80,7 +80,8 @@ const useStyles = makeStyles(() =>
       color: 'whitesmoke',
     },
     btn: {
-      height: '40px'
+      height: '40px',
+      marginLeft: 10
     },
     header: {
       textAlign: 'center',

@@ -69,6 +69,10 @@ const useStyles = makeStyles({
   gridMargin: {
     margin: '10px 0'
   },
+  btn: {
+    height: '40px',
+    marginLeft: 10
+  },
   deleteButton: {
     background: '#ca263d',
     marginRight: 15,
@@ -186,6 +190,7 @@ export default function ProductList(): JSX.Element {
                 pathname: routes.ADD_PRODUCTS,
                 state: { product: null, verticalScrollHeight: window.scrollY },
               })}
+            className={classes.btn}
           >
             Add product
           </Button>

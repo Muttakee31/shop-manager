@@ -68,7 +68,8 @@ const useStyles = makeStyles({
     alignItems: 'center'
   },
   btn: {
-    height: '40px'
+    height: '40px',
+    marginLeft: 10
   },
   deleteButton: {
     background: '#ca263d',
