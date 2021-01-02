@@ -108,7 +108,6 @@ export default function ProductList(): JSX.Element {
         top: location.state.verticalScrollHeight,
       })
     }
-   // listRef && listRef.current.scrollTop = location.state.verticalScrollHeight;
   })
 
   const getProductList = () => {
