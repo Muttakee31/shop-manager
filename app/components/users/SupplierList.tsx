@@ -154,7 +154,7 @@ export default function SupplierList(): JSX.Element {
   );
   */
   return (
-    <Grid container direction="row" style={{height: '140vh'}}>
+    <Grid container direction="row">
       <Grid item xs={4} lg={3}>
         <Sidebar />
       </Grid>

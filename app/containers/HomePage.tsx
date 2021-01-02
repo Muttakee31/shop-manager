@@ -93,7 +93,6 @@ const useStyles = makeStyles(() =>
       alignItems: 'center'
     },
     grid: {
-      marginTop: 40,
     },
     textField: {
       color: 'white',
