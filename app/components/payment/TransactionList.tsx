@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
@@ -12,7 +12,7 @@ import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import Button from '@material-ui/core/Button';
 import routes from '../../constants/routes.json';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import dayjs from 'dayjs';
 import Chip from '@material-ui/core/Chip';
 import EditIcon from '@material-ui/icons/Edit';
@@ -124,6 +124,7 @@ const chipColor = ['#2cb115', '#3638aa', '#b12423', '#388f9c', '#541212']
 export default function TransactionList(): JSX.Element {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const authFlag= useSelector(isAuthenticated);
 
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
@@ -141,6 +142,15 @@ export default function TransactionList(): JSX.Element {
     // add db.all function to get all transactions
     getTransactionList();
   }, [selectedDate, type]);
+
+  useLayoutEffect(()=> {
+    if (location.state) {
+      window.scrollTo({
+        left: 0,
+        top: location.state.verticalScrollHeight,
+      })
+    }
+  })
 
   const openDeleteTransaction = (instant: Transaction) => {
     setDeleteModal(true);
@@ -340,7 +350,11 @@ export default function TransactionList(): JSX.Element {
                       />
                       {authFlag &&
                         <>
-                          <EditIcon onClick={() => history.push(`/update-transaction/${row.id}`)}/>
+                          <EditIcon onClick={() => history.push({
+                            pathname: `/update-transaction/${row.id}`,
+                            state: {verticalScrollHeight: window.scrollY}
+                            })
+                          }/>
                           <DeleteIcon onClick={() => openDeleteTransaction(row)} style={{ padding: '0 5px' }}/>
                         </>
                       }

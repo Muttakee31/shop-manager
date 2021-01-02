@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-export default function BackButton() : JSX.Element {
+export default function BackButton({customGoBack}) : JSX.Element {
   const history = useHistory();
 
   return (
@@ -12,7 +12,7 @@ export default function BackButton() : JSX.Element {
         variant="contained"
         color="primary"
         style={{margin: 10}}
-        onClick={() => history.goBack()}
+        onClick={() => customGoBack ? customGoBack() : history.goBack()}
       >
         Back
       </Button>

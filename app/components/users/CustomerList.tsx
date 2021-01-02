@@ -118,6 +118,7 @@ export default function CustomerList(): JSX.Element {
   const viewCustomer = (instant: Customer) => {
     history.push({
       pathname: `/user-details/0/${instant.id}`,
+      state: {verticalScrollHeight: window.scrollY}
     });
   };
 
