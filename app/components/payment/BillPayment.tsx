@@ -134,7 +134,12 @@ export default function BillPayment(): JSX.Element {
         <Grid className={classes.header}>
           <h3>Add bill payment</h3>
         </Grid>
-        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                createBillPayment();
+              }}
+        >
 
           <Grid item xs={12}>
             <Autocomplete
@@ -146,7 +151,7 @@ export default function BillPayment(): JSX.Element {
                 setSupplier(newValue);
               }}
               renderInput={(params) => (
-                <CssTextField {...params} label="Select supplier" />
+                <CssTextField {...params} label="Select supplier" required />
               )}
             />
           </Grid>
@@ -158,6 +163,7 @@ export default function BillPayment(): JSX.Element {
               value={amount}
               className={classes.textField}
               fullWidth
+              required
               onChange={(e) => setAmount(e.target.value)}
             />
           </Grid>
@@ -170,6 +176,7 @@ export default function BillPayment(): JSX.Element {
               fullWidth
               multiline
               rows={3}
+              required
               className={classes.textField}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -189,11 +196,8 @@ export default function BillPayment(): JSX.Element {
 
             <Button
               variant="contained"
+              type="submit"
               color="primary"
-              onClick={(e) => {
-                e.preventDefault();
-                createBillPayment();
-              }}
             >
               Submit
             </Button>

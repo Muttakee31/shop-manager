@@ -103,15 +103,22 @@ export default function OtherExpenseForm(): JSX.Element {
         <Grid className={classes.header}>
           <h3>Add other expense</h3>
         </Grid>
-        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                createOtherExpense();
+              }}
+        >
 
           <Grid>
             <CssTextField
               id="standard-required"
               label="Amount"
               value={amount}
+              type='number'
               className={classes.textField}
               fullWidth
+              required
               onChange={(e) => setAmount(e.target.value)}
             />
           </Grid>
@@ -124,6 +131,7 @@ export default function OtherExpenseForm(): JSX.Element {
               fullWidth
               multiline
               rows={3}
+              required
               className={classes.textField}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -144,10 +152,7 @@ export default function OtherExpenseForm(): JSX.Element {
             <Button
               variant="contained"
               color="primary"
-              onClick={(e) => {
-                e.preventDefault();
-                createOtherExpense();
-              }}
+              type="submit"
             >
               Submit
             </Button>
