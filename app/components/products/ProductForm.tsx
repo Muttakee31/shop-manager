@@ -82,7 +82,6 @@ export default function ProductForm(): JSX.Element {
       setGodownStock(String(state.product.godown_stock_count));
       setShopStock(String(state.product.shop_stock_count));
     }
-    console.log(state.verticalScrollHeight);
     /* if (location.state.instant !== undefined) {
       console.log(location.state.instant);
     } */
@@ -105,7 +104,7 @@ export default function ProductForm(): JSX.Element {
       function (err: Error) {
         if (err) {
           console.log(err.message);
-          setAlert("Product Code is not unique. Enter a unique code.");
+          setAlert('Product Code is not unique. Enter a unique code.');
         }
         else {
           // @ts-ignore
@@ -124,10 +123,10 @@ export default function ProductForm(): JSX.Element {
               productName,
               midnight,
               today,
-              shopStock,
-              shopStock,
-              godownStock,
-              godownStock,
+              !shopStock || shopStock.length === 0 ? 0 : shopStock,
+              !shopStock || shopStock.length === 0 ? 0 : shopStock,
+              !godownStock || godownStock.length === 0 ? 0 : godownStock,
+              !godownStock || godownStock.length === 0 ? 0 : godownStock,
             ],
             function (err: Error) {
               if (err) {
@@ -200,8 +199,8 @@ export default function ProductForm(): JSX.Element {
               } else {
                 history.replace({
                   pathname: routes.PRODUCTS,
-                  state: {  verticalScrollHeight: location && location.state && location.state.verticalScrollHeight },
-                })
+                  state: {verticalScrollHeight: location && location.state && location.state.verticalScrollHeight },
+                });
               }
             }
           });
