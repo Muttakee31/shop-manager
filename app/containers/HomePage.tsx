@@ -350,7 +350,6 @@ export default function HomePage() {
                   labels: {
                     trim: true,
                     style: {
-                      colors: 'whitesmoke'
                     }
                   }
                 }
