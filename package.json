@@ -1,7 +1,7 @@
 {
-  "name": "store-manager",
-  "productName": "Store manager",
-  "version": "1.5.0",
+  "name": "shop-manager",
+  "productName": "Shop manager",
+  "version": "1.7.0",
   "description": "Simple desktop app for storing shop record and information.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -52,7 +52,7 @@
     ]
   },
   "build": {
-    "productName": "Store manager",
+    "productName": "Shop Manager",
     "appId": "org.develar.ElectronReact",
     "files": [
       "dist/",
@@ -78,7 +78,8 @@
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "msi"
       ]
     },
     "linux": {
@@ -281,6 +282,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.21",
+    "react-number-format": "^4.4.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
