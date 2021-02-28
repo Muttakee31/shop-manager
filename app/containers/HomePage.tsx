@@ -109,8 +109,8 @@ const useStyles = makeStyles(() =>
       margin: '10px 0'
     },
     card: {
-      width: 290,
-      boxShadow: '5px 5px 15px #010101'
+      boxShadow: '5px 5px 15px #010101',
+      marginRight: '16px'
     },
     content: {
       display: 'flex',
@@ -121,8 +121,8 @@ const useStyles = makeStyles(() =>
       display: 'flex',
       flexDirection: 'row',
       color: 'white',
-      justifyContent: 'space-evenly',
-      margin: 17,
+      justifyContent: 'space-between',
+      margin: 16,
       borderRadius: 9
     },
     graphHeader: {
@@ -151,6 +151,7 @@ export default function HomePage() {
   const [orderCount, setOrderCount] = useState(0);
   const [totalSale, setTotalSale] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
+  const [totalInput, setTotalInput] = useState(0);
   const [totalDue, setTotalDue] = useState(0);
 
   const [shopSeries, setShopSeries] = useState<SeriesData[]>([]);
@@ -397,6 +398,7 @@ export default function HomePage() {
               setTotalSale(orderSum);
               setTotalExpense(saleSum);
               setOrderCount(orderCount);
+              setTotalInput(saleSum);
             }
           }
         }
@@ -476,43 +478,66 @@ export default function HomePage() {
       </Grid>
 
 
-      <Grid className={classes.cardContainer}>
-        <Card className={classes.card} variant="outlined" style={{background: '#018af8'}}>
-          <CardContent className={classes.content}>
-            <span className={classes.title}>Total orders</span>
-             <span className={classes.amount}>{orderCount}</span>
-          </CardContent>
-        </Card>
-        <Card className={classes.card} variant="outlined" style={{background: '#2fa758'}}>
-          <CardContent className={classes.content}>
-            <span className={classes.title}>Total sales</span>
-            <span className={classes.amount}>
+      <Grid container className={classes.cardContainer}>
+        <Grid item xs={4}>
+          <Card className={classes.card} variant="outlined" style={{background: '#018af8'}}>
+            <CardContent className={classes.content}>
+              <span className={classes.title}>Total orders</span>
+              <span className={classes.amount}>{orderCount}</span>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Card className={classes.card} variant="outlined" style={{background: '#2fa758'}}>
+            <CardContent className={classes.content}>
+              <span className={classes.title}>Total sales</span>
+              <span className={classes.amount}>
               <NumberFormat value={totalSale} displayType={'text'}
                             thousandSeparator={true} thousandsGroupStyle="lakh"/>
             </span>
-          </CardContent>
-        </Card>
-      </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
-      <Grid className={classes.cardContainer}>
-        <Card className={classes.card} variant="outlined" style={{background: '#1abfaa'}}>
-          <CardContent className={classes.content}>
-            <span className={classes.title}>Total expense</span>
-            <span className={classes.amount}>
+        <Grid item xs={4}>
+          <Card className={classes.card} variant="outlined" style={{background: '#1abfaa'}}>
+            <CardContent className={classes.content}>
+              <span className={classes.title}>Total expense</span>
+              <span className={classes.amount}>
               <NumberFormat value={totalExpense} displayType={'text'}
                             thousandSeparator={true} thousandsGroupStyle="lakh"/>
             </span>
-          </CardContent>
-        </Card>
-        <Card className={classes.card} variant="outlined" style={{background: '#dc0835'}}>
-          <CardContent className={classes.content}>
-            <span className={classes.title}>Payments due</span>
-            <span className={classes.amount}>
-              <NumberFormat value={totalDue} displayType={'text'}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Grid container className={classes.cardContainer}>
+        <Grid item xs={4}>
+          <Card className={classes.card} variant="outlined" style={{background: '#254498'}}>
+            <CardContent className={classes.content}>
+              <span className={classes.title}>Total Input</span>
+              <span className={classes.amount}>
+              <NumberFormat value={totalInput} displayType={'text'}
                             thousandSeparator={true} thousandsGroupStyle="lakh"/>
             </span>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Card className={classes.card} variant="outlined" style={{background: '#dc0835'}}>
+            <CardContent className={classes.content}>
+              <span className={classes.title}>Payments due</span>
+              <span className={classes.amount}>
+                <NumberFormat value={totalDue} displayType={'text'}
+                              thousandSeparator={true} thousandsGroupStyle="lakh"/>
+              </span>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={4} />
       </Grid>
 
       <Grid container>
