@@ -122,7 +122,7 @@ const useStyles = makeStyles(() =>
       flexDirection: 'row',
       color: 'white',
       justifyContent: 'space-between',
-      margin: 16,
+      padding: 16,
       borderRadius: 9
     },
     graphHeader: {
@@ -387,18 +387,27 @@ export default function HomePage() {
               let orderSum: number = 0;
               let saleSum: number = 0;
               let orderCount: number = 0;
+              let totalInputSum: number = 0;
               instant.map(item => {
                 if (item.transaction_type === transactionType["order"]) {
                   orderSum += Number(item.order_cost);
+                  totalInputSum += Number(item.paid_amount);
                   orderCount++;
                 }
                 if (item.transaction_type === transactionType["supply"] ||
-                  item.transaction_type === transactionType["other"]) saleSum += Number(item.order_cost);
+                  item.transaction_type === transactionType["other"] ||
+                  item.transaction_type === transactionType["bill"]) {
+                  saleSum += Number(item.paid_amount);
+                }
+                if (item.transaction_type === transactionType["due"]) {
+                  totalInputSum += Number(item.paid_amount)
+                }
               });
+
               setTotalSale(orderSum);
               setTotalExpense(saleSum);
               setOrderCount(orderCount);
-              setTotalInput(saleSum);
+              setTotalInput(totalInputSum);
             }
           }
         }
