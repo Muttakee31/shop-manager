@@ -173,7 +173,7 @@ export default function SupplierList(): JSX.Element {
                 <TableCell className={classes.texts}>Supplier Name</TableCell>
                 <TableCell className={classes.texts}>Phone</TableCell>
                 <TableCell className={classes.texts}>Address</TableCell>
-                <TableCell className={classes.texts}>Due</TableCell>
+                <TableCell className={classes.texts}>Balance</TableCell>
                 <TableCell className={classes.texts} />
               </TableRow>
             </TableHead>

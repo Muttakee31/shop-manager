@@ -130,7 +130,7 @@ export default function TransactionList(): JSX.Element {
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const [deleteModal, setDeleteModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState(-1);
-  const [type, setType] = useState("-1");
+  const [type, setType] = useState(transactionType["order"]);
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   //const [visibleTransactionList, setVisibleTransactionList] = useState<Transaction[]>([]);
@@ -269,7 +269,6 @@ export default function TransactionList(): JSX.Element {
               onChange={(event)=>
                 setType(event.target.value as string)}
             >
-              <MenuItem value="-1">Show all</MenuItem>
               {Object.keys(transactionType).map((type:string, index)=> {
                 return (
                   <MenuItem value={String(transactionType[type])}>{type}</MenuItem>
