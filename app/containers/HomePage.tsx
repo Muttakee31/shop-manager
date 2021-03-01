@@ -77,7 +77,6 @@ const useStyles = makeStyles(() =>
       height: 330,
     },
     texts: {
-      color: 'whitesmoke',
     },
     btn: {
       height: '40px',
@@ -85,7 +84,6 @@ const useStyles = makeStyles(() =>
     },
     header: {
       textAlign: 'center',
-      color: 'white',
       textDecoration: 'underline',
       textUnderlinePosition: 'under',
     },
@@ -108,7 +106,7 @@ const useStyles = makeStyles(() =>
       margin: '10px 0'
     },
     card: {
-      boxShadow: '5px 5px 15px #010101',
+      boxShadow: '5px 5px 15px #c5cbcc',
       marginRight: '16px'
     },
     content: {
@@ -178,7 +176,6 @@ export default function HomePage() {
       align: 'center',
       margin: 0,
       style: {
-        color: 'whitesmoke'
       }
     },
     tooltip: {
@@ -188,7 +185,6 @@ export default function HomePage() {
       labels: {
         trim: true,
         style: {
-          colors: 'whitesmoke',
         }
       }
     },
