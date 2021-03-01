@@ -162,6 +162,7 @@ export default function CustomerList(): JSX.Element {
                 <TableCell className={classes.texts}>Phone</TableCell>
                 <TableCell className={classes.texts}>Address</TableCell>
                 <TableCell className={classes.texts}>Due amount</TableCell>
+                <TableCell className={classes.texts}>Balance</TableCell>
                 <TableCell className={classes.texts} />
               </TableRow>
             </TableHead>
@@ -187,6 +188,13 @@ export default function CustomerList(): JSX.Element {
                   <TableCell align="left" className={classes.texts}>
                     {row.due_amount > 0 ?
                       <NumberFormat value={row.due_amount} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
+                      : 0}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.due_amount < 0 ?
+                      <NumberFormat value={row.due_amount * -1} displayType={'text'}
                                     thousandSeparator={true} thousandsGroupStyle="lakh"
                                     decimalScale={2}/>
                       : 0}

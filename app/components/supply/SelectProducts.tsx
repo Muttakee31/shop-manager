@@ -238,8 +238,7 @@ export default function SelectProducts(props: {
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
 
-    let due = Math.floor(totalPrice) + Number(labourCost) - Number(paidToSupplier) <= 0 ?
-      0 : Math.floor(totalPrice) + Number(labourCost) - Number(paidToSupplier);
+    let due = Math.floor(totalPrice) + Number(labourCost) - Number(paidToSupplier);
     // insert one row into the langs table
     db.run(
       `INSERT INTO Transactions(supply_id, order_cost, client, client_name, transaction_type,
@@ -261,7 +260,7 @@ export default function SelectProducts(props: {
       function (err: Error) {
         if (err) {
           console.log(err.message);
-        } else if (due> 0 ||
+        } else if (due !== 0 ||
           props.selectedSupplier.is_supplier !== 1) {
           db.run(
             `UPDATE User set due_amount = due_amount - ?, has_due_bill = ?, is_supplier = ? WHERE id = ?`,

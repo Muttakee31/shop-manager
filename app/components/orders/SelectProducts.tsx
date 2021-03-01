@@ -248,8 +248,7 @@ export default function SelectProducts(props: {
   const createTransaction = (order_id:number) => {
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
-    let due = Math.floor(totalPrice) + Number(labourCost) - Number(discount) - Number(paidByCustomer) <= 0 ?
-      0 : Math.floor(totalPrice) + Number(labourCost) - Number(discount) - Number(paidByCustomer);
+    let due = Math.floor(totalPrice) + Number(labourCost) - Number(discount) - Number(paidByCustomer);
     // insert one row into the langs table
     db.run(
       `INSERT INTO Transactions(order_id, order_cost, client, client_name, transaction_type,
@@ -271,7 +270,7 @@ export default function SelectProducts(props: {
       function (err: Error) {
         if (err) {
           console.log(err.message);
-        } else if (due> 0 ||
+        } else if (due !== 0 ||
           props.selectedCustomer.is_customer !== 1) {
           db.run(
             `UPDATE User set due_amount = due_amount + ?, has_due_bill = ?, is_customer = ? WHERE id = ?`,
