@@ -237,7 +237,7 @@ export default function SupplyDetails(): JSX.Element {
 
           <Grid className={classes.details}>
             <Grid item xs={6}>
-              Due amount:
+              Balance:
 {' '}
             </Grid>
             <Grid item xs={6}>

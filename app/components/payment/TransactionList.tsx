@@ -300,7 +300,9 @@ export default function TransactionList(): JSX.Element {
                 <TableCell className={classes.texts}>Type</TableCell>
                 <TableCell className={classes.texts}>Cost</TableCell>
                 <TableCell className={classes.texts}>Paid amount</TableCell>
-                <TableCell className={classes.texts}>Due amount</TableCell>
+                <TableCell className={classes.texts}>
+                  {Number(type) === transactionType['supply'] ? "Balance" : "Due amount"}
+                </TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>

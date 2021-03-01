@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useRouteMatch } from 'react-router';
 import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
+import { transactionType } from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import dayjs from 'dayjs';
 import NumberFormat from 'react-number-format';
@@ -152,7 +153,9 @@ export default function TransactionDetails(): JSX.Element {
 
           <Grid className={classes.details}>
             <Grid item xs={6}>
-              Due amount:
+              {transactionInfo.transaction_type === transactionType['supply'] ?
+                "Balance:" : "Due amount:"
+              }
               {' '}
             </Grid>
             <Grid item xs={6}>

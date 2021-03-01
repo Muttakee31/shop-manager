@@ -173,6 +173,7 @@ export default function SupplierList(): JSX.Element {
                 <TableCell className={classes.texts}>Supplier Name</TableCell>
                 <TableCell className={classes.texts}>Phone</TableCell>
                 <TableCell className={classes.texts}>Address</TableCell>
+                <TableCell className={classes.texts}>Due Amount</TableCell>
                 <TableCell className={classes.texts}>Balance</TableCell>
                 <TableCell className={classes.texts} />
               </TableRow>
@@ -195,6 +196,12 @@ export default function SupplierList(): JSX.Element {
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.address}
+                  </TableCell>
+                  <TableCell align="left" className={classes.texts}>
+                    {row.due_amount < 0 ? 0 :
+                      <NumberFormat value={row.due_amount} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {row.due_amount > 0 ? 0 :

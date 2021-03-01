@@ -153,6 +153,7 @@ export default function HomePage() {
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalInput, setTotalInput] = useState(0);
   const [totalDue, setTotalDue] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
 
   const [shopSeries, setShopSeries] = useState<SeriesData[]>([]);
   const [godownSeries, setGodownSeries] = useState<SeriesData[]>([]);
@@ -324,7 +325,7 @@ export default function HomePage() {
             // setMidBar(mBar);
             // setTopBar(tBar);
             setShopSeries([{
-              name: '',
+              name: 'yesterday stock',
               data: lBar
             }, {
               name: 'Net sold',
@@ -335,7 +336,7 @@ export default function HomePage() {
             }
             ]);
             setGodownSeries([{
-              name: '',
+              name: 'yesterday stock',
               data: lBar2
             }, {
               name: 'Net sold',
@@ -414,16 +415,21 @@ export default function HomePage() {
       );
 
       db.all(
-        'SELECT * FROM User WHERE is_customer = ?', [1],
+        'SELECT * FROM User',
         (_err: Error, instant: any[]) => {
           if (_err) {
             console.log(_err)
           } else {
             let dues = 0;
-            instant.map(item => {
-              if (item.due_amount !== null && item.due_amount > 0) dues += Number(item.due_amount);
+            let balances = 0;
+            instant.map(user => {
+              if (user.due_amount !== null) {
+                if (user.due_amount > 0) dues += Number(user.due_amount);
+                else if (user.due_amount < 0) balances += Number(user.due_amount);
+              }
             });
             setTotalDue(dues);
+            setTotalBalance(balances * -1);
           }
         }
       );
@@ -546,7 +552,17 @@ export default function HomePage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={4} />
+        <Grid item xs={4}>
+          <Card className={classes.card} variant="outlined" style={{background: '#99154e'}}>
+            <CardContent className={classes.content}>
+              <span className={classes.title}>Total Balance</span>
+              <span className={classes.amount}>
+                <NumberFormat value={totalBalance} displayType={'text'}
+                              thousandSeparator={true} thousandsGroupStyle="lakh"/>
+              </span>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
 
       <Grid container>
