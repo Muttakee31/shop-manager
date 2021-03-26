@@ -23,6 +23,7 @@ import TransactionDetails from './components/payment/TransactionDetails';
 import TransactionForm from './components/payment/TransactionForm';
 import UpdateUser from './components/users/UpdateUser';
 import BillPayment from './components/payment/BillPayment';
+import ParentRoute from './containers/ParentRoute';
 // Lazily load routes and code split with webpacck
 const LazyCounterPage = React.lazy(() =>
   import(/* webpackChunkName: "CounterPage" */ './containers/CounterPage')
@@ -38,32 +39,32 @@ export default function Routes() {
   return (
     <App>
       <Switch>
-        <Route path={routes.PRODUCTS} component={ProductList} />
-        <Route path={routes.ADD_PRODUCTS} component={ProductForm} />
-        <Route path={routes.STOCK_HISTORY} component={StockHistoryList} />
+        <ParentRoute path={routes.PRODUCTS} component={ProductList} />
+        <ParentRoute path={routes.ADD_PRODUCTS} component={ProductForm} />
+        <ParentRoute path={routes.STOCK_HISTORY} component={StockHistoryList} />
 
-        <Route path={routes.ORDERS} component={OrderList} />
-        <Route path={routes.PLACE_ORDERS} component={OrderPage} />
-        <Route path={routes.CUSTOMERS} component={CustomerList} />
-        <Route path={routes.ORDER_DETAILS} component={OrderDetails} />
+        <ParentRoute path={routes.ORDERS} component={OrderList} />
+        <ParentRoute path={routes.PLACE_ORDERS} component={OrderPage} />
+        <ParentRoute path={routes.CUSTOMERS} component={CustomerList} />
+        <ParentRoute path={routes.ORDER_DETAILS} component={OrderDetails} />
 
-        <Route path={routes.SUPPLY} component={SupplyList} />
-        <Route path={routes.ADD_SUPPLY} component={SupplyPage} />
-        <Route path={routes.SUPPLIERS} component={SupplierList} />
-        <Route path={routes.SUPPLY_DETAILS} component={SupplyDetails} />
+        <ParentRoute path={routes.SUPPLY} component={SupplyList} />
+        <ParentRoute path={routes.ADD_SUPPLY} component={SupplyPage} />
+        <ParentRoute path={routes.SUPPLIERS} component={SupplierList} />
+        <ParentRoute path={routes.SUPPLY_DETAILS} component={SupplyDetails} />
 
-        <Route path={routes.TRANSACTIONS} component={TransactionList} />
-        <Route path={routes.TRANSACTION_DETAILS} component={TransactionDetails} />
-        <Route path={routes.UPDATE_TRANSACTION} component={TransactionForm} />
-        <Route path={routes.OTHER_EXPENSE} component={OtherExpenseForm} />
-        <Route path={routes.USER_DETAILS} component={UserDetails} />
-        <Route path={routes.UPDATE_USER} component={UpdateUser} />
-        <Route path={routes.DUE_PAYMENT} component={DueTransaction} />
-        <Route path={routes.BILL_PAYMENT} component={BillPayment} />
+        <ParentRoute path={routes.TRANSACTIONS} component={TransactionList} />
+        <ParentRoute path={routes.TRANSACTION_DETAILS} component={TransactionDetails} />
+        <ParentRoute path={routes.UPDATE_TRANSACTION} component={TransactionForm} />
+        <ParentRoute path={routes.OTHER_EXPENSE} component={OtherExpenseForm} />
+        <ParentRoute path={routes.USER_DETAILS} component={UserDetails} />
+        <ParentRoute path={routes.UPDATE_USER} component={UpdateUser} />
+        <ParentRoute path={routes.DUE_PAYMENT} component={DueTransaction} />
+        <ParentRoute path={routes.BILL_PAYMENT} component={BillPayment} />
 
         <Route path={routes.COUNTER} component={CounterPage} />
-        <Route path={routes.OVERVIEW} component={OverviewPage} />
-        <Route path={routes.HOME} component={OverviewPage} />
+        <ParentRoute path={routes.OVERVIEW} component={OverviewPage} />
+        <ParentRoute path={routes.HOME} component={OverviewPage} />
 
       </Switch>
     </App>

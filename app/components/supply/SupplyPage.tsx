@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Sidebar from '../../containers/Sidebar';
 import SelectSupplier from './SelectSupplier';
 import SelectProducts from './SelectProducts';
 import StepperComponent from './StepperComponent';
@@ -14,11 +12,8 @@ export default function SupplyPage(): JSX.Element {
     // setOrderState(0);
   }, [orderState]); */
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <>
+      <div>
         <StepperComponent orderState={supplyState} />
         {supplyState === 0 && (
           <SelectSupplier
@@ -32,7 +27,7 @@ export default function SupplyPage(): JSX.Element {
             selectedSupplier={selectedUser}
           />
         )}
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

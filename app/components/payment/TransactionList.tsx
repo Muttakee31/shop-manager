@@ -7,7 +7,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import Button from '@material-ui/core/Button';
@@ -235,19 +234,16 @@ export default function TransactionList(): JSX.Element {
   // @ts-ignore
   // @ts-ignore
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>List of Transactions</h3>
         </Grid>
 
         <Grid item xs={12} className={classes.topbin}>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             className={classes.btn}
             onClick={() =>
               history.push({
@@ -353,27 +349,27 @@ export default function TransactionList(): JSX.Element {
                             pathname: `/update-transaction/${row.id}`,
                             state: {verticalScrollHeight: window.scrollY}
                             })
-                          }/>
-                          <DeleteIcon onClick={() => openDeleteTransaction(row)} style={{ padding: '0 5px' }}/>
+                          } />
+                          <DeleteIcon onClick={() => openDeleteTransaction(row)} style={{ padding: '0 5px' }} />
                         </>
                       }
                     </TableCell>
                 </TableRow>
-              ))}
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Grid>
+      </div>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby='transition-modal-title'
+        aria-describedby='transition-modal-description'
         className={classes.modal}
         open={deleteModal}
-        onClose={()=> setDeleteModal(false)}
+        onClose={() => setDeleteModal(false)}
         closeAfterTransition
         disableAutoFocus
         BackdropProps={{
-          timeout: 500,
+          timeout: 500
         }}
       >
         <Fade in={deleteModal}>
@@ -401,6 +397,6 @@ export default function TransactionList(): JSX.Element {
           </div>
         </Fade>
       </Modal>
-    </Grid>
+    </>
   );
 }

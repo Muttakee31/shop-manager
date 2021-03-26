@@ -8,7 +8,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import * as dbpath from '../../constants/config';
-import Sidebar from '../../containers/Sidebar';
 import dayjs from 'dayjs';
 import CssTextField from '../snippets/CssTextField';
 
@@ -77,7 +76,6 @@ export default function StockHistoryList(): JSX.Element {
             console.log(err);
           } else {
             setStockHistoryList(instant.sort(compare));
-            console.log(instant);
           }
         }
       );
@@ -88,20 +86,17 @@ export default function StockHistoryList(): JSX.Element {
   }
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>Stock History</h3>
         </Grid>
 
         <Grid>
           <CssTextField
-            id="date"
-            label="Date"
-            type="date"
+            id='date'
+            label='Date'
+            type='date'
             className={classes.textField}
             InputLabelProps={{
               shrink: true,
@@ -142,17 +137,17 @@ export default function StockHistoryList(): JSX.Element {
                     <TableCell align="left" className={classes.texts}>
                       {row.prev_godown_stock} / {row.current_godown_stock}
                     </TableCell>
-                    <TableCell align="left" className={classes.texts}>
+                    <TableCell align='left' className={classes.texts}>
                       {dayjs(row.date_updated.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
                     </TableCell>
 
                   </TableRow>
-                ))}
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

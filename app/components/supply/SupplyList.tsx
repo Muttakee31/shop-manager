@@ -12,7 +12,6 @@ import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
 import dayjs from 'dayjs';
 import routes from '../../constants/routes.json';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { useSelector } from 'react-redux';
 import { isAuthenticated } from '../../features/auth/authSlice';
@@ -152,19 +151,16 @@ export default function SupplyList(): JSX.Element {
   }
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>List of Supply</h3>
         </Grid>
 
         <Grid item xs={8} xl={9} className={classes.topbin}>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={() =>
               history.push({
                 pathname: routes.ADD_SUPPLY,
@@ -224,24 +220,24 @@ export default function SupplyList(): JSX.Element {
                       onClick={() => history.push(`/supply/${row.id}`)}
                     />
                     {authFlag &&
-                    <DeleteIcon onClick={() => openDeleteSupply(row)} style={{ padding: '0 5px' }}/>
+                    <DeleteIcon onClick={() => openDeleteSupply(row)} style={{ padding: '0 5px' }} />
                     }
                   </TableCell>
                 </TableRow>
-              ))}
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Grid>
+      </div>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby='transition-modal-title'
+        aria-describedby='transition-modal-description'
         className={classes.modal}
         open={deleteModal}
-        onClose={()=> setDeleteModal(false)}
+        onClose={() => setDeleteModal(false)}
         closeAfterTransition
         BackdropProps={{
-          timeout: 500,
+          timeout: 500
         }}
       >
         <Fade in={deleteModal}>
@@ -269,6 +265,6 @@ export default function SupplyList(): JSX.Element {
           </div>
         </Fade>
       </Modal>
-    </Grid>
+    </>
   );
 }

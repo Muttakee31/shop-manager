@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { useHistory, useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import routes from '../../constants/routes.json';
@@ -86,20 +85,8 @@ export default function OtherExpenseForm(): JSX.Element {
   };
 
   return (
-    <Grid container direction="row">
-
-      <Grid item sm={4} lg={3}>
-        <Sidebar />
-      </Grid>
-
-      <Grid
-        item
-        sm={8}
-        lg={9}
-        direction="column"
-        justify="center"
-        className={classes.grid}
-      >
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>Add other expense</h3>
         </Grid>
@@ -112,8 +99,8 @@ export default function OtherExpenseForm(): JSX.Element {
 
           <Grid>
             <CssTextField
-              id="standard-required"
-              label="Amount"
+              id='standard-required'
+              label='Amount'
               value={amount}
               type='number'
               className={classes.textField}
@@ -158,7 +145,7 @@ export default function OtherExpenseForm(): JSX.Element {
             </Button>
           </Grid>
         </form>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

@@ -10,7 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 import dayjs from 'dayjs';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import BackButton from '../snippets/BackButton';
@@ -153,12 +152,8 @@ export default function UserDetails(): JSX.Element {
   }
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
-
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>User Details</h3>
         </Grid>
@@ -168,7 +163,7 @@ export default function UserDetails(): JSX.Element {
         <Grid className={classes.details}>
           <Grid item xs={6}>
             Name:
-{' '}
+            {' '}
           </Grid>
           <Grid item xs={6}>
             {user.name}
@@ -311,8 +306,8 @@ export default function UserDetails(): JSX.Element {
                       <TableCell align="left" className={classes.texts}>
                         {row.due_amount === null ? 'N/A' :
                           <NumberFormat value={row.due_amount} displayType={'text'}
-                                        thousandSeparator={true} thousandsGroupStyle="lakh"
-                                        decimalScale={2}/>}
+                                        thousandSeparator={true} thousandsGroupStyle='lakh'
+                                        decimalScale={2} />}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -320,7 +315,7 @@ export default function UserDetails(): JSX.Element {
             </Table>
           </TableContainer>
         </Grid>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

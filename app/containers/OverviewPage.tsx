@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Sidebar from './Sidebar';
 import * as dbpath from '../constants/config';
 import dayjs from 'dayjs';
 import HomePage from './HomePage';
@@ -274,13 +272,8 @@ export default function OverviewPage() {
   };
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
-        <HomePage />
-      </Grid>
-    </Grid>
+    <>
+      <HomePage />
+    </>
   );
 }
