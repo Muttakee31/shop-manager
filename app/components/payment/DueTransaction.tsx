@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -122,28 +121,16 @@ export default function DueTransaction(): JSX.Element {
   };
 
   return (
-    <Grid container direction="row">
-
-      <Grid item sm={4} lg={3}>
-        <Sidebar />
-      </Grid>
-
-      <Grid
-        item
-        sm={8}
-        lg={9}
-        direction="column"
-        justify="center"
-        className={classes.grid}
-      >
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>Add due payment</h3>
         </Grid>
-        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+        <form autoComplete='off' style={{ width: '320px', margin: 'auto' }}>
 
           <Grid item xs={12}>
             <Autocomplete
-              id="combo-box-demo"
+              id='combo-box-demo'
               options={userList}
               getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
               style={{ width: 320, margin: 'auto' }}
@@ -194,7 +181,7 @@ export default function DueTransaction(): JSX.Element {
 
             <Button
               variant="contained"
-              color="primary"
+              color='primary'
               onClick={(e) => {
                 e.preventDefault();
                 createDuePayment();
@@ -204,7 +191,7 @@ export default function DueTransaction(): JSX.Element {
             </Button>
           </Grid>
         </form>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

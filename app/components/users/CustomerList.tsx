@@ -9,7 +9,6 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -149,16 +148,13 @@ export default function CustomerList(): JSX.Element {
 
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>List of Customers</h3>
         </Grid>
         <TableContainer>
-          <Table aria-label="simple table">
+          <Table aria-label='simple table'>
             <TableHead>
               <TableRow>
                 <TableCell className={classes.texts}>Name</TableCell>
@@ -212,25 +208,25 @@ export default function CustomerList(): JSX.Element {
                       })}
                                 style={{ padding: '0 5px'}} />
                       <DeleteIcon onClick={() => openDeleteCustomer(row)}
-                                   />
+                      />
                     </>
                     }
                   </TableCell>
                 </TableRow>
-              ))}
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Grid>
+      </div>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby'"transition-modal-titl'"
+        aria-describedby'"transition-modal-descriptio'"
         className={classes.modal}
         open={deleteModal}
-        onClose={()=> setDeleteModal(false)}
+        onClose={() => setDeleteModal(false)}
         closeAfterTransition
         BackdropProps={{
-          timeout: 500,
+          timeout: 500
         }}
       >
         <Fade in={deleteModal}>
@@ -258,6 +254,6 @@ export default function CustomerList(): JSX.Element {
           </div>
         </Fade>
       </Modal>
-    </Grid>
+    </>
   );
 }

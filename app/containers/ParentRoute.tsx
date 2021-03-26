@@ -1,23 +1,27 @@
-/* import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import React from 'react';
 import Sidebar from './Sidebar';
-import { RouteComponentProps } from 'react-router-dom';
-import { RouteProps } from 'react-router';
+import { Route } from 'react-router-dom';
 
-type RouteComponent = React.Component<RouteComponentProps<{}>> | React.ComponentClass<any>;
-
-const ParentRoute <RouteProps> = ({component, ...rest}) => {
-    return (
-      <div>
-        <Grid xs={4}>
-          <Sidebar />
-        </Grid>
-        <Grid>
-          <Component {...props} />
-        </Grid>
-      </div>
-
-    );
+// @ts-ignore
+const ParentRoute = ({ component: Component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        return (
+          <div className='app-container'>
+            <div>
+              <Sidebar />
+              <div className='main-content'
+                   style={{ marginLeft: '256px', paddingLeft: '8px', paddingRight: '8px' }}>
+                <Component {...props} />
+              </div>
+            </div>
+          </div>
+        );
+      }}
+    />
+  );
 };
 
-export default ParentRoute; */
+export default ParentRoute;

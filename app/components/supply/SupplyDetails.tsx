@@ -9,7 +9,6 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import { useRouteMatch } from 'react-router';
 import dayjs from 'dayjs';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
@@ -130,11 +129,8 @@ export default function SupplyDetails(): JSX.Element {
   }, []);
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>Supply Details</h3>
         </Grid>
@@ -144,7 +140,7 @@ export default function SupplyDetails(): JSX.Element {
         <Grid className={classes.details}>
           <Grid item xs={6}>
             Supplier Name:
-{' '}
+            {' '}
           </Grid>
           <Grid item xs={6}>
             {supply.supplier_name}
@@ -248,7 +244,7 @@ export default function SupplyDetails(): JSX.Element {
           <Grid className={classes.details}>
             <Grid item xs={6}>
               Labour cost:
-{' '}
+              {' '}
             </Grid>
             <Grid item xs={6}>
               {transactionInfo.labour_cost}
@@ -256,7 +252,7 @@ export default function SupplyDetails(): JSX.Element {
           </Grid>
 
         </Grid>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

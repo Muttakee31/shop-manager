@@ -1,223 +1,209 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import StoreIcon from '@material-ui/icons/Store';
-import EmojiFoodBeverageIcon from '@material-ui/icons/EmojiFoodBeverage';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
-import { useLocation } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
-import routes from '../constants/routes.json';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import StorageIcon from '@material-ui/icons/Storage';
-import SwapVertIcon from '@material-ui/icons/SwapVert';
-import ReceiptIcon from '@material-ui/icons/Receipt';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import sidebarConfig from '../constants/sidebarConfig';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Divider from '@material-ui/core/Divider';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
-const useStyles = makeStyles({
-  sidebarContainer: {
-    top: 0,
-    position: 'sticky',
-    height: '100vh',
-    maxHeight: '100vh',
-    boxShadow: '0 -2px 22px 0 rgba(0,0,0,.3)',
-  },
-  links: {
-    textDecoration: 'none',
-    padding: 12,
-    cursor: 'pointer',
-  },
-  whiteWashedLinks: {
-    textDecoration: 'none',
-    backgroundColor: '#277ea7',
-    padding: 12,
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
-    // color: 'black',
-  },
-  icons: {
-    fontSize: 42,
-  },
-  sideBarChild: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  sideText: {
-    margin: 10,
-  },
-});
+const drawerWidth: number = 256;
+
+const useStyles = makeStyles((theme: Theme) => ({
+    /*sidebarContainer: {
+      top: 0,
+      position: 'sticky',
+      height: '100vh',
+      maxHeight: '100vh',
+      boxShadow: '0 -2px 22px 0 rgba(0,0,0,.3)',
+    },
+    links: {
+      textDecoration: 'none',
+      padding: 12,
+      cursor: 'pointer',
+    },
+    whiteWashedLinks: {
+      textDecoration: 'none',
+      backgroundColor: '#277ea7',
+      padding: 12,
+      borderTopRightRadius: 12,
+      borderBottomRightRadius: 12,
+      // color: 'black',
+    },
+    icons: {
+      fontSize: 42,
+    },
+    sideBarChild: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+    },
+    sideText: {
+      margin: 10,
+    },*/
+    root: {
+      top: 0,
+      position: 'sticky',
+      maxHeight: '100vh',
+      boxShadow: '0 -2px 22px 0 rgba(0,0,0,.3)',
+      width: '100%',
+      maxWidth: drawerWidth
+    },
+    appBar: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth
+
+    },
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0
+
+    },
+    drawerPaper: {
+      width: drawerWidth,
+      background: 'inherit',
+      boxShadow: '6px 0px 18px rgba(0, 0, 0, 0.06)',
+      border: 'none'
+    },
+    drawerHeader: {
+      color: '#EFB60E',
+      fontSize: '1.25rem',
+      margin: '12px'
+    },
+    parentList: {
+      color: 'whitesmoke'
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+    nested: {
+      width: '100%',
+      '&:hover': {
+        background: 'rgba(40, 217, 195, 0.2)',
+        borderRadius: 58.5
+      }
+    },
+    activeListItem: {
+      width: '100%',
+      background: 'rgba(40, 217, 195, 0.2)',
+      borderRadius: 58.5,
+      '&:hover': {
+        background: 'rgba(40, 217, 195, 0.2)',
+        borderRadius: 58.5
+      }
+    },
+    icon: {
+      color: 'whitesmoke'
+    },
+    listItems: {
+      flexDirection: 'column',
+      paddingLeft: 0,
+      paddingRight: 0
+    },
+    userMargin: {
+      padding: '24px 12px'
+    },
+    subtitle: {
+      fontSize: '0.75rem',
+      textDecoration: 'underline',
+      textUnderlinePosition: 'under',
+      cursor: 'pointer',
+      color: '#28D9C3'
+    },
+    avatarSize: {
+      width: 47,
+      height: 47,
+      background: '#1d2951',
+      color: '#28D9C3'
+    }
+  })
+);
 
 const Sidebar: React.FC = () => {
-  const router = useLocation();
   const history = useHistory();
   const classes = useStyles();
+  const [open, setOpen] = useState(1);
+
+  useEffect(() => {
+    sidebarConfig.map((config, index) => {
+      config.menu?.map(item => item.url === location.pathname && setOpen(index));
+    });
+  }, []);
+
+  const handleClick = (key: number) => {
+    (open === key) ? setOpen(-1) : setOpen(key);
+  };
+
   return (
-    <div className={classes.sidebarContainer}>
-      <Grid
-        className={
-          router.pathname === routes.OVERVIEW || router.pathname === routes.HOME
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.OVERVIEW)}
-        onKeyDown={() => history.push(routes.OVERVIEW)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <TimelineIcon className={classes.icons} />
-          <span className={classes.sideText}>Overview</span>
-        </div>
-      </Grid>
+    <div className={classes.root}>
 
-      <Grid
-        className={
-          router.pathname === routes.ORDERS ||
-          router.pathname === routes.PLACE_ORDERS
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.ORDERS)}
-        onKeyDown={() => history.push(routes.ORDERS)}
-        role="presentation"
+      <Drawer
+        className={classes.drawer}
+        variant'"permanen'"
+        classes={{
+          paper: classes.drawerPaper
+        }}
+        anchor='left'
       >
-        <div className={classes.sideBarChild}>
-          <ShoppingCartIcon className={classes.icons} />
-          <span className={classes.sideText}>Orders</span>
+        {/*<div className={classes.toolbar}>
+          <div className={classes.drawerHeader}>
+            <img src={logo_horizontal_blue} alt="itehk" width='80'/>
+          </div>
         </div>
-      </Grid>
+        <Divider />*/}
 
-      <Grid
-        className={
-          router.pathname === routes.SUPPLY ||
-          router.pathname === routes.ADD_SUPPLY
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.SUPPLY)}
-        onKeyDown={() => history.push(routes.SUPPLY)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <StoreIcon className={classes.icons} />
-          <span className={classes.sideText}>Supply</span>
-        </div>
-      </Grid>
+        {/*<Grid container className={classes.userMargin}>
+          <Grid item xs={3} style={{margin: "auto"}}>
+            <Avatar alt={auth.user?.full_name} src='invalid-url'
+                    className={classes.avatarSize} />
+          </Grid>
+          <Grid item xs={9}>
+            <div>
+              {auth.user?.full_name}
+            </div>
+            <div style={{fontSize: '0.75rem'}}>
+              {auth.user?.email}
+            </div>
+            <div style={{fontSize: '0.75rem'}}>
+              {auth.user?.phone_no}
+            </div>
+          </Grid>
+        </Grid>*/}
 
-      <Grid
-        className={
-          router.pathname === routes.TRANSACTIONS
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.TRANSACTIONS)}
-        onKeyDown={() => history.push(routes.TRANSACTIONS)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <SwapVertIcon className={classes.icons} />
-          <span className={classes.sideText}>Transactions</span>
-        </div>
-      </Grid>
+        <List component='nav' disablePadding className={classes.parentList}>
+          {sidebarConfig.map((config, index) => (
+            <ListItem button key={config.title} className={classes.listItems}>
+              <ListItem button onClick={() => handleClick(index)}>
 
-      <Grid
-        className={
-          router.pathname === routes.OTHER_EXPENSE
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.OTHER_EXPENSE)}
-        onKeyDown={() => history.push(routes.OTHER_EXPENSE)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <AccountBalanceWalletIcon className={classes.icons} />
-          <span className={classes.sideText}>Other expense</span>
-        </div>
-      </Grid>
+                <ListItemText primary={config.title} style={{ fontWeight: 'bold' }} />
+                {open === index ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={open === index} timeout='auto' unmountOnExit>
+                <List component='div' disablePadding>
+                  {config.menu && config.menu.map((instant) => (
+                      <ListItem button key={instant.title}
+                                className={instant.url === location.pathname ?
+                                  classes.activeListItem : classes.nested}
+                                onClick={() => history.push(instant.url)}>
+                        <ListItemIcon className={classes.icon}>
+                          {instant.icon}
+                        </ListItemIcon>
+                        <ListItemText primary={instant.title} />
+                      </ListItem>
+                    )
+                  )}
 
-      <Grid
-        className={
-          router.pathname === routes.BILL_PAYMENT
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.BILL_PAYMENT)}
-        onKeyDown={() => history.push(routes.BILL_PAYMENT)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <ReceiptIcon className={classes.icons} />
-          <span className={classes.sideText}>Bill payment</span>
-        </div>
-      </Grid>
-
-      <Grid
-        className={
-          router.pathname === routes.PRODUCTS ||
-          router.pathname === routes.ADD_PRODUCTS
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.PRODUCTS)}
-        onKeyDown={() => history.push(routes.PRODUCTS)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <EmojiFoodBeverageIcon className={classes.icons} />
-          <span className={classes.sideText}>Products</span>
-        </div>
-      </Grid>
-
-      <Grid
-        className={
-          router.pathname === routes.STOCK_HISTORY
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.STOCK_HISTORY)}
-        onKeyDown={() => history.push(routes.STOCK_HISTORY)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <StorageIcon className={classes.icons} />
-          <span className={classes.sideText}>Stock History</span>
-        </div>
-      </Grid>
-
-      <Grid
-        className={
-          router.pathname === routes.CUSTOMERS
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.CUSTOMERS)}
-        onKeyDown={() => history.push(routes.CUSTOMERS)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <AccountCircleIcon className={classes.icons} />
-          <span className={classes.sideText}>Customers</span>
-        </div>
-      </Grid>
-
-
-      <Grid
-        className={
-          router.pathname === routes.SUPPLIERS
-            ? classes.whiteWashedLinks
-            : classes.links
-        }
-        onClick={() => history.push(routes.SUPPLIERS)}
-        onKeyDown={() => history.push(routes.SUPPLIERS)}
-        role="presentation"
-      >
-        <div className={classes.sideBarChild}>
-          <BusinessCenterIcon className={classes.icons} />
-          <span className={classes.sideText}>Suppliers</span>
-        </div>
-      </Grid>
+                </List>
+              </Collapse>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+      </Drawer>
     </div>
   );
 };

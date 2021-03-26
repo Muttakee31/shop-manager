@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { useRouteMatch } from 'react-router';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import BackButton from '../snippets/BackButton';
@@ -95,19 +94,16 @@ export default function TransactionDetails(): JSX.Element {
   }, []);
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <>
+      <div>
 
         <Grid className={classes.header}>
           <h3>Transaction Details</h3>
         </Grid>
 
-        <BackButton />
+        <BackButton customGoBack={false} />
 
-        <Grid style={{border: '1px solid #ccc', margin: '10px'}}>
+        <Grid style={{ border: '1px solid #ccc', margin: '10px' }}>
 
           <Grid className={classes.details}>
             <Grid item xs={6}>
@@ -188,11 +184,11 @@ export default function TransactionDetails(): JSX.Element {
               {' '}
             </Grid>
             <Grid item xs={6}>
-              {transactionInfo.description  === null ? "N/A" : transactionInfo.description}
+              {transactionInfo.description === null ? 'N/A' : transactionInfo.description}
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

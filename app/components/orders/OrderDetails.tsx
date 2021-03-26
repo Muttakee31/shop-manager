@@ -9,7 +9,6 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import { useRouteMatch } from 'react-router';
 import dayjs from 'dayjs';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
@@ -131,22 +130,18 @@ export default function OrderDetails(): JSX.Element {
   }, []);
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
-
+    <>
+      <div>
         <Grid className={classes.header}>
           <h3>Order Details</h3>
         </Grid>
 
-        <BackButton />
+        <BackButton customGoBack={false} />
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
             Customer Name:
-{' '}
+            {' '}
           </Grid>
           <Grid item xs={6}>
             {order.customer_name}
@@ -271,16 +266,16 @@ export default function OrderDetails(): JSX.Element {
           <Grid className={classes.details}>
             <Grid item xs={6}>
               Discount:
-{' '}
+              {' '}
             </Grid>
             <Grid item xs={6}>
               <NumberFormat value={transactionInfo.discount} displayType='text'
-                            thousandSeparator={true} thousandsGroupStyle="lakh"
-                            decimalScale={2}/>
+                            thousandSeparator={true} thousandsGroupStyle='lakh'
+                            decimalScale={2} />
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

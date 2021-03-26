@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import { useSelector } from 'react-redux';
 import { authToken, isAuthenticated, logOutUser, userName } from '../../features/auth/authSlice';
@@ -146,27 +145,17 @@ export default function UpdateUser(): JSX.Element {
   }
 
   return (
-    <Grid container direction="row">
-      <Grid item sm={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid
-        item
-        sm={8}
-        lg={9}
-        direction="column"
-        justify="center"
-        className={classes.grid}
-      >
+    <>
+      <div className={classes.grid}>
         <Grid className={classes.header}>
           <h3>Update User Details</h3>
         </Grid>
 
-        <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}>
+        <form autoComplete='off' style={{ width: '320px', margin: 'auto' }}>
           <Grid>
             <CssTextField
-              id="standard-required"
-              label="Name"
+              id='standard-required'
+              label='Name'
               value={username}
               className={classes.textField}
               fullWidth
@@ -237,7 +226,7 @@ export default function UpdateUser(): JSX.Element {
             </Button>
           </Grid>
         </form>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 }

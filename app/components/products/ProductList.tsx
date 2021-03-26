@@ -12,7 +12,6 @@ import { useHistory, useLocation } from 'react-router';
 import EditIcon from '@material-ui/icons/Edit';
 import routes from '../../constants/routes.json';
 import * as dbpath from '../../constants/config';
-import Sidebar from '../../containers/Sidebar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
@@ -172,19 +171,16 @@ export default function ProductList(): JSX.Element {
 
 
   return (
-    <Grid container>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9} ref={listRef}>
+    <>
+      <div ref={listRef}>
         <Grid className={classes.header}>
           <h3>List of Products</h3>
         </Grid>
 
         <Grid>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={() =>
               history.push({
                 pathname: routes.ADD_PRODUCTS,
@@ -243,25 +239,25 @@ export default function ProductList(): JSX.Element {
                     <TableCell align="center" className={classes.texts}>
                       <EditIcon onClick={() => editProduct(row)} style={{padding: '0 5px'}}/>
                       {authFlag &&
-                      <DeleteIcon onClick={() => openDeleteProduct(row)} style={{ padding: '0 5px' }}/>
+                      <DeleteIcon onClick={() => openDeleteProduct(row)} style={{ padding: '0 5px' }} />
                       }
                     </TableCell>
                   </TableRow>
-                ))}
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-      </Grid>
+      </div>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby'"transition-modal-titl'"
+        aria-describedby'"transition-modal-descriptio'"
         className={classes.modal}
         open={deleteModal}
-        onClose={()=> setDeleteModal(false)}
+        onClose={() => setDeleteModal(false)}
         closeAfterTransition
         BackdropProps={{
-          timeout: 500,
+          timeout: 500
         }}
       >
         <Fade in={deleteModal}>
@@ -289,6 +285,6 @@ export default function ProductList(): JSX.Element {
           </div>
         </Fade>
       </Modal>
-    </Grid>
+    </>
   );
 }

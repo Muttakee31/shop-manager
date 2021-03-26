@@ -9,7 +9,6 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import Sidebar from '../../containers/Sidebar';
 import * as dbpath from '../../constants/config';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -157,17 +156,14 @@ export default function SupplierList(): JSX.Element {
   );
   */
   return (
-    <Grid container direction="row" style={{height: '140vh'}}>
-      <Grid item xs={4} lg={3}>
-        <Sidebar />
-      </Grid>
-      <Grid item xs={8} lg={9}>
+    <div style={{ height: '140vh' }}>
+      <div>
         <Grid className={classes.header}>
           <h3>List of Suppliers</h3>
         </Grid>
 
         <TableContainer>
-          <Table aria-label="simple table">
+          <Table aria-label='simple table'>
             <TableHead>
               <TableRow>
                 <TableCell className={classes.texts}>Supplier Name</TableCell>
@@ -217,26 +213,26 @@ export default function SupplierList(): JSX.Element {
                         pathname: `/update-user/1/${row.id}`,
                         state: {verticalScrollHeight: window.scrollY}
                       })}
-                                style={{ padding: '0 5px'}} />
+                                style={{ padding: '0 5px' }} />
                       <DeleteIcon onClick={() => openDeleteSupplier(row)} />
                     </>
                     }
                   </TableCell>
                 </TableRow>
-              ))}
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Grid>
+      </div>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby'"transition-modal-titl'"
+        aria-describedby'"transition-modal-descriptio'"
         className={classes.modal}
         open={deleteModal}
-        onClose={()=> setDeleteModal(false)}
+        onClose={() => setDeleteModal(false)}
         closeAfterTransition
         BackdropProps={{
-          timeout: 500,
+          timeout: 500
         }}
       >
         <Fade in={deleteModal}>
@@ -264,6 +260,6 @@ export default function SupplierList(): JSX.Element {
           </div>
         </Fade>
       </Modal>
-    </Grid>
+    </div>
   );
 }
