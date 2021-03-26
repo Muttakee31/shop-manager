@@ -44,3 +44,20 @@ a:hover {
   text-decoration: none;
   cursor: pointer;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; /* width of vertical scrollbar */
+  border: 1px solid #d5d5d5;
+}
+
+
+::-webkit-scrollbar-track {
+  border-radius: 3px;
+  background: #eeeeee;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: #b0b0b0;
+}

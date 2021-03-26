@@ -78,7 +78,6 @@ export default function StockHistoryList(): JSX.Element {
             console.log(err);
           } else {
             setStockHistoryList(instant.sort(compare));
-            console.log(instant);
           }
         }
       );

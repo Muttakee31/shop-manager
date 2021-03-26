@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -194,7 +194,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Sidebar: React.FC = () => {
   const history = useHistory();
   const classes = useStyles();
-  const [open, setOpen] = useState(1);
+  const [collapseFlag, setCollapseFlag] = useState(new Array(sidebarConfig.length).fill(true));
   const [openSignInModal, setOpenSignInModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
   const [alert, setAlert] = useState<string | null>(null);
@@ -206,14 +206,11 @@ const Sidebar: React.FC = () => {
   const authFlag = useSelector(isAuthenticated);
   const loggedInUser = useSelector(userName);
 
-  useEffect(() => {
-    sidebarConfig.map((config, index) => {
-      config.menu?.map(item => item.url === location.pathname && setOpen(index));
-    });
-  }, []);
-
   const handleClick = (key: number) => {
-    (open === key) ? setOpen(-1) : setOpen(key);
+    const flag = (collapseFlag[key] === false);
+    const temp = [...collapseFlag];
+    temp[key] = flag;
+    setCollapseFlag(temp);
   };
 
   const handleOpen = () => {
@@ -246,7 +243,6 @@ const Sidebar: React.FC = () => {
               handleClose();
               setSuccessMessage(true);
             } else {
-              console.log('did not match');
               setAlert('Username or password did not match!');
             }
           }
@@ -260,8 +256,8 @@ const Sidebar: React.FC = () => {
     <div className={classes.root}>
 
       <Modal
-        aria-labelledb''"transition-modal-tit''"
-        aria-describedb''"transition-modal-descripti''"
+        aria-labelledb="transition-modal-title"
+        aria-describedb="transition-modal-description"
         className={classes.modal}
         open={openSignInModal}
         onClose={handleClose}
@@ -277,8 +273,8 @@ const Sidebar: React.FC = () => {
             </Grid>
             <Grid>
               <CssTextField
-                id''standard-require''
-                label''Usernam''
+                id='standard-required'
+                label='Username'
                 value={fullName}
                 className={classes.textField}
                 fullWidth
@@ -288,8 +284,8 @@ const Sidebar: React.FC = () => {
 
             <Grid>
               <CssTextField
-                id''standard-basi''
-                label''Passwor''
+                id='standard-basic'
+                label='Password'
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 fullWidth
@@ -311,14 +307,14 @@ const Sidebar: React.FC = () => {
               />
             </Grid>
             {alert !== null &&
-            <Alert severity''erro'' className={classes.gridMargin}>
+            <Alert severity='error' className={classes.gridMargin}>
               {alert}
             </Alert>
             }
             <Grid>
               <Button
-                variant''containe''
-                color''primar''
+                variant='contained'
+                color='primary'
                 fullWidth
                 className={classes.gridMargin}
                 onClick={(e) => {
@@ -394,13 +390,13 @@ const Sidebar: React.FC = () => {
               <ListItem button onClick={() => handleClick(index)}>
 
                 <ListItemText primary={config.title} style={{ fontWeight: 'bold' }} />
-                {open === index ? <ExpandLess /> : <ExpandMore />}
+                {collapseFlag && collapseFlag[index] == true ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-              <Collapse in={open === index} timeout='auto' unmountOnExit className={classes.nestedList}>
+              <Collapse in={collapseFlag && collapseFlag[index] == true} timeout='auto' unmountOnExit className={classes.nestedList}>
                 <List component='div' disablePadding>
                   {config.menu?.map((instant) => (
                       <ListItem button key={instant.title}
-                                className={instant.url === location.pathname ?
+                                className={instant.url !== location.pathname ?
                                   classes.activeListItem : classes.nested}
                                 onClick={() => history.push(instant.url)}>
                         <ListItemIcon className={classes.icon}>
