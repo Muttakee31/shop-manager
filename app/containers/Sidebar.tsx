@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import sidebarConfig from '../constants/sidebarConfig';
@@ -193,6 +193,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Sidebar: React.FC = () => {
   const history = useHistory();
+  const location = useLocation();
   const classes = useStyles();
   const [collapseFlag, setCollapseFlag] = useState(new Array(sidebarConfig.length).fill(true));
   const [openSignInModal, setOpenSignInModal] = useState(false);
@@ -396,7 +397,7 @@ const Sidebar: React.FC = () => {
                 <List component='div' disablePadding>
                   {config.menu?.map((instant) => (
                       <ListItem button key={instant.title}
-                                className={instant.url !== location.pathname ?
+                                className={instant.url === location.pathname ?
                                   classes.activeListItem : classes.nested}
                                 onClick={() => history.push(instant.url)}>
                         <ListItemIcon className={classes.icon}>
