@@ -75,13 +75,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: drawerWidth
   },
   textField: {
-    color: 'white',
-    borderColor: 'white',
     margin: '0 0 16px 0'
   },
   header: {
     textAlign: 'center',
-    color: 'white',
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
@@ -94,7 +91,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 40
   },
   input: {
-    color: 'white'
   },
   gridMargin: {
     margin: '10px 0'
@@ -106,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paper: {
     border: '2px solid #000',
-    background: '#232c39',
+    background: '#fff',
     boxShadow: '3px 3px 20px #010101',
     padding: 15,
     margin: 15,
@@ -114,7 +110,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 330
   },
   texts: {
-    color: 'whitesmoke'
   },
   btn: {
     height: '40px',
@@ -142,7 +137,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '12px'
   },
   parentList: {
-    color: 'whitesmoke'
   },
   nestedList: {
     width: '100%'
@@ -165,7 +159,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
     icon: {
-      color: 'whitesmoke'
     },
     listItems: {
       flexDirection: 'column',
@@ -371,7 +364,7 @@ const Sidebar: React.FC = () => {
                 display: 'flex', flexDirection: 'column',
                 justifyContent: 'flex-start', alignItems: 'center'
               }}>
-                <div style={{ fontSize: '1.25em', color: 'whitesmoke' }}>
+                <div style={{ fontSize: '1.25em' }}>
                   {loggedInUser}
                 </div>
                 <Link onClick={() => dispatch(logOutUser())}>

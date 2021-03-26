@@ -121,7 +121,6 @@ export default function BillPayment(): JSX.Element {
         <Grid className={classes.header}>
           <h3>Add bill payment</h3>
         </Grid>
-        <form autoComplete='off' style={{ width: '320px', margin: 'auto' }}>
         <form autoComplete="off" style={{ width: '320px', margin: 'auto' }}
               onSubmit={(e) => {
                 e.preventDefault();
