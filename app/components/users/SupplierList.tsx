@@ -225,8 +225,8 @@ export default function SupplierList(): JSX.Element {
         </TableContainer>
       </div>
       <Modal
-        aria-labelledby'"transition-modal-titl'"
-        aria-describedby'"transition-modal-descriptio'"
+        aria-labelledby='transition-modal-title'
+        aria-describedby='transition-modal-description'
         className={classes.modal}
         open={deleteModal}
         onClose={() => setDeleteModal(false)}

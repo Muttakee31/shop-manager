@@ -1,30 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
 import Grid from '@material-ui/core/Grid';
-import Fade from '@material-ui/core/Fade';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import * as dbpath from '../constants/config';
 import { transactionType } from '../constants/config';
-import Alert from '@material-ui/lab/Alert';
-import { useDispatch, useSelector } from 'react-redux';
-import { isAuthenticated, logOutUser, setAuthToken, userName } from '../features/auth/authSlice';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ReactApexChart from 'react-apexcharts';
 import dayjs from 'dayjs';
 import CssTextField from '../components/snippets/CssTextField';
 import NumberFormat from 'react-number-format';
-import Snackbar from '@material-ui/core/Snackbar';
-
 
 const sqlite3 = require('sqlite3').verbose();
-const CryptoJS = require("crypto-js");
-const jwt = require('jsonwebtoken');
 
 interface Transaction {
   id: number;
@@ -144,10 +130,6 @@ const useStyles = makeStyles(() =>
 
 export default function HomePage() {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const [username, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [orderCount, setOrderCount] = useState(0);
   const [totalSale, setTotalSale] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
@@ -159,9 +141,6 @@ export default function HomePage() {
   const [godownSeries, setGodownSeries] = useState<SeriesData[]>([]);
 
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
-
-  const [alert, setAlert] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState(false);
   const [options, setOption] = useState({
     chart: {
       type: 'bar',
@@ -231,57 +210,10 @@ export default function HomePage() {
     colors: ['rgb(0,143,251)', 'rgb(255,69,96)', 'rgb(0, 227, 150)'],
   });
 
-  const dispatch = useDispatch();
-  const authFlag= useSelector(isAuthenticated);
-  const loggedInUser = useSelector(userName);
-
   useEffect(()=> {
     getTransactionCount(selectedDate);
     getStockRecordToday();
   }, []);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setAlert(null);
-    setOpen(false);
-  };
-
-  const handleClickShowPassword = () => {
-    setShowPassword(prevState => !prevState);
-  }
-
-  const signIn = () => {
-    const db = new sqlite3.Database(dbpath.dbPath);
-    setAlert(null);
-    try{
-      db.all(`SELECT * FROM USER WHERE name = ? AND is_admin = ?`, [username, 1],
-        function(err: Error, instant:any) {
-          if (err) {
-            console.log(err);
-          }
-          else {
-            const hashedPass : string =  CryptoJS.SHA256(password).toString();
-            if (instant.length !== 0 && instant[0].password == hashedPass) {
-              const token = jwt.sign({ username }, dbpath.SECRET_KEY, { expiresIn: '12h' });
-              //console.log(token);
-              dispatch(setAuthToken({token, username}));
-              handleClose();
-              setSuccessMessage(true);
-            }
-            else {
-              console.log('did not match');
-              setAlert("Username or password did not match!");
-            }
-          }
-        })
-    }
-    catch (e) {
-      console.log(e);
-    }
-  }
 
   const getStockRecordToday = () => {
     try {
@@ -451,34 +383,11 @@ export default function HomePage() {
   return (
     <Grid className={classes.grid}>
 
-      <Snackbar open={successMessage} autoHideDuration={6000}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                onClose={()=> setSuccessMessage(false)}>
-        <Alert onClose={()=> setSuccessMessage(false)} severity="success">
-          Welcome, {loggedInUser}
-        </Alert>
-      </Snackbar>
-
       <Grid className={classes.header}>
-        <h3>Welcome to Shop Manager</h3>
+        <h3>Overview</h3>
       </Grid>
 
       <Grid item xs={8} lg={9} className={classes.topbin}>
-        {!authFlag ?
-          <Button color='primary' variant='contained'
-                  onClick={handleOpen} className={classes.btn}>
-            View as Admin
-          </Button>
-          :
-          <Button color='primary' variant='contained'
-                  className={classes.btn} onClick={()=> dispatch(logOutUser())}>
-            Log out
-          </Button>
-        }
-
         <CssTextField
           id="date"
           label="Date"
@@ -576,90 +485,18 @@ export default function HomePage() {
 
 
       <Grid id='chart' className={classes.cardContainer}>
+        {shopSeries &&
         <ReactApexChart options={options}
                         series={shopSeries}
-                        type="bar" height={300} width={375} />
+                        type='bar' height={300} width={375} />
 
+        }
+        {godownSeries &&
         <ReactApexChart options={options}
                         series={godownSeries}
-                        type="bar" height={300} width={375} />
+                        type='bar' height={300} width={375} />
+        }
       </Grid>
-
-
-
-
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <div className={classes.paper}>
-            <Grid className={classes.header}>
-              <h3>Sign in</h3>
-            </Grid>
-            <Grid>
-              <CssTextField
-                id="standard-required"
-                label="Username"
-                value={username}
-                className={classes.textField}
-                fullWidth
-                onChange={(e) => setUserName(e.target.value)}
-              />
-            </Grid>
-
-            <Grid>
-              <CssTextField
-                id="standard-basic"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                fullWidth
-                className={classes.textField}
-                onChange={(e) => setPassword(e.target.value)}
-                InputProps = {{ endAdornment :
-                  <InputAdornment position="end">
-                    <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    >
-                      {!showPassword ?
-                        <VisibilityIcon className={classes.texts}/> :
-                        <VisibilityIconOff className={classes.texts}/>}
-                    </IconButton>
-                  </InputAdornment>
-                }}
-              />
-            </Grid>
-            {alert !== null &&
-            <Alert severity="error" className={classes.gridMargin}>
-              {alert}
-            </Alert>
-            }
-            <Grid>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                className={classes.gridMargin}
-                onClick={(e) => {
-                  e.preventDefault();
-                  signIn();
-                }}
-              >
-                Sign in
-              </Button>
-            </Grid>
-          </div>
-        </Fade>
-      </Modal>
     </Grid>
   );
 }
