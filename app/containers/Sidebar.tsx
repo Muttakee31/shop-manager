@@ -151,16 +151,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   toolbar: theme.mixins.toolbar,
   nested: {
     '&:hover': {
-      background: 'rgba(39, 126, 167, 0.2)',
+      background: 'rgba(39, 126, 167, 0.35)',
       borderRadius: 58.5
     }
   },
   activeListItem: {
     width: '100%',
-    background: 'rgba(39, 126, 167, 0.2)',
+    background: 'rgba(39, 126, 167, 0.6)',
     borderRadius: 58.5,
     '&:hover': {
-      background: 'rgba(39, 126, 167, 0.2)',
+      background: 'rgba(39, 126, 167, 0.35)',
       borderRadius: 58.5
     }
   },

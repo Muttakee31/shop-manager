@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SelectCustomer from './SelectCustomer';
 import SelectProducts from './SelectProducts';
 import StepperComponent from './StepperComponent';
+import { Prompt } from 'react-router-dom';
 
 export default function OrderPage(): JSX.Element {
   const [orderState, setOrderState] = useState(0);
@@ -12,6 +13,8 @@ export default function OrderPage(): JSX.Element {
   }, [orderState]); */
   return (
     <>
+      <Prompt when={orderState > 0}
+              message="Are you sure? The order will be canceled." />
       <div>
         <StepperComponent orderState={orderState} />
         {orderState === 0 && (
