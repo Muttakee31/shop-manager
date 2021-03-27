@@ -112,7 +112,7 @@ export default function SelectCustomer(props: {
         <Autocomplete
           id="combo-box-demo"
           options={userList}
-          getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
+          getOptionLabel={(option: User) => `${option.name} - ${option.phone ? option.phone : "N/A"}`}
           style={{ width: 250, margin: 'auto' }}
           onChange={(event: ChangeEvent<{}>, newValue: User) => {
             setSelectedUser(newValue);
@@ -138,7 +138,7 @@ export default function SelectCustomer(props: {
       </Grid>
 
       <Grid item style={{width: '250px', margin: '0 auto'}}>
-        <form>
+        <form onSubmit={(e) => createCustomer(e)}>
           <Grid>
             <CssTextField
               id="standard-required"
@@ -146,6 +146,7 @@ export default function SelectCustomer(props: {
               value={userName}
               className={classes.textField}
               fullWidth
+              required
               onChange={(e) => setUserName(e.target.value)}
             />
           </Grid>
@@ -167,6 +168,7 @@ export default function SelectCustomer(props: {
               value={userAddress}
               className={classes.textField}
               fullWidth
+              required
               onChange={(e) => setAddress(e.target.value)}
             />
           </Grid>
@@ -175,7 +177,7 @@ export default function SelectCustomer(props: {
               variant="contained"
               color="primary"
               fullWidth
-              onClick={(e) => createCustomer(e)}
+              type='submit'
             >
               Create customer
             </Button>

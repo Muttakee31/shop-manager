@@ -78,8 +78,6 @@ const useStyles = makeStyles(() =>
       justifyContent: 'space-between',
       alignItems: 'center'
     },
-    grid: {
-    },
     textField: {
       color: 'white',
       borderColor: 'white',
@@ -132,7 +130,7 @@ export default function HomePage() {
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalInput, setTotalInput] = useState(0);
   const [totalDue, setTotalDue] = useState(0);
-  const [totalBalance, setTotalBalance] = useState(0);
+  const [totalLabourCost, setTotalLabourCost] = useState(0);
 
   const [shopSeries, setShopSeries] = useState<SeriesData[]>([]);
   const [godownSeries, setGodownSeries] = useState<SeriesData[]>([]);
@@ -315,6 +313,7 @@ export default function HomePage() {
               let saleSum: number = 0;
               let orderCount: number = 0;
               let totalInputSum: number = 0;
+              let laborCost: number = 0;
               instant.map(item => {
                 if (item.transaction_type === transactionType["order"]) {
                   orderSum += Number(item.order_cost);
@@ -329,12 +328,14 @@ export default function HomePage() {
                 if (item.transaction_type === transactionType["due"]) {
                   totalInputSum += Number(item.paid_amount)
                 }
+                laborCost += Number(item.labour_cost);
               });
 
               setTotalSale(orderSum);
               setTotalExpense(saleSum);
               setOrderCount(orderCount);
               setTotalInput(totalInputSum);
+              setTotalLabourCost(laborCost);
             }
           }
         }
@@ -347,15 +348,12 @@ export default function HomePage() {
             console.log(_err)
           } else {
             let dues = 0;
-            let balances = 0;
             instant.map(user => {
               if (user.due_amount !== null) {
                 if (user.due_amount > 0) dues += Number(user.due_amount);
-                else if (user.due_amount < 0) balances += Number(user.due_amount);
               }
             });
             setTotalDue(dues);
-            setTotalBalance(balances * -1);
           }
         }
       );
@@ -375,7 +373,7 @@ export default function HomePage() {
 
 
   return (
-    <Grid className={classes.grid}>
+    <Grid>
 
       <Grid className={classes.header}>
         <h3>Overview</h3>
@@ -458,9 +456,9 @@ export default function HomePage() {
         <Grid item xs={4}>
           <Card className={classes.card} variant="outlined" style={{background: '#99154e'}}>
             <CardContent className={classes.content}>
-              <span className={classes.title}>Total Balance</span>
+              <span className={classes.title}>Total Labour Cost</span>
               <span className={classes.amount}>
-                <NumberFormat value={totalBalance} displayType={'text'}
+                <NumberFormat value={totalLabourCost} displayType={'text'}
                               thousandSeparator={true} thousandsGroupStyle="lakh"/>
               </span>
             </CardContent>

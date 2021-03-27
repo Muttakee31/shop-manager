@@ -44,6 +44,7 @@ interface Transaction {
   due_amount: number | null;
   supply_id: number;
   timestamp: string;
+  description: string;
 }
 
 const useStyles = makeStyles({
@@ -290,7 +291,8 @@ export default function TransactionList(): JSX.Element {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell className={classes.texts}>Client name</TableCell>
+                <TableCell className={classes.texts}>
+                  {Number(type) === transactionType['other'] ? "Reason" : "Client name"}</TableCell>
                 <TableCell className={classes.texts}>Type</TableCell>
                 <TableCell className={classes.texts}>Cost</TableCell>
                 <TableCell className={classes.texts}>Paid amount</TableCell>
@@ -310,7 +312,10 @@ export default function TransactionList(): JSX.Element {
                 :transactionList.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align="left" className={classes.texts}>
-                    {row.client_name === null ? 'N/A' : row.client_name}
+                    {Number(type) === transactionType['other'] ?
+                      row.description === null ? 'N/A' : row.description :
+                      row.client_name === null ? 'N/A' : row.client_name
+                    }
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     {getChip(row.transaction_type)}

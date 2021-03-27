@@ -52,7 +52,7 @@ const useStyles = makeStyles({
 
 export default function BillPayment(): JSX.Element {
   const [amount, setAmount] = useState('');
-  const [supplier, setSupplier] = useState<User | null>(null);
+  const [client, setClient] = useState<User | null>(null);
   const [description, setDescription] = useState('');
   const [userList, setUserList] = useState<User[]>([]);
 
@@ -63,7 +63,7 @@ export default function BillPayment(): JSX.Element {
   useEffect(() => {
     const db = new sqlite3.Database(dbpath.dbPath);
     db.all(
-      'SELECT * FROM USER WHERE is_supplier = ?', [1],
+      'SELECT * FROM USER WHERE is_admin IS NULL OR is_admin=?', [0],
       (err: Error, instant: User[]) => {
         if (!err) {
           setUserList(instant);
@@ -82,8 +82,8 @@ export default function BillPayment(): JSX.Element {
        payment_type, paid_amount, discount, description, timestamp)
        VALUES(?,?,?,?,?,?,?,?) `,
       [
-        supplier.id,
-        supplier.name,
+        client.id,
+        client.name,
         transactionType['bill'],
         1,
         amount,
@@ -97,7 +97,7 @@ export default function BillPayment(): JSX.Element {
         } else {
           db.run(
             `UPDATE User set due_amount = due_amount + ? WHERE id = ?`,
-            [amount, supplier.id],
+            [amount, client.id],
             function (error: Error) {
               if (error) {
                 console.log(error.message);
@@ -135,10 +135,10 @@ export default function BillPayment(): JSX.Element {
               getOptionLabel={(option: User) => `${option.name} - ${option.phone}`}
               style={{ width: 320, margin: 'auto' }}
               onChange={(event: ChangeEvent<{}>, newValue: User) => {
-                setSupplier(newValue);
+                setClient(newValue);
               }}
               renderInput={(params) => (
-                <CssTextField {...params} label="Select supplier" required />
+                <CssTextField {...params} label="Select client" required />
               )}
             />
           </Grid>
