@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import SelectSupplier from './SelectSupplier';
 import SelectProducts from './SelectProducts';
 import StepperComponent from './StepperComponent';
-import { Prompt } from 'react-router-dom';
 
 
 export default function SupplyPage(): JSX.Element {
@@ -14,9 +13,9 @@ export default function SupplyPage(): JSX.Element {
   }, [orderState]); */
   return (
     <>
-      <Prompt when={supplyState > 0}
+     {/* <Prompt when={supplyState > 0}
               message="Are you sure? Your purchase will be canceled."
-      />
+      />*/}
       <div>
         <StepperComponent orderState={supplyState} />
         {supplyState === 0 && (
