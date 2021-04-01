@@ -153,6 +153,7 @@ export default function SelectProducts(props: {
   };
 
   const createSupply = () => {
+    props.setSupplyState(2);
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     let id = -1;

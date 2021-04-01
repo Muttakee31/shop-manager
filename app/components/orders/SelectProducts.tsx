@@ -166,6 +166,7 @@ export default function SelectProducts(props: {
   };
 
   const createOrder = () => {
+    props.setOrderState(2);
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     const temp = new Date();
