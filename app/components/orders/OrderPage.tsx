@@ -13,7 +13,7 @@ export default function OrderPage(): JSX.Element {
   }, [orderState]); */
   return (
     <>
-      <Prompt when={orderState < 2}
+      <Prompt when={orderState === 1}
               message="Are you sure? The order will be canceled." />
       <div>
         <StepperComponent orderState={orderState} />
