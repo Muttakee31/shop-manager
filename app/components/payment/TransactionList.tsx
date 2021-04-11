@@ -47,6 +47,25 @@ interface Transaction {
   description: string;
 }
 
+interface OrderItem {
+  product: number;
+  product_title: string;
+  title: string;
+  quantity: number;
+  price: number;
+  storage: string;
+}
+
+interface SupplyItem {
+  product: number;
+  product_title: string;
+  title: string;
+  quantity: number;
+  price: number;
+  storage: string;
+}
+
+
 const useStyles = makeStyles({
   texts: {
     color: 'whitesmoke',
@@ -129,7 +148,7 @@ export default function TransactionList(): JSX.Element {
 
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const [deleteModal, setDeleteModal] = useState(false);
-  const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [toBeDeleted, setToBeDeleted] = useState<Transaction | null>(null);
   const [type, setType] = useState(transactionType["order"]);
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
@@ -154,20 +173,17 @@ export default function TransactionList(): JSX.Element {
 
   const openDeleteTransaction = (instant: Transaction) => {
     setDeleteModal(true);
-    setToBeDeleted(instant.id);
+    setToBeDeleted(instant);
   };
 
   const getTransactionList = () => {
    try {
      const db = new sqlite3.Database(dbpath.dbPath);
-     console.log(type);
      let params = [];
      params.push(selectedDate + "%");
      let statement : string = `SELECT * FROM Transactions WHERE timestamp LIKE ?`;
-     if (type !== "-1") {
-       params.push(type);
-       statement += ` AND transaction_type = ?`;
-     }
+     params.push(type);
+     statement += ` AND transaction_type = ?`;
 
      db.all(
        statement,
@@ -188,14 +204,16 @@ export default function TransactionList(): JSX.Element {
 
   const deleteTransaction = () => {
     try {
+      deleteAction();
       const db = new sqlite3.Database(dbpath.dbPath);
       db.run(
-        'DELETE FROM Transactions WHERE id = ?', [toBeDeleted],
+        'DELETE FROM Transactions WHERE id = ?', [toBeDeleted?.id],
         (_err: Error) => {
           if (_err) {
             console.log(_err);
           } else {
             setDeleteModal(false);
+            setToBeDeleted(null);
             getTransactionList();
           }
         }
@@ -204,6 +222,160 @@ export default function TransactionList(): JSX.Element {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  const deleteAction = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    const temp = new Date();
+    temp.setHours(0, 0, 0, 0);
+    const midnight = dayjs(temp).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    if (toBeDeleted?.transaction_type !== transactionType['other']) {
+      resetDueBalance();
+    }
+    if (toBeDeleted?.transaction_type === transactionType['order']) {
+      try {
+        console.log('here');
+        db.all(
+          'SELECT * FROM OrderedItem WHERE order_id = ?', [toBeDeleted.order_id],
+          (_err: Error, instant: OrderItem[]) => {
+            if (_err) {
+              console.log(_err);
+            } else {
+              console.log(instant);
+              instant?.map(item => {
+                const dest = item.storage === '0' ? 'shop_stock_count' : 'godown_stock_count';
+                db.run(
+                  `UPDATE Product set ${dest}=${dest} + ? where id=?`,
+                  [item.quantity, item.product],
+                  function (error_1: Error) {
+                    if (error_1) {
+                      console.log(error_1.message);
+                    } else {
+                      console.log(item.product_title + ' updated' + JSON.stringify(this));
+                    }
+                  })
+                const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
+                db.run(
+                  `UPDATE StockHistory SET ${store} = ${store} + ?, date_updated= ? WHERE
+id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
+                  [
+                    item.quantity,
+                    today,
+                    item.product
+                  ],
+                  function (error_2: Error) {
+                    if (error_2) {
+                      console.log(error_2.message);
+                    } else {
+                      console.log(item.product_title + ' stock updated' + JSON.stringify(this));
+                    }
+                  })
+              })
+              db.run(
+                'DELETE FROM Orders WHERE id = ?', [toBeDeleted.order_id],
+                (_err: Error) => {
+                  if (_err) {
+                    console.log(_err);
+                  } else {
+                    console.log('order deleted');
+                  }
+                }
+              );
+            }
+          }
+        )
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['supply']){
+      try {
+        db.all(
+          'SELECT * FROM SupplyItem WHERE supply_id = ?', [toBeDeleted.supply_id],
+          (_err: Error, instant: SupplyItem[]) => {
+            if (_err) {
+              console.log(_err);
+            } else {
+              instant?.map(item => {
+                const dest = item.storage === '0' ? 'shop_stock_count' : 'godown_stock_count';
+                db.run(
+                  `UPDATE Product set ${dest}=${dest} - ? where id= ?`,
+                  [item.quantity, item.product],
+                  function (error_1: Error) {
+                    if (error_1) {
+                      console.log(error_1.message);
+                    } else {
+                      console.log(JSON.stringify(this) + ' updated');
+                    }
+                  })
+                const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
+                db.run(
+                  `UPDATE StockHistory SET ${store} = ${store} - ?, date_updated= ?
+WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
+                  [
+                    item.quantity,
+                    today,
+                    item.product
+                  ],
+                  function (error_2: Error) {
+                    if (error_2) {
+                      console.log(error_2.message);
+                    } else {
+                      console.log(JSON.stringify(this) + ' updated');
+                    }
+                  })
+              })
+            }
+          }
+        )
+        db.run(
+          'DELETE FROM Supply WHERE id = ?', [toBeDeleted.supply_id],
+          (_err: Error) => {
+            if (_err) {
+              console.log(_err);
+            } else {
+              console.log('supply deleted');
+            }
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    db.close();
+  }
+
+  const resetDueBalance = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    const stmt = db.prepare(
+      `UPDATE User SET due_amount = due_amount - ? WHERE id = ?`
+    )
+
+    let resetAmount: number | null = 0;
+    if (toBeDeleted?.transaction_type === transactionType['order']) {
+      resetAmount = toBeDeleted.due_amount;
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['supply']) {
+      resetAmount = toBeDeleted.due_amount * -1
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['due']) {
+      resetAmount = toBeDeleted.paid_amount * -1
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['bill']) {
+      resetAmount = toBeDeleted.paid_amount
+    }
+
+    stmt.run(
+      [resetAmount, toBeDeleted?.client],
+      function (error_3: Error) {
+        if (error_3) {
+          console.log(error_3.message);
+        } else {
+          console.log('due updated');
+        }
+      })
+    stmt.finalize();
   }
 
   const changeDate = (e:React.ChangeEvent) => {

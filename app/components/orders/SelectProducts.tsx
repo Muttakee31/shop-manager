@@ -354,7 +354,7 @@ export default function SelectProducts(props: {
           />
         </Grid>
       </Grid>
-      <Grid direction="row" style={{margin: '0 20px'}}>
+      <Grid style={{margin: '0 20px'}}>
         <FormControl component="fieldset">
           <FormLabel component="legend">Select storage</FormLabel>
           <RadioGroup
