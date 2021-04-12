@@ -332,7 +332,7 @@ id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
                                     decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {dayjs(row.timestamp.split('Z')[0]).format('MMM DD, YYYY [at] hh:mm a')}
+                      {dayjs(row.timestamp.split('Z')[0]).format('MMM DD, YYYY [at] hh:mm A')}
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       <VisibilityIcon style={{padding: '0 5px'}}

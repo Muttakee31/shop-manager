@@ -153,7 +153,7 @@ export default function SupplyDetails(): JSX.Element {
 {' '}
           </Grid>
           <Grid item xs={6}>
-            {dayjs(supply.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm')}
+            {dayjs(supply.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
           </Grid>
         </Grid>
 
