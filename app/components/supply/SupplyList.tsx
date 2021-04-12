@@ -32,6 +32,7 @@ interface Supply {
 }
 
 interface SupplyItem {
+  id: number;
   product: number;
   product_title: string;
   title: string;
@@ -164,7 +165,6 @@ export default function SupplyList(): JSX.Element {
     try {
       const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]')
       const db = new sqlite3.Database(dbpath.dbPath);
-      // db.get("PRAGMA foreign_keys = ON")
       db.all(
         'SELECT * FROM SupplyItem WHERE supply_id = ?', [toBeDeleted?.id],
         (_err: Error, instant: SupplyItem[]) => {
@@ -196,26 +196,36 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
                   if (error_2) {
                     console.log(error_2.message);
                   } else {
-                    console.log(JSON.stringify(this) + ' updated');
+                    console.log('updated');
+                  }
+                })
+              db.run(
+                `DELETE FROM SupplyItem WHERE id = ?`,
+                [item.id],
+                function (error_4: Error) {
+                  if (error_4) {
+                    console.log(error_4.message);
+                  } else {
+                    console.log(item.id + ' deleted');
                   }
                 })
             })
           }
+          deleteTransaction();
+          db.run(
+            'DELETE FROM Supply WHERE id = ?', [toBeDeleted?.id],
+            (_err: Error) => {
+              if (_err) {
+                console.log(_err);
+              } else {
+                console.log('supply deleted');
+                setDeleteModal(false);
+                getSupplies();
+              }
+            }
+          );
         }
       )
-      deleteTransaction();
-      db.run(
-        'DELETE FROM Supply WHERE id = ?', [toBeDeleted?.id],
-        (_err: Error) => {
-          if (_err) {
-            console.log(_err);
-          } else {
-            console.log('supply deleted');
-            setDeleteModal(false);
-            getSupplies();
-          }
-        }
-      );
       db.close();
     } catch (e) {
       console.log(e);

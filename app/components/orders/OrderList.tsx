@@ -32,6 +32,7 @@ interface Order {
 }
 
 interface OrderItem {
+  id: number;
   product: number;
   product_title: string;
   title: string;
@@ -196,6 +197,16 @@ id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
                     console.log(error_2.message);
                   } else {
                     console.log(item.product_title + ' stock updated' + JSON.stringify(this));
+                  }
+                })
+              db.run(
+                `DELETE FROM OrderedItem WHERE id = ?`,
+                [item.id],
+                function (error_4: Error) {
+                  if (error_4) {
+                    console.log(error_4.message);
+                  } else {
+                    console.log(item.id + ' deleted');
                   }
                 })
             })
