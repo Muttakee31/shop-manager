@@ -25,9 +25,36 @@ const sqlite3 = require('sqlite3').verbose();
 
 interface Supply {
   id: number;
+  supplier: number;
   supplier_name: string;
   total_cost: number;
   timestamp: string;
+}
+
+interface SupplyItem {
+  product: number;
+  product_title: string;
+  title: string;
+  quantity: number;
+  price: number;
+  storage: string;
+}
+
+interface Transaction {
+  id: number;
+  client: number;
+  order_id: number;
+  paid_amount: number;
+  client_name: string;
+  order_cost: number;
+  labour_cost: number;
+  discount: number | null;
+  payment_type: number;
+  transaction_type: number;
+  due_amount: number | null;
+  supply_id: number;
+  timestamp: string;
+  description: string;
 }
 
 const useStyles = makeStyles({
@@ -90,7 +117,7 @@ export default function SupplyList(): JSX.Element {
   const classes = useStyles();
   const [supplyList, setSupplyList] = useState<Supply[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [toBeDeleted, setToBeDeleted] = useState<null | Supply>(null);
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const history = useHistory();
   const authFlag= useSelector(isAuthenticated);
@@ -105,7 +132,7 @@ export default function SupplyList(): JSX.Element {
 
   const openDeleteSupply = (instant: Supply) => {
     setDeleteModal(true);
-    setToBeDeleted(instant.id);
+    setToBeDeleted(instant);
   }
 
   const getSupplies = () => {
@@ -135,13 +162,55 @@ export default function SupplyList(): JSX.Element {
 
   const deleteSupply = () => {
     try {
+      const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]')
       const db = new sqlite3.Database(dbpath.dbPath);
+      // db.get("PRAGMA foreign_keys = ON")
+      db.all(
+        'SELECT * FROM SupplyItem WHERE supply_id = ?', [toBeDeleted?.id],
+        (_err: Error, instant: SupplyItem[]) => {
+          if (_err) {
+            console.log(_err);
+          } else {
+            instant?.map(item => {
+              const dest = item.storage === '0' ? 'shop_stock_count' : 'godown_stock_count';
+              db.run(
+                `UPDATE Product set ${dest}=${dest} - ? where id= ?`,
+                [item.quantity, item.product],
+                function (error_1: Error) {
+                  if (error_1) {
+                    console.log(error_1.message);
+                  } else {
+                    console.log(JSON.stringify(this) + ' updated');
+                  }
+                })
+              const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
+              db.run(
+                `UPDATE StockHistory SET ${store} = ${store} - ?, date_updated= ?
+WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
+                [
+                  item.quantity,
+                  today,
+                  item.product
+                ],
+                function (error_2: Error) {
+                  if (error_2) {
+                    console.log(error_2.message);
+                  } else {
+                    console.log(JSON.stringify(this) + ' updated');
+                  }
+                })
+            })
+          }
+        }
+      )
+      deleteTransaction();
       db.run(
-        'DELETE FROM Supply WHERE id = ?', [toBeDeleted],
+        'DELETE FROM Supply WHERE id = ?', [toBeDeleted?.id],
         (_err: Error) => {
           if (_err) {
             console.log(_err);
           } else {
+            console.log('supply deleted');
             setDeleteModal(false);
             getSupplies();
           }
@@ -151,6 +220,41 @@ export default function SupplyList(): JSX.Element {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  const deleteTransaction = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    db.get(
+      `SELECT * FROM Transactions WHERE supply_id = ?`,
+      [toBeDeleted?.id],
+      function (err : Error, instant : Transaction) {
+        if (err) {
+          console.log(err);
+        } else {
+          if (instant) {
+            db.run(
+              `UPDATE User SET due_amount = due_amount - ? WHERE id = ?`,
+              [instant.due_amount, toBeDeleted?.supplier],
+              function(error_3: Error) {
+                if (error_3) {
+                  console.log(error_3.message);
+                } else {
+                  console.log('due updated');
+                }
+              })
+            db.run(
+              'DELETE FROM Transactions WHERE id = ?', [instant.id],
+              (_err: Error) => {
+                if (_err) {
+                  console.log(_err);
+                } else {
+                  console.log('deleted transaction');
+                }
+              }
+            );
+          }
+        }
+      })
   }
 
   return (

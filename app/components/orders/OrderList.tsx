@@ -25,10 +25,39 @@ const sqlite3 = require('sqlite3').verbose();
 
 interface Order {
   id: number;
+  customer: number;
   customer_name: string;
   total_cost: number;
   timestamp: string;
 }
+
+interface OrderItem {
+  product: number;
+  product_title: string;
+  title: string;
+  quantity: number;
+  price: number;
+  storage: string;
+}
+
+
+interface Transaction {
+  id: number;
+  client: number;
+  order_id: number;
+  paid_amount: number;
+  client_name: string;
+  order_cost: number;
+  labour_cost: number;
+  discount: number | null;
+  payment_type: number;
+  transaction_type: number;
+  due_amount: number | null;
+  supply_id: number;
+  timestamp: string;
+  description: string;
+}
+
 
 const useStyles = makeStyles({
   texts: {
@@ -86,7 +115,7 @@ export default function OrderList(): JSX.Element {
   const classes = useStyles();
   const [orderList, setOrderList] = useState<Order[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [toBeDeleted, setToBeDeleted] = useState<null | Order>(null);
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
 
   const history = useHistory();
@@ -102,7 +131,7 @@ export default function OrderList(): JSX.Element {
 
   const openDeleteOrder = (instant: Order) => {
     setDeleteModal(true);
-    setToBeDeleted(instant.id);
+    setToBeDeleted(instant);
   }
 
   const getOrders = () => {
@@ -133,22 +162,97 @@ export default function OrderList(): JSX.Element {
 
   const deleteOrder = () => {
     try {
+      const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
       const db = new sqlite3.Database(dbpath.dbPath);
-      db.run(
-        'DELETE FROM Orders WHERE id = ?', [toBeDeleted],
-        (_err: Error) => {
+      db.all(
+        'SELECT * FROM OrderedItem WHERE order_id = ?', [toBeDeleted?.id],
+        (_err: Error, instant: OrderItem[]) => {
           if (_err) {
             console.log(_err);
           } else {
-            setDeleteModal(false);
-            getOrders();
+            instant?.map(item => {
+              const dest = item.storage === '0' ? 'shop_stock_count' : 'godown_stock_count';
+              db.run(
+                `UPDATE Product set ${dest}=${dest} + ? where id=?`,
+                [item.quantity, item.product],
+                function (error_1: Error) {
+                  if (error_1) {
+                    console.log(error_1.message);
+                  } else {
+                    console.log(item.product_title + ' updated' + JSON.stringify(this));
+                  }
+                })
+              const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
+              db.run(
+                `UPDATE StockHistory SET ${store} = ${store} + ?, date_updated= ? WHERE
+id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
+                [
+                  item.quantity,
+                  today,
+                  item.product
+                ],
+                function (error_2: Error) {
+                  if (error_2) {
+                    console.log(error_2.message);
+                  } else {
+                    console.log(item.product_title + ' stock updated' + JSON.stringify(this));
+                  }
+                })
+            })
+            deleteTransaction();
+            db.run(
+              'DELETE FROM Orders WHERE id = ?', [toBeDeleted?.id],
+              (_err: Error) => {
+                if (_err) {
+                  console.log(_err);
+                } else {
+                  console.log('order deleted');
+                  setDeleteModal(false);
+                  getOrders();
+                }
+              }
+            );
           }
-        }
-      );
+        });
       db.close();
     } catch (e) {
 
     }
+  }
+
+  const deleteTransaction = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    db.get(
+      `SELECT * FROM Transactions WHERE order_id = ?`,
+      [toBeDeleted?.id],
+      function (err : Error, instant : Transaction) {
+        if (err) {
+          console.log(err);
+        } else {
+          if (instant) {
+            db.run(
+              `UPDATE User SET due_amount = due_amount + ? WHERE id = ?`,
+              [instant.due_amount, toBeDeleted?.customer],
+              function(error_3: Error) {
+                if (error_3) {
+                  console.log(error_3.message);
+                } else {
+                  console.log('due updated');
+                }
+              })
+            db.run(
+              'DELETE FROM Transactions WHERE id = ?', [instant.id],
+              (_err: Error) => {
+                if (_err) {
+                  console.log(_err);
+                } else {
+                  console.log('deleted transaction');
+                }
+              }
+            );
+          }
+        }
+      })
   }
 
   return (

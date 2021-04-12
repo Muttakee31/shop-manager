@@ -228,7 +228,6 @@ export default function TransactionList(): JSX.Element {
     const db = new sqlite3.Database(dbpath.dbPath);
     const temp = new Date();
     temp.setHours(0, 0, 0, 0);
-    const midnight = dayjs(temp).format('YYYY-MM-DDTHH:mm:ss[Z]');
     const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     if (toBeDeleted?.transaction_type !== transactionType['other']) {
       resetDueBalance();
@@ -252,7 +251,7 @@ export default function TransactionList(): JSX.Element {
                     if (error_1) {
                       console.log(error_1.message);
                     } else {
-                      console.log(item.product_title + ' updated' + JSON.stringify(this));
+                      console.log(item.product_title + ' updated');
                     }
                   })
                 const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
@@ -268,7 +267,7 @@ id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
                     if (error_2) {
                       console.log(error_2.message);
                     } else {
-                      console.log(item.product_title + ' stock updated' + JSON.stringify(this));
+                      console.log(item.product_title + ' stock updated');
                     }
                   })
               })
@@ -306,7 +305,6 @@ id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
                     if (error_1) {
                       console.log(error_1.message);
                     } else {
-                      console.log(JSON.stringify(this) + ' updated');
                     }
                   })
                 const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
@@ -322,7 +320,6 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
                     if (error_2) {
                       console.log(error_2.message);
                     } else {
-                      console.log(JSON.stringify(this) + ' updated');
                     }
                   })
               })
@@ -354,10 +351,10 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
 
     let resetAmount: number | null = 0;
     if (toBeDeleted?.transaction_type === transactionType['order']) {
-      resetAmount = toBeDeleted.due_amount;
+      resetAmount = Number(toBeDeleted.due_amount);
     }
     else if (toBeDeleted?.transaction_type === transactionType['supply']) {
-      resetAmount = toBeDeleted.due_amount * -1
+      resetAmount = Number(toBeDeleted.due_amount) * -1
     }
     else if (toBeDeleted?.transaction_type === transactionType['due']) {
       resetAmount = toBeDeleted.paid_amount * -1
