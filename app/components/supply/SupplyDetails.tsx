@@ -12,6 +12,8 @@ import dayjs from 'dayjs';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
+import routes from '../../constants/routes.json';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -77,7 +79,8 @@ export default function SupplyDetails(): JSX.Element {
     emptyTransaction
   );
   const [itemList, setItemList] = useState<SupplyItem[]>([]);
-  // const history = useHistory();
+  const history = useHistory();
+  const location = useLocation();
   const match = useRouteMatch();
   // console.log('Connected to the shop database.');
   useEffect(() => {
@@ -126,6 +129,15 @@ export default function SupplyDetails(): JSX.Element {
     db.close();
   }, []);
 
+  const returnToList = () => {
+    history.replace({
+      pathname: routes.ORDERS,
+      state: {
+        selectedDate:location.state.selectedDate
+      }
+    })
+  }
+
   return (
     <>
       <div>
@@ -133,7 +145,7 @@ export default function SupplyDetails(): JSX.Element {
           <h3>Supply Details</h3>
         </Grid>
 
-        <BackButton />
+        <BackButton customGoBack={returnToList}/>
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
@@ -151,7 +163,7 @@ export default function SupplyDetails(): JSX.Element {
 {' '}
           </Grid>
           <Grid item xs={6}>
-            {dayjs(supply.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm')}
+            {dayjs(supply.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
           </Grid>
         </Grid>
 

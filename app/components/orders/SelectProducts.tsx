@@ -147,6 +147,7 @@ export default function SelectProducts(props: {
   };
 
   const createOrder = () => {
+    props.setOrderState(2);
     const db = new sqlite3.Database(dbpath.dbPath);
     const date = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
     const temp = new Date();
@@ -334,7 +335,7 @@ export default function SelectProducts(props: {
           />
         </Grid>
       </Grid>
-      <Grid direction="row" style={{margin: '0 20px'}}>
+      <Grid style={{margin: '0 20px'}}>
         <FormControl component="fieldset">
           <FormLabel component="legend">Select storage</FormLabel>
           <RadioGroup

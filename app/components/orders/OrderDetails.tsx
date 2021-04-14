@@ -12,6 +12,8 @@ import dayjs from 'dayjs';
 import * as dbpath from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
+import routes from '../../constants/routes.json';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -73,6 +75,8 @@ const emptyTransaction: Transaction = {
 
 export default function OrderDetails(): JSX.Element {
   const classes = useStyles1();
+  const history = useHistory();
+  const location = useLocation();
   const [order, setOrder] = useState<Order>(emptyOrder);
   const [transactionInfo, setTransactionInfo] = useState<Transaction>(
     emptyTransaction
@@ -127,6 +131,15 @@ export default function OrderDetails(): JSX.Element {
     db.close();
   }, []);
 
+  const returnToList = () => {
+    history.replace({
+      pathname: routes.ORDERS,
+      state: {
+        selectedDate:location.state.selectedDate
+      }
+    })
+  }
+
   return (
     <>
       <div>
@@ -134,7 +147,7 @@ export default function OrderDetails(): JSX.Element {
           <h3>Order Details</h3>
         </Grid>
 
-        <BackButton customGoBack={false} />
+        <BackButton customGoBack={returnToList} />
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
@@ -152,7 +165,7 @@ export default function OrderDetails(): JSX.Element {
 {' '}
           </Grid>
           <Grid item xs={6}>
-            {dayjs(order.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm')}
+            {dayjs(order.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
           </Grid>
         </Grid>
 

@@ -127,6 +127,7 @@ export default function SelectCustomer(props: {
         <Button
           variant="contained"
           color="primary"
+          disabled={selectedUser === null}
           onClick={() => confirmCustomer()}
         >
           Select Customer

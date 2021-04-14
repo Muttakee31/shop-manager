@@ -125,6 +125,7 @@ export default function SelectSupplier(props: {
           variant="contained"
           color="primary"
           onClick={() => confirmSupplier()}
+          disabled={selectedUser === null}
         >
           Select supplier
         </Button>

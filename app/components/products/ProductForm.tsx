@@ -70,7 +70,6 @@ export default function ProductForm(): JSX.Element {
     // @ts-ignore
     const state: any = location.state;
     if (state.product !== null) {
-      console.log(state.product);
       setProductID(state.product.id);
       setProductCode(state.product.code);
       setProductName(state.product.title);

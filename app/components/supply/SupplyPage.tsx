@@ -14,7 +14,7 @@ export default function SupplyPage(): JSX.Element {
   }, [orderState]); */
   return (
     <>
-      <Prompt when={supplyState > 0}
+      <Prompt when={supplyState === 1}
               message="Are you sure? Your purchase will be canceled."
       />
       <div>

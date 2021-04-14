@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
@@ -27,6 +27,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import NumberFormat from 'react-number-format';
+import ReactToPrint from 'react-to-print';
+import DatewiseTransactionReceipt from '../prints/DatewiseTransactionReceipt';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -46,6 +48,25 @@ interface Transaction {
   timestamp: string;
   description: string;
 }
+
+interface OrderItem {
+  product: number;
+  product_title: string;
+  title: string;
+  quantity: number;
+  price: number;
+  storage: string;
+}
+
+interface SupplyItem {
+  product: number;
+  product_title: string;
+  title: string;
+  quantity: number;
+  price: number;
+  storage: string;
+}
+
 
 const useStyles = makeStyles({
   texts: {
@@ -124,10 +145,11 @@ export default function TransactionList(): JSX.Element {
   const history = useHistory();
   const location = useLocation();
   const authFlag= useSelector(isAuthenticated);
+  const cellRef = useRef();
 
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const [deleteModal, setDeleteModal] = useState(false);
-  const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [toBeDeleted, setToBeDeleted] = useState<Transaction | null>(null);
   const [type, setType] = useState(transactionType["order"]);
 
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
@@ -135,6 +157,13 @@ export default function TransactionList(): JSX.Element {
   // const history = useHistory();
   // console.log('Connected to the shop database.');
   // const [transactionList, setTransactionList] = useState([]);
+
+  useEffect(() => {
+    if (typeof location.state !== 'undefined') {
+      setType(location.state.type);
+      setSelectedDate(location.state.selectedDate);
+    }
+  }, [])
 
   useEffect(() => {
     // add db.all function to get all transactions
@@ -152,20 +181,17 @@ export default function TransactionList(): JSX.Element {
 
   const openDeleteTransaction = (instant: Transaction) => {
     setDeleteModal(true);
-    setToBeDeleted(instant.id);
+    setToBeDeleted(instant);
   };
 
   const getTransactionList = () => {
    try {
      const db = new sqlite3.Database(dbpath.dbPath);
-     console.log(type);
      let params = [];
      params.push(selectedDate + "%");
      let statement : string = `SELECT * FROM Transactions WHERE timestamp LIKE ?`;
-     if (type !== "-1") {
-       params.push(type);
-       statement += ` AND transaction_type = ?`;
-     }
+     params.push(type);
+     statement += ` AND transaction_type = ?`;
 
      db.all(
        statement,
@@ -186,14 +212,16 @@ export default function TransactionList(): JSX.Element {
 
   const deleteTransaction = () => {
     try {
+      deleteAction();
       const db = new sqlite3.Database(dbpath.dbPath);
       db.run(
-        'DELETE FROM Transactions WHERE id = ?', [toBeDeleted],
+        'DELETE FROM Transactions WHERE id = ?', [toBeDeleted?.id],
         (_err: Error) => {
           if (_err) {
             console.log(_err);
           } else {
             setDeleteModal(false);
+            setToBeDeleted(null);
             getTransactionList();
           }
         }
@@ -202,6 +230,157 @@ export default function TransactionList(): JSX.Element {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  const deleteAction = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    const temp = new Date();
+    temp.setHours(0, 0, 0, 0);
+    const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]');
+    if (toBeDeleted?.transaction_type !== transactionType['other']) {
+      resetDueBalance();
+    }
+    if (toBeDeleted?.transaction_type === transactionType['order']) {
+      try {
+        console.log('here');
+        db.all(
+          'SELECT * FROM OrderedItem WHERE order_id = ?', [toBeDeleted.order_id],
+          (_err: Error, instant: OrderItem[]) => {
+            if (_err) {
+              console.log(_err);
+            } else {
+              console.log(instant);
+              instant?.map(item => {
+                const dest = item.storage === '0' ? 'shop_stock_count' : 'godown_stock_count';
+                db.run(
+                  `UPDATE Product set ${dest}=${dest} + ? where id=?`,
+                  [item.quantity, item.product],
+                  function (error_1: Error) {
+                    if (error_1) {
+                      console.log(error_1.message);
+                    } else {
+                      console.log(item.product_title + ' updated');
+                    }
+                  })
+                const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
+                db.run(
+                  `UPDATE StockHistory SET ${store} = ${store} + ?, date_updated= ? WHERE
+id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
+                  [
+                    item.quantity,
+                    today,
+                    item.product
+                  ],
+                  function (error_2: Error) {
+                    if (error_2) {
+                      console.log(error_2.message);
+                    } else {
+                      console.log(item.product_title + ' stock updated');
+                    }
+                  })
+              })
+              db.run(
+                'DELETE FROM Orders WHERE id = ?', [toBeDeleted.order_id],
+                (_err: Error) => {
+                  if (_err) {
+                    console.log(_err);
+                  } else {
+                    console.log('order deleted');
+                  }
+                }
+              );
+            }
+          }
+        )
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['supply']){
+      try {
+        db.all(
+          'SELECT * FROM SupplyItem WHERE supply_id = ?', [toBeDeleted.supply_id],
+          (_err: Error, instant: SupplyItem[]) => {
+            if (_err) {
+              console.log(_err);
+            } else {
+              instant?.map(item => {
+                const dest = item.storage === '0' ? 'shop_stock_count' : 'godown_stock_count';
+                db.run(
+                  `UPDATE Product set ${dest}=${dest} - ? where id= ?`,
+                  [item.quantity, item.product],
+                  function (error_1: Error) {
+                    if (error_1) {
+                      console.log(error_1.message);
+                    } else {
+                    }
+                  })
+                const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
+                db.run(
+                  `UPDATE StockHistory SET ${store} = ${store} - ?, date_updated= ?
+WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
+                  [
+                    item.quantity,
+                    today,
+                    item.product
+                  ],
+                  function (error_2: Error) {
+                    if (error_2) {
+                      console.log(error_2.message);
+                    } else {
+                    }
+                  })
+              })
+            }
+          }
+        )
+        db.run(
+          'DELETE FROM Supply WHERE id = ?', [toBeDeleted.supply_id],
+          (_err: Error) => {
+            if (_err) {
+              console.log(_err);
+            } else {
+              console.log('supply deleted');
+            }
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    db.close();
+  }
+
+  const resetDueBalance = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    const stmt = db.prepare(
+      `UPDATE User SET due_amount = due_amount - ? WHERE id = ?`
+    )
+
+    let resetAmount: number | null = 0;
+    if (toBeDeleted?.transaction_type === transactionType['order']) {
+      resetAmount = Number(toBeDeleted.due_amount);
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['supply']) {
+      resetAmount = Number(toBeDeleted.due_amount) * -1
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['due']) {
+      resetAmount = toBeDeleted.paid_amount * -1
+    }
+    else if (toBeDeleted?.transaction_type === transactionType['bill']) {
+      resetAmount = toBeDeleted.paid_amount
+    }
+
+    stmt.run(
+      [resetAmount, toBeDeleted?.client],
+      function (error_3: Error) {
+        if (error_3) {
+          console.log(error_3.message);
+        } else {
+          console.log('due updated');
+        }
+      })
+    stmt.finalize();
   }
 
   const changeDate = (e:React.ChangeEvent) => {
@@ -285,6 +464,23 @@ export default function TransactionList(): JSX.Element {
             value={selectedDate}
             onChange={changeDate}
           />
+
+          <div>
+            <ReactToPrint
+              trigger={() =>
+                <Button variant="outlined" color="primary">
+                  Print
+                </Button>
+              }
+              content={() => cellRef.current}
+            />
+            <div style={{display: 'none'}}>
+              <DatewiseTransactionReceipt
+                ref={cellRef}
+                type={type}
+                transactionList={transactionList}/>
+            </div>
+          </div>
         </Grid>
 
         <TableContainer>
@@ -345,14 +541,25 @@ export default function TransactionList(): JSX.Element {
                   </TableCell>
                     <TableCell align="center" className={classes.texts}>
                       <VisibilityIcon
-                        onClick={() => history.push(`/transaction-details/${row.id}`)}
+                        onClick={() => history.push({
+                          pathname: `/transaction-details/${row.id}`,
+                          state: {
+                            verticalScrollHeight: window.scrollY,
+                            type: type,
+                            selectedDate: selectedDate
+                          }
+                        })}
                         style={{ padding: '0 5px' }}
                       />
                       {authFlag &&
                         <>
                           <EditIcon onClick={() => history.push({
                             pathname: `/update-transaction/${row.id}`,
-                            state: {verticalScrollHeight: window.scrollY}
+                            state: {
+                              verticalScrollHeight: window.scrollY,
+                              type: type,
+                              selectedDate: selectedDate
+                            }
                             })
                           } />
                           <DeleteIcon onClick={() => openDeleteTransaction(row)} style={{ padding: '0 5px' }} />

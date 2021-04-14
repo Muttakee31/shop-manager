@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
@@ -89,7 +89,8 @@ export default function UpdateUser(): JSX.Element {
     } */
   }, []);
 
-  const updateUser = () => {
+  const updateUser = (event : FormEvent) => {
+    event.preventDefault();
     // @ts-ignore
     const id: number = match.params.id;
     try {
@@ -149,7 +150,8 @@ export default function UpdateUser(): JSX.Element {
           <h3>Update User Details</h3>
         </Grid>
 
-        <form autoComplete='off' style={{ width: '320px', margin: 'auto' }}>
+        <form autoComplete='off' onSubmit={(e) => updateUser(e)}
+              style={{ width: '320px', margin: 'auto' }}>
           <Grid>
             <CssTextField
               id='standard-required'
@@ -157,6 +159,7 @@ export default function UpdateUser(): JSX.Element {
               value={username}
               className={classes.textField}
               fullWidth
+              required
               onChange={(e) => setUserName(e.target.value)}
             />
           </Grid>
@@ -178,6 +181,7 @@ export default function UpdateUser(): JSX.Element {
               value={userAddress}
               className={classes.textField}
               fullWidth
+              required
               onChange={(e) => setAddress(e.target.value)}
             />
           </Grid>
@@ -214,10 +218,7 @@ export default function UpdateUser(): JSX.Element {
             <Button
               variant="contained"
               color="primary"
-              onClick={(e) => {
-                e.preventDefault();
-                updateUser();
-              }}
+              type='submit'
               disabled={!authFlag}
             >
               Update

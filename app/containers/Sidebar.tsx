@@ -231,7 +231,7 @@ const Sidebar: React.FC = () => {
           } else {
             const hashedPass: string = CryptoJS.SHA256(password).toString();
             if (instant.length !== 0 && instant[0].password == hashedPass) {
-              const token = jwt.sign({ fullName }, dbpath.SECRET_KEY, { expiresIn: '12h' });
+              const token = jwt.sign({ username: fullName }, dbpath.SECRET_KEY, { expiresIn: '12h' });
               //console.log(token);
               dispatch(setAuthToken({ token, username: fullName }));
               handleClose();

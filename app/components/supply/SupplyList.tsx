@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from '@material-ui/core/Button';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import dayjs from 'dayjs';
 import routes from '../../constants/routes.json';
 import * as dbpath from '../../constants/config';
@@ -25,9 +25,37 @@ const sqlite3 = require('sqlite3').verbose();
 
 interface Supply {
   id: number;
+  supplier: number;
   supplier_name: string;
   total_cost: number;
   timestamp: string;
+}
+
+interface SupplyItem {
+  id: number;
+  product: number;
+  product_title: string;
+  title: string;
+  quantity: number;
+  price: number;
+  storage: string;
+}
+
+interface Transaction {
+  id: number;
+  client: number;
+  order_id: number;
+  paid_amount: number;
+  client_name: string;
+  order_cost: number;
+  labour_cost: number;
+  discount: number | null;
+  payment_type: number;
+  transaction_type: number;
+  due_amount: number | null;
+  supply_id: number;
+  timestamp: string;
+  description: string;
 }
 
 const useStyles = makeStyles({
@@ -87,9 +115,10 @@ export default function SupplyList(): JSX.Element {
   const classes = useStyles();
   const [supplyList, setSupplyList] = useState<Supply[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [toBeDeleted, setToBeDeleted] = useState(-1);
+  const [toBeDeleted, setToBeDeleted] = useState<null | Supply>(null);
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const history = useHistory();
+  const location = useLocation();
   const authFlag= useSelector(isAuthenticated);
 
   // console.log('Connected to the shop database.');
@@ -97,12 +126,15 @@ export default function SupplyList(): JSX.Element {
 
   useEffect(() => {
     // add db.all function to get all Supplys
+    if (typeof location.state !== 'undefined') {
+      setSelectedDate(location.state.selectedDate);
+    }
     getSupplies();
   }, [selectedDate]);
 
   const openDeleteSupply = (instant: Supply) => {
     setDeleteModal(true);
-    setToBeDeleted(instant.id);
+    setToBeDeleted(instant);
   }
 
   const getSupplies = () => {
@@ -132,22 +164,108 @@ export default function SupplyList(): JSX.Element {
 
   const deleteSupply = () => {
     try {
+      const today = dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss[Z]')
       const db = new sqlite3.Database(dbpath.dbPath);
-      db.run(
-        'DELETE FROM Supply WHERE id = ?', [toBeDeleted],
-        (_err: Error) => {
+      db.all(
+        'SELECT * FROM SupplyItem WHERE supply_id = ?', [toBeDeleted?.id],
+        (_err: Error, instant: SupplyItem[]) => {
           if (_err) {
             console.log(_err);
           } else {
-            setDeleteModal(false);
-            getSupplies();
+            instant?.map(item => {
+              const dest = item.storage === '0' ? 'shop_stock_count' : 'godown_stock_count';
+              db.run(
+                `UPDATE Product set ${dest}=${dest} - ? where id= ?`,
+                [item.quantity, item.product],
+                function (error_1: Error) {
+                  if (error_1) {
+                    console.log(error_1.message);
+                  } else {
+                    console.log(JSON.stringify(this) + ' updated');
+                  }
+                })
+              const store = item.storage === '0' ? 'current_shop_stock' : 'current_godown_stock';
+              db.run(
+                `UPDATE StockHistory SET ${store} = ${store} - ?, date_updated= ?
+WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
+                [
+                  item.quantity,
+                  today,
+                  item.product
+                ],
+                function (error_2: Error) {
+                  if (error_2) {
+                    console.log(error_2.message);
+                  } else {
+                    console.log('updated');
+                  }
+                })
+              db.run(
+                `DELETE FROM SupplyItem WHERE id = ?`,
+                [item.id],
+                function (error_4: Error) {
+                  if (error_4) {
+                    console.log(error_4.message);
+                  } else {
+                    console.log(item.id + ' deleted');
+                  }
+                })
+            })
           }
+          deleteTransaction();
+          db.run(
+            'DELETE FROM Supply WHERE id = ?', [toBeDeleted?.id],
+            (_err: Error) => {
+              if (_err) {
+                console.log(_err);
+              } else {
+                console.log('supply deleted');
+                setDeleteModal(false);
+                getSupplies();
+              }
+            }
+          );
         }
-      );
+      )
       db.close();
     } catch (e) {
       console.log(e);
     }
+  }
+
+  const deleteTransaction = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    db.get(
+      `SELECT * FROM Transactions WHERE supply_id = ?`,
+      [toBeDeleted?.id],
+      function (err : Error, instant : Transaction) {
+        if (err) {
+          console.log(err);
+        } else {
+          if (instant) {
+            db.run(
+              `UPDATE User SET due_amount = due_amount + ? WHERE id = ?`,
+              [instant.due_amount, toBeDeleted?.supplier],
+              function(error_3: Error) {
+                if (error_3) {
+                  console.log(error_3.message);
+                } else {
+                  console.log('due updated');
+                }
+              })
+            db.run(
+              'DELETE FROM Transactions WHERE id = ?', [instant.id],
+              (_err: Error) => {
+                if (_err) {
+                  console.log(_err);
+                } else {
+                  console.log('deleted transaction');
+                }
+              }
+            );
+          }
+        }
+      })
   }
 
   return (
@@ -213,11 +331,15 @@ export default function SupplyList(): JSX.Element {
                                   decimalScale={2}/>
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
-                    {dayjs(row.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm a')}
+                    {dayjs(row.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     <VisibilityIcon style={{ padding: '0 5px' }}
-                      onClick={() => history.push(`/supply/${row.id}`)}
+                      onClick={() => history.push({
+                        pathname: `/supply/${row.id}`,
+                        state: {selectedDate: selectedDate}
+                        }
+                      )}
                     />
                     {authFlag &&
                     <DeleteIcon onClick={() => openDeleteSupply(row)} style={{ padding: '0 5px' }} />

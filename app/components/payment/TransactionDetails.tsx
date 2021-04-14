@@ -7,6 +7,8 @@ import { transactionType } from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import dayjs from 'dayjs';
 import NumberFormat from 'react-number-format';
+import routes from '../../constants/routes.json';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -62,11 +64,12 @@ const emptyTransaction: Transaction = {
 
 export default function TransactionDetails(): JSX.Element {
   const classes = useStyles1();
+  const location = useLocation();
 
   const [transactionInfo, setTransactionInfo] = useState<Transaction>(
     emptyTransaction
   );
-  // const history = useHistory();
+  const history = useHistory();
   const match = useRouteMatch();
   // console.log('Connected to the shop database.');
   useEffect(() => {
@@ -74,7 +77,6 @@ export default function TransactionDetails(): JSX.Element {
 
     // @ts-ignore
     const id: number = match.params.id;
-    console.log(id);
     const db = new sqlite3.Database(dbpath.dbPath);
     db.get(
       'SELECT * FROM Transactions where id=?',
@@ -91,6 +93,16 @@ export default function TransactionDetails(): JSX.Element {
     db.close();
   }, []);
 
+  const returnToPreviousPage = () => {
+    history.replace({
+      pathname: routes.TRANSACTIONS,
+      state: {
+        verticalScrollHeight: location.state.verticalScrollHeight,
+        selectedDate: location.state.selectedDate,
+        type: location.state.type},
+    })
+  }
+
   return (
     <>
       <div>
@@ -99,7 +111,7 @@ export default function TransactionDetails(): JSX.Element {
           <h3>Transaction Details</h3>
         </Grid>
 
-        <BackButton customGoBack={false} />
+        <BackButton customGoBack={returnToPreviousPage} />
 
         <Grid style={{ border: '1px solid #ccc', margin: '10px' }}>
 
