@@ -242,7 +242,7 @@ id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
         } else {
           if (instant) {
             db.run(
-              `UPDATE User SET due_amount = due_amount + ? WHERE id = ?`,
+              `UPDATE User SET due_amount = due_amount - ? WHERE id = ?`,
               [instant.due_amount, toBeDeleted?.customer],
               function(error_3: Error) {
                 if (error_3) {

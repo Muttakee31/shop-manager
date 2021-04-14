@@ -234,6 +234,7 @@ export default function TransactionForm(): JSX.Element {
               value={discount}
               className={classes.textField}
               fullWidth
+              disabled={type !== transactionType['order']}
               onChange={(e) => setDiscount(e.target.value)}
             />
           </Grid>
