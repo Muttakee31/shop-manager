@@ -480,7 +480,7 @@ export default function SelectProducts(props: {
                   disabled={supplyItemList.length === 0}>
             Confirm
           </Button>
-        </Grid>`
+        </Grid>
       </Grid>
     </>
   );

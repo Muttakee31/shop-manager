@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import * as dbpath from '../../constants/config';
+import { transactionType } from '../../constants/config';
 import { useSelector } from 'react-redux';
 import { authToken, isAuthenticated, logOutUser, userName } from '../../features/auth/authSlice';
 import Alert from '@material-ui/lab/Alert';
@@ -54,6 +55,9 @@ export default function TransactionForm(): JSX.Element {
   const [labourCost, setLabourCost] = useState('');
   const [discount, setDiscount] = useState('');
   const [totalCost, setTotalCost] = useState('');
+  const [dueAmount, setDueAmount] = useState(0);
+  const [type, setType] = useState(transactionType['order']);
+  const [client, setClient] = useState<number | null>(null);
   const [alert, setAlert] = useState<string | null>(null);
 
   const location = useLocation();
@@ -76,10 +80,13 @@ export default function TransactionForm(): JSX.Element {
         if (err) {
           console.log(err);
         } else {
+          setType(instant.transaction_type);
           setTotalCost(instant.order_cost);
           setDiscount(instant.discount);
           setLabourCost(instant.labour_cost);
           setPaidAmount(instant.paid_amount);
+          setDueAmount(instant.due_amount);
+          setClient(instant.client);
           //console.log(instant);
         }
       }
@@ -97,15 +104,17 @@ export default function TransactionForm(): JSX.Element {
       setAlert(null);
       const decoded = jwt.verify(token, dbpath.SECRET_KEY);
       const db = new sqlite3.Database(dbpath.dbPath);
+      let latestDue = Number(totalCost) + Number(labourCost) - Number(discount) - Number(paidAmount);
       if (decoded.username === user) {
         db.run(
           `UPDATE Transactions SET paid_amount = ?, order_cost = ?,
-           discount = ?, labour_cost = ? WHERE id = ?`,
+           discount = ?, labour_cost = ?, due_amount = ? WHERE id = ?`,
           [
             paidAmount,
             totalCost,
             discount,
             labourCost,
+            latestDue,
             id
           ],
           function(err: Error) {
@@ -113,6 +122,7 @@ export default function TransactionForm(): JSX.Element {
               console.log(err.message);
               setAlert("Something went wrong!");
             } else {
+              resetDueBalance();
               // @ts-ignore
               returnToPreviousPage();
             }
@@ -135,6 +145,39 @@ export default function TransactionForm(): JSX.Element {
       setAlert("Your session has expired. Please sign in again!")
     }
   };
+
+  const resetDueBalance = () => {
+    const db = new sqlite3.Database(dbpath.dbPath);
+    const stmt = db.prepare(
+      `UPDATE User SET due_amount = due_amount - ? WHERE id = ?`
+    )
+
+    let resetAmount = 0;
+    let latestDue = Number(totalCost) + Number(labourCost) - Number(discount) - Number(paidAmount);
+    if (type === transactionType['order']) {
+      resetAmount = Number(dueAmount) - latestDue;
+    }
+    else if (type === transactionType['supply']) {
+      resetAmount = latestDue - Number(dueAmount);
+    }
+    else if (type === transactionType['due']) {
+      resetAmount = latestDue - Number(paidAmount);
+    }
+    else if (type === transactionType['bill']) {
+      resetAmount = Number(paidAmount) - latestDue;
+    }
+
+    stmt.run(
+      [resetAmount, client],
+      function (error_3: Error) {
+        if (error_3) {
+          console.log(error_3.message);
+        } else {
+          console.log('due updated');
+        }
+      })
+    stmt.finalize();
+  }
 
   const returnToPreviousPage = () => {
     history.replace({
