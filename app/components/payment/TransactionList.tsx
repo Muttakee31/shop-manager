@@ -27,7 +27,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import NumberFormat from 'react-number-format';
-import ReactToPrint from 'react-to-print';
 import DatewiseTransactionReceipt from '../prints/DatewiseTransactionReceipt';
 
 const sqlite3 = require('sqlite3').verbose();
@@ -466,23 +465,7 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
             value={selectedDate}
             onChange={changeDate}
           />
-
-          <div>
-            <ReactToPrint
-              trigger={() =>
-                <Button variant="outlined" color="primary">
-                  Print
-                </Button>
-              }
-              content={() => cellRef.current}
-            />
-            <div style={{display: 'none'}}>
-              <DatewiseTransactionReceipt
-                ref={cellRef}
-                type={type}
-                transactionList={transactionList}/>
-            </div>
-          </div>
+          <DatewiseTransactionReceipt type={type} transactionList={transactionList}/>
         </Grid>
 
         <TableContainer>
