@@ -158,6 +158,13 @@ export default function TransactionList(): JSX.Element {
   // const [transactionList, setTransactionList] = useState([]);
 
   useEffect(() => {
+    if (typeof location.state !== 'undefined') {
+      setType(location.state.type);
+      setSelectedDate(location.state.selectedDate);
+    }
+  }, [])
+
+  useEffect(() => {
     // add db.all function to get all transactions
     getTransactionList();
   }, [selectedDate, type]);
@@ -516,14 +523,25 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
                   </TableCell>
                     <TableCell align="center" className={classes.texts}>
                       <VisibilityIcon
-                        onClick={() => history.push(`/transaction-details/${row.id}`)}
+                        onClick={() => history.push({
+                          pathname: `/transaction-details/${row.id}`,
+                          state: {
+                            verticalScrollHeight: window.scrollY,
+                            type: type,
+                            selectedDate: selectedDate
+                          }
+                        })}
                         style={{ padding: '0 5px' }}
                       />
                       {authFlag &&
                         <>
                           <EditIcon onClick={() => history.push({
                             pathname: `/update-transaction/${row.id}`,
-                            state: {verticalScrollHeight: window.scrollY}
+                            state: {
+                              verticalScrollHeight: window.scrollY,
+                              type: type,
+                              selectedDate: selectedDate
+                            }
                             })
                           } />
                           <DeleteIcon onClick={() => openDeleteTransaction(row)} style={{ padding: '0 5px' }} />

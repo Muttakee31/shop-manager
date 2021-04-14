@@ -182,7 +182,10 @@ export default function TransactionForm(): JSX.Element {
   const returnToPreviousPage = () => {
     history.replace({
       pathname: routes.TRANSACTIONS,
-      state: {  verticalScrollHeight: location.state.verticalScrollHeight },
+      state: {
+        verticalScrollHeight: location.state.verticalScrollHeight,
+        selectedDate: location.state.selectedDate,
+        type: location.state.type},
     })
   }
 
