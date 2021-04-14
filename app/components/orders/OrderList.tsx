@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from '@material-ui/core/Button';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import dayjs from 'dayjs';
 import routes from '../../constants/routes.json';
 import * as dbpath from '../../constants/config';
@@ -120,13 +120,20 @@ export default function OrderList(): JSX.Element {
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
 
   const history = useHistory();
+  const location = useLocation();
   const authFlag= useSelector(isAuthenticated);
 
   // console.log('Connected to the shop database.');
   // const [OrderList, setOrderList] = useState([]);
 
+  useEffect(()=> {
+  }, [])
+
   useEffect(() => {
     // add db.all function to get all Orders
+    if (typeof location.state !== 'undefined') {
+      setSelectedDate(location.state.selectedDate);
+    }
     getOrders();
   }, [selectedDate]);
 
@@ -336,7 +343,11 @@ id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMIT 1)`,
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       <VisibilityIcon style={{padding: '0 5px'}}
-                        onClick={() => history.push(`/order/${row.id}`)}
+                        onClick={() => history.push({
+                          pathname:`/order/${row.id}`,
+                          state: {selectedDate: selectedDate}
+                        })
+                        }
                       />
                       {authFlag &&
                       <DeleteIcon onClick={() => openDeleteOrder(row)} style={{ padding: '0 5px' }} />

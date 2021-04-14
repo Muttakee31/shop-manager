@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import { makeStyles } from '@material-ui/core/styles';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from '@material-ui/core/Button';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import dayjs from 'dayjs';
 import routes from '../../constants/routes.json';
 import * as dbpath from '../../constants/config';
@@ -121,6 +121,7 @@ export default function SupplyList(): JSX.Element {
   const [toBeDeleted, setToBeDeleted] = useState<null | Supply>(null);
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const history = useHistory();
+  const location = useLocation();
   const authFlag= useSelector(isAuthenticated);
 
   // console.log('Connected to the shop database.');
@@ -128,6 +129,9 @@ export default function SupplyList(): JSX.Element {
 
   useEffect(() => {
     // add db.all function to get all Supplys
+    if (typeof location.state !== 'undefined') {
+      setSelectedDate(location.state.selectedDate);
+    }
     getSupplies();
   }, [selectedDate]);
 
@@ -334,7 +338,11 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
                   </TableCell>
                   <TableCell align="left" className={classes.texts}>
                     <VisibilityIcon style={{ padding: '0 5px' }}
-                      onClick={() => history.push(`/supply/${row.id}`)}
+                      onClick={() => history.push({
+                        pathname: `/supply/${row.id}`,
+                        state: {selectedDate: selectedDate}
+                        }
+                      )}
                     />
                     {authFlag &&
                     <DeleteIcon onClick={() => openDeleteSupply(row)} style={{ padding: '0 5px' }} />

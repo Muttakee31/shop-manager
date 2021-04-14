@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
@@ -27,6 +27,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import NumberFormat from 'react-number-format';
+import ReactToPrint from 'react-to-print';
+import DatewiseTransactionReceipt from '../prints/DatewiseTransactionReceipt';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -145,6 +147,7 @@ export default function TransactionList(): JSX.Element {
   const history = useHistory();
   const location = useLocation();
   const authFlag= useSelector(isAuthenticated);
+  const cellRef = useRef();
 
   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const [deleteModal, setDeleteModal] = useState(false);
@@ -463,6 +466,23 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
             value={selectedDate}
             onChange={changeDate}
           />
+
+          <div>
+            <ReactToPrint
+              trigger={() =>
+                <Button variant="outlined" color="primary">
+                  Print
+                </Button>
+              }
+              content={() => cellRef.current}
+            />
+            <div style={{display: 'none'}}>
+              <DatewiseTransactionReceipt
+                ref={cellRef}
+                type={type}
+                transactionList={transactionList}/>
+            </div>
+          </div>
         </Grid>
 
         <TableContainer>
