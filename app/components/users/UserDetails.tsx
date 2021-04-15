@@ -15,6 +15,7 @@ import { transactionType } from '../../constants/config';
 import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
 import routes from '../../constants/routes.json';
+import UserReceipt from '../prints/UserReceipt';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -65,6 +66,10 @@ const useStyles1 = makeStyles({
     textDecoration: 'underline',
     textUnderlinePosition: 'under'
   },
+  topbin: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
 });
 
 const emptyUser: User = {
@@ -160,7 +165,10 @@ export default function UserDetails(): JSX.Element {
           <h3>User Details</h3>
         </Grid>
 
-        <BackButton customGoBack={returnToPreviousPage} />
+        <Grid className={classes.topbin}>
+          <BackButton customGoBack={returnToPreviousPage} />
+          <UserReceipt user={user} transactionList={transactionList} />
+        </Grid>
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
@@ -194,7 +202,7 @@ export default function UserDetails(): JSX.Element {
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
-            {user.due_amount >= 0 ? "Due of the user" : "Due to pay the user"}
+            {user.due_amount >= 0 ? "Due" : "Balance"}
 {' '}
           </Grid>
           <Grid item xs={6}>
@@ -266,7 +274,7 @@ export default function UserDetails(): JSX.Element {
                   <TableCell className={classes.texts}>Paid amount</TableCell>
                   <TableCell className={classes.texts}>Labour cost</TableCell>
                   <TableCell className={classes.texts}>Discount</TableCell>
-                  <TableCell className={classes.texts}>Due amount</TableCell>
+                  <TableCell className={classes.texts}>Due/Balance</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
