@@ -194,12 +194,12 @@ export default function UserDetails(): JSX.Element {
 
         <Grid className={classes.details}>
           <Grid item xs={6}>
-            {type === '0' ? "Due of the customer" : "Due to pay the supplier"}
+            {user.due_amount >= 0 ? "Due of the user" : "Due to pay the user"}
 {' '}
           </Grid>
           <Grid item xs={6}>
             {user.due_amount ?
-              type === '0' ? user.due_amount : user.due_amount * -1
+              user.due_amount >= 0 ? user.due_amount : user.due_amount * -1
             : 0
             }
           </Grid>

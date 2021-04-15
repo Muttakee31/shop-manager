@@ -10,7 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import Button from '@material-ui/core/Button';
-import routes from '../../constants/routes.json';
 import { useHistory, useLocation } from 'react-router';
 import dayjs from 'dayjs';
 import Chip from '@material-ui/core/Chip';
@@ -422,18 +421,6 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
         </Grid>
 
         <Grid item xs={12} className={classes.topbin}>
-          <Button
-            variant='contained'
-            color='primary'
-            className={classes.btn}
-            onClick={() =>
-              history.push({
-                pathname: routes.DUE_PAYMENT,
-              })}
-          >
-            Add due payment
-          </Button>
-
           <FormControl variant="outlined">
             <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
             <Select
