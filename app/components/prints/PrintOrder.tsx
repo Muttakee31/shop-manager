@@ -30,7 +30,8 @@ class PrintOrder extends Component {
     <>
       <div style={{padding: '5%', color: '#0a0a0a', fontSize: '12px'}}>
         <Grid style={{textAlign: 'center'}}>
-          <h4>Order Details</h4>
+          <h5>Sarker & Sons'</h5> <br/>
+          <h5>Order Details</h5>
         </Grid>
         <div>
             Customer Name: {orderInfo.customer_name}
@@ -45,7 +46,7 @@ class PrintOrder extends Component {
         </div>
 
         <Grid>
-          <TableContainer>
+          <TableContainer style={{overflow: 'hidden'}}>
             <Table aria-label="simple table" size='small'>
               <TableHead>
                 <TableRow>
@@ -58,25 +59,25 @@ class PrintOrder extends Component {
               <TableBody>
                 {itemList.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} align="left"  style={{textAlign: 'center', fontSize: '12px'}}>
+                    <TableCell colSpan={5} align="left"  style={{textAlign: 'center', fontSize: '12px', borderBottom: 'none'}}>
                       No items
                     </TableCell>
                   </TableRow>
                 ) : (
                   itemList.map((row:OrderItem) => (
                     <TableRow key={row.product_id}>
-                      <TableCell style={{fontSize: '12px'}}  align="left" >
+                      <TableCell style={{fontSize: '12px', borderBottom: 'none'}}  align="left" >
                         {row.product_title}
                       </TableCell>
-                      <TableCell style={{fontSize: '12px'}}  align="left" >
+                      <TableCell style={{fontSize: '12px', borderBottom: 'none'}}  align="left" >
                         <NumberFormat value={row.price} displayType={'text'}
                                       thousandSeparator={true} thousandsGroupStyle="lakh"
                                       decimalScale={2}/>
                       </TableCell>
-                      <TableCell style={{fontSize: '12px'}}  align="left" >
+                      <TableCell style={{fontSize: '12px', borderBottom: 'none'}}  align="left" >
                         {row.quantity}
                       </TableCell>
-                      <TableCell style={{fontSize: '12px'}}  align="left" >
+                      <TableCell style={{fontSize: '12px', borderBottom: 'none'}}  align="left" >
                         <NumberFormat value={row.quantity * row.price} displayType={'text'}
                                       thousandSeparator={true} thousandsGroupStyle="lakh"
                                       decimalScale={2}/>
@@ -105,8 +106,7 @@ class PrintOrder extends Component {
         </div>
 
         <div>
-            Labour cost:
-            <NumberFormat value={transactionInfo.labour_cost} displayType={'text'}
+            Labour cost: <NumberFormat value={transactionInfo.labour_cost} displayType={'text'}
                           thousandSeparator={true} thousandsGroupStyle="lakh"
                           decimalScale={2}/>
         </div>
@@ -118,8 +118,7 @@ class PrintOrder extends Component {
         </div>
 
         <div>
-          Due amount:
-          <NumberFormat value={transactionInfo.due_amount} displayType={'text'}
+          Due amount: <NumberFormat value={transactionInfo.due_amount} displayType={'text'}
                         thousandSeparator={true} thousandsGroupStyle="lakh"
                         decimalScale={2}/>
         </div>

@@ -11,8 +11,6 @@ import TableBody from '@material-ui/core/TableBody';
 import NumberFormat from 'react-number-format';
 import TableContainer from '@material-ui/core/TableContainer';
 
-const sqlite3 = require('sqlite3').verbose();
-
 interface Transaction {
   id: number;
   client: number;
@@ -52,6 +50,7 @@ class PrintUserTransactions extends Component {
       }}>
         <Grid style={{margin: 16}}>
           <Typography align='center' variant='h5'>
+            Sarker & Sons' <br />
             User Transactions
           </Typography>
           <Typography>
@@ -67,7 +66,7 @@ class PrintUserTransactions extends Component {
             Printed on: {dayjs(new Date()).format('DD/MM/YYYY [a]t hh:mm A')}
           </Typography>
         </Grid>
-        <TableContainer>
+        <TableContainer style={{overflow: 'hidden'}}>
           <Table aria-label="simple table" size='small'>
             <TableHead>
               <TableRow>
@@ -85,39 +84,39 @@ class PrintUserTransactions extends Component {
             <TableBody>
               {transactionList.length === 0 ?
                 <TableRow>
-                  <TableCell colSpan={6} align="left" style={{ textAlign: 'center' }}>
+                  <TableCell colSpan={6} align="left" style={{ textAlign: 'center', fontSize: '12px' }}>
                     No items
                   </TableCell>
                 </TableRow>
                 :
                 transactionList.map((row:Transaction) => (
                   <TableRow key={row.id}>
-                    <TableCell align="left">
+                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {Number(row.transaction_type) === transactionType['other'] ?
                         row.description === null ? 'N/A' : row.description :
                         row.client_name === null ? 'N/A' : row.client_name
                       }
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {this.getType(row.transaction_type)}
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       <NumberFormat value={row.paid_amount} displayType={'text'}
                                     thousandSeparator={true} thousandsGroupStyle="lakh"
                                     decimalScale={2}/>
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       <NumberFormat value={row.order_cost} displayType={'text'}
                                     thousandSeparator={true} thousandsGroupStyle="lakh"
                                     decimalScale={2}/>
                     </TableCell>
-                    <TableCell align="left" >
+                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {row.labour_cost !== null ? "N/A" : row.labour_cost}
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {row.discount === null ? 'N/A' : row.discount}
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {row.due_amount === null ?
                         'N/A' :
                         <NumberFormat value={row.due_amount} displayType={'text'}

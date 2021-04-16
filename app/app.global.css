@@ -47,8 +47,8 @@ a:hover {
   cursor: pointer;
 }
 
-.MuiTableCell-head,  .MuiTableCell-body {
-  font-family: 'Poppins', Sans-Arial, Helvetica, Helvetica Neue, serif;
+.MuiTableCell-root {
+  font-family: 'Poppins', Helvetica, sans-serif !important;
 }
 
 ::-webkit-scrollbar {

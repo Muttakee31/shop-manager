@@ -30,7 +30,8 @@ class PrintSupply extends Component {
       <>
         <div style={{padding: '5%', color: '#0a0a0a', fontSize: '12px'}}>
           <Grid style={{textAlign: 'center'}}>
-            <h4>Supply Details</h4>
+            <h5>Sarker & Sons' </h5> <br />
+            <h5>Supply Details</h5>
           </Grid>
           <div>
             Supplier Name: {supplyInfo.supplier_name}
@@ -45,7 +46,7 @@ class PrintSupply extends Component {
           </div>
 
           <Grid>
-            <TableContainer>
+            <TableContainer style={{overflow: 'hidden'}}>
               <Table aria-label="simple table" size='small'>
                 <TableHead>
                   <TableRow>
@@ -58,25 +59,26 @@ class PrintSupply extends Component {
                 <TableBody>
                   {itemList.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} align="left"  style={{textAlign: 'center', fontSize: '12px'}}>
+                      <TableCell colSpan={5} align="left"
+                                 style={{textAlign: 'center', fontSize: '12px', borderBottom: 'none'}}>
                         No items
                       </TableCell>
                     </TableRow>
                   ) : (
                     itemList.map((row:SupplyItem) => (
                       <TableRow key={row.product_id}>
-                        <TableCell style={{fontSize: '12px'}} align="left">
+                        <TableCell style={{fontSize: '12px', borderBottom: 'none'}} align="left">
                           {row.product_title}
                         </TableCell>
-                        <TableCell style={{fontSize: '12px'}} align="left">
+                        <TableCell style={{fontSize: '12px', borderBottom: 'none'}} align="left">
                           <NumberFormat value={row.price} displayType={'text'}
                                         thousandSeparator={true} thousandsGroupStyle="lakh"
                                         decimalScale={2}/>
                         </TableCell>
-                        <TableCell style={{fontSize: '12px'}}  align="left">
+                        <TableCell style={{fontSize: '12px', borderBottom: 'none'}}  align="left">
                           {row.quantity}
                         </TableCell>
-                        <TableCell style={{fontSize: '12px'}}  align="left" >
+                        <TableCell style={{fontSize: '12px', borderBottom: 'none'}}  align="left" >
                           <NumberFormat value={row.quantity * row.price} displayType={'text'}
                                         thousandSeparator={true} thousandsGroupStyle="lakh"
                                         decimalScale={2}/>
