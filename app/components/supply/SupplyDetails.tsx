@@ -14,6 +14,7 @@ import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
 import routes from '../../constants/routes.json';
 import { useHistory, useLocation } from 'react-router-dom';
+import SupplyInvoice from '../prints/SupplyInvoice';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -147,7 +148,12 @@ export default function SupplyDetails(): JSX.Element {
           <h3>Supply Details</h3>
         </Grid>
 
-        <BackButton customGoBack={returnToList}/>
+        <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+          <BackButton customGoBack={returnToList} />
+          <SupplyInvoice
+            supplyInfo={supply} transactionInfo={transactionInfo}
+            itemList={itemList}/>
+        </Grid>
 
         <Grid className={classes.details}>
           <Grid item xs={6}>

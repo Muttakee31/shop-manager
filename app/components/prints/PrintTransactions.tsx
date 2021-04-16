@@ -48,7 +48,7 @@ class PrintTransactions extends Component {
   render() {
     const {type, transactionList} = this.props;
     return (
-      <div className='pagebreak' style={{ padding: '5% 10%', color: '#0a0a0a'
+      <div className='pagebreak' style={{ padding: '5% 10%', color: '#0a0a0a', fontSize: '12px'
       }}>
         <Grid style={{margin: 16}}>
           <Typography align='center' variant='h5'>
