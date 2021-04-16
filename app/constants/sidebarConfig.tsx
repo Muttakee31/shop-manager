@@ -9,6 +9,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import StorageIcon from '@material-ui/icons/Storage';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
 import ReceiptIcon from '@material-ui/icons/Receipt';
+import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import React from 'react';
 
 interface menuType {
@@ -61,6 +62,12 @@ const sidebarConfig: { title: string, menu: menuType[] }[] = [
         title: 'History',
         url: routes.TRANSACTIONS,
         icon: <SwapVertIcon />
+      },
+      {
+        key: 10,
+        title: 'Due payment',
+        url: routes.DUE_PAYMENT,
+        icon: <KeyboardReturnIcon />
       },
       {
         key: 5,

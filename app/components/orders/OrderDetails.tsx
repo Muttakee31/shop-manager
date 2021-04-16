@@ -14,6 +14,7 @@ import BackButton from '../snippets/BackButton';
 import NumberFormat from 'react-number-format';
 import routes from '../../constants/routes.json';
 import { useHistory, useLocation } from 'react-router-dom';
+import OrderInvoice from '../prints/OrderInvoice';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -90,7 +91,6 @@ export default function OrderDetails(): JSX.Element {
 
     // @ts-ignore
     const id: number = match.params.id;
-    console.log(id);
     const db = new sqlite3.Database(dbpath.dbPath);
     db.get(
       'SELECT * FROM Orders where id=?',
@@ -146,9 +146,12 @@ export default function OrderDetails(): JSX.Element {
         <Grid className={classes.header}>
           <h3>Order Details</h3>
         </Grid>
-
-        <BackButton customGoBack={returnToList} />
-
+        <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+          <BackButton customGoBack={returnToList} />
+          <OrderInvoice
+            orderInfo={order} transactionInfo={transactionInfo}
+            itemList={itemList}/>
+        </Grid>
         <Grid className={classes.details}>
           <Grid item xs={6}>
             Customer Name:

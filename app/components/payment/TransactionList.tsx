@@ -10,7 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as dbpath from '../../constants/config';
 import { transactionType } from '../../constants/config';
 import Button from '@material-ui/core/Button';
-import routes from '../../constants/routes.json';
 import { useHistory, useLocation } from 'react-router';
 import dayjs from 'dayjs';
 import Chip from '@material-ui/core/Chip';
@@ -27,7 +26,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import NumberFormat from 'react-number-format';
-import ReactToPrint from 'react-to-print';
 import DatewiseTransactionReceipt from '../prints/DatewiseTransactionReceipt';
 
 const sqlite3 = require('sqlite3').verbose();
@@ -421,18 +419,6 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
         </Grid>
 
         <Grid item xs={12} className={classes.topbin}>
-          <Button
-            variant='contained'
-            color='primary'
-            className={classes.btn}
-            onClick={() =>
-              history.push({
-                pathname: routes.DUE_PAYMENT,
-              })}
-          >
-            Add due payment
-          </Button>
-
           <FormControl variant="outlined">
             <InputLabel id="demo-simple-select-label" className={classes.textField}>Payment type</InputLabel>
             <Select
@@ -464,23 +450,7 @@ WHERE id in (SELECT id FROM StockHistory WHERE product = ? ORDER BY id DESC LIMI
             value={selectedDate}
             onChange={changeDate}
           />
-
-          <div>
-            <ReactToPrint
-              trigger={() =>
-                <Button variant="outlined" color="primary">
-                  Print
-                </Button>
-              }
-              content={() => cellRef.current}
-            />
-            <div style={{display: 'none'}}>
-              <DatewiseTransactionReceipt
-                ref={cellRef}
-                type={type}
-                transactionList={transactionList}/>
-            </div>
-          </div>
+          <DatewiseTransactionReceipt type={type} transactionList={transactionList}/>
         </Grid>
 
         <TableContainer>
