@@ -63,7 +63,14 @@ class PrintUserTransactions extends Component {
             Phone: {user.phone}
           </Typography>
           <Typography>
-            Printed on: {dayjs(new Date()).format('DD/MM/YYYY [a]t hh:mm A')}
+            {user.due_amount> 0 ?
+              `Due amount: ${user.due_amount}` : `Balance: ${user.due_amount * -1}`}
+          </Typography>
+          <Typography>
+            Number of transactions: {transactionList?.length}
+          </Typography>
+          <Typography>
+            Printed on: {dayjs(new Date()).format('DD MMMM, YYYY [a]t hh:mm A')}
           </Typography>
         </Grid>
         <TableContainer style={{overflow: 'hidden'}}>
@@ -111,7 +118,7 @@ class PrintUserTransactions extends Component {
                                     decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
-                      {row.labour_cost !== null ? "N/A" : row.labour_cost}
+                      {row.labour_cost === null ? "N/A" : row.labour_cost}
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {row.discount === null ? 'N/A' : row.discount}

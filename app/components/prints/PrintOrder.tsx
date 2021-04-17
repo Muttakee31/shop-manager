@@ -8,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import dayjs from 'dayjs';
 import NumberFormat from 'react-number-format';
+import Typography from '@material-ui/core/Typography';
 
 interface OrderItem {
   product_id: number;
@@ -29,16 +30,16 @@ class PrintOrder extends Component {
     return (
     <>
       <div style={{padding: '5%', color: '#0a0a0a', fontSize: '12px'}}>
-        <Grid style={{textAlign: 'center'}}>
-          <h5>Sarker & Sons'</h5> <br/>
-          <h5>Order Details</h5>
-        </Grid>
+        <Typography align='center' variant='h5'>
+          Sarker & Sons'<br/>
+          Order Details
+        </Typography>
         <div>
             Customer Name: {orderInfo.customer_name}
         </div>
 
         <div>
-            Date of order: {dayjs(orderInfo.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
+            Date of order: {dayjs(orderInfo.timestamp.split('Z')[0]).format('DD MMMM, YYYY [a]t hh:mm A')}
         </div>
 
         <div>
@@ -50,10 +51,10 @@ class PrintOrder extends Component {
             <Table aria-label="simple table" size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell style={{fontSize: '12px'}}  >Title</TableCell>
-                  <TableCell style={{fontSize: '12px'}} >Rate</TableCell>
-                  <TableCell style={{fontSize: '12px'}} >Qty</TableCell>
-                  <TableCell style={{fontSize: '12px'}} >Price</TableCell>
+                  <TableCell style={{fontSize: '12px'}}>Title</TableCell>
+                  <TableCell style={{fontSize: '12px'}}>Rate</TableCell>
+                  <TableCell style={{fontSize: '12px'}}>Qty</TableCell>
+                  <TableCell style={{fontSize: '12px'}}>Price</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

@@ -36,12 +36,84 @@ class PrintTransactions extends Component {
     }
   }
 
+  componentDidMount() {
+  }
+
   getType = (type:number) => {
     const text = Object.keys(transactionType).filter(item => {
       // @ts-ignore
       return transactionType[item] == type;
     })[0];
     return text;
+  }
+
+  showFinalDetails = () => {
+    if (Number(this.props.type) === transactionType['order']) {
+      return (
+        <>
+          <div>
+            Paid by customer: {this.props.totalBill}
+          </div>
+          <div>
+            Total sales: {this.props.totalOrderCost}
+          </div>
+          <div>
+            Total due: {this.props.totalDue}
+          </div>
+          <div>
+            Total discount: {this.props.totalDiscount}
+          </div>
+          <div>
+            Total labour cost: {this.props.totalLabourCost}
+          </div>
+        </>
+      )
+    }
+    else if (Number(this.props.type) === transactionType['supply']) {
+      return (
+        <>
+          <div>
+            paid to supplier: {this.props.totalBill}
+          </div>
+          <div>
+            Total goods bought: {this.props.totalOrderCost}
+          </div>
+          <div>
+            Total Balance: {this.props.totalDue}
+          </div>
+          <div>
+            Total labour cost: {this.props.totalLabourCost}
+          </div>
+        </>
+      )
+    }
+    else if (Number(this.props.type) === transactionType['due']) {
+      return (
+        <>
+          <div>
+            Total due paid: {this.props.totalBill}
+          </div>
+        </>
+      )
+    }
+    else if (Number(this.props.type) === transactionType['bill']) {
+      return (
+        <>
+          <div>
+            Total bill: {this.props.totalBill}
+          </div>
+        </>
+      )
+    }
+    else {
+      return (
+        <>
+          <div>
+            Total Other bills: {this.props.totalBill}
+          </div>
+        </>
+      )
+    }
   }
 
   render() {
@@ -54,12 +126,13 @@ class PrintTransactions extends Component {
             Sarker & Sons' <br />
             Transaction Report
           </Typography>
-          <Typography>
-            Printed on: {dayjs(new Date()).format('DD/MM/YYYY [a]t hh:mm A')}
-          </Typography>
-          <Typography>
+          <div>
+            Printed on: {dayjs(new Date()).format('DD MMMM, YYYY [a]t hh:mm A')}
+          </div>
+          <div>
             Transaction Type: {this.getType(type)}
-          </Typography>
+          </div>
+          {this.showFinalDetails()}
           {/* <Typography>
             Date Range:
           </Typography>*/}
@@ -110,7 +183,7 @@ class PrintTransactions extends Component {
                                     decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}}>
-                      {row.labour_cost !== null ? "N/A" : row.labour_cost}
+                      {row.labour_cost === null ? "N/A" : row.labour_cost}
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}}>
                       {row.discount === null ? 'N/A' : row.discount}

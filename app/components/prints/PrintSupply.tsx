@@ -8,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import dayjs from 'dayjs';
 import NumberFormat from 'react-number-format';
+import Typography from '@material-ui/core/Typography';
 
 interface SupplyItem {
   product_id: number;
@@ -29,16 +30,16 @@ class PrintSupply extends Component {
     return (
       <>
         <div style={{padding: '5%', color: '#0a0a0a', fontSize: '12px'}}>
-          <Grid style={{textAlign: 'center'}}>
-            <h5>Sarker & Sons' </h5> <br />
-            <h5>Supply Details</h5>
-          </Grid>
+          <Typography align='center' variant='h5'>
+            Sarker & Sons'<br/>
+            Supply Details
+          </Typography>
           <div>
             Supplier Name: {supplyInfo.supplier_name}
           </div>
 
           <div>
-            Date of supply: {dayjs(supplyInfo.timestamp.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
+            Date of supply: {dayjs(supplyInfo.timestamp.split('Z')[0]).format('DD MMMM, YYYY [a]t hh:mm A')}
           </div>
 
           <div>
