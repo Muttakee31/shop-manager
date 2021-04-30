@@ -137,7 +137,8 @@ export default function OrderDetails(): JSX.Element {
     history.replace({
       pathname: routes.ORDERS,
       state: {
-        selectedDate:location.state.selectedDate
+        selectedDate: typeof location.state !== 'undefined' ?
+          location.state.selectedDate : dayjs(new Date()).format('YYYY-MM-DD')
       }
     })
   }
