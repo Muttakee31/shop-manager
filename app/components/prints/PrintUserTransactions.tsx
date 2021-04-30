@@ -11,8 +11,6 @@ import TableBody from '@material-ui/core/TableBody';
 import NumberFormat from 'react-number-format';
 import TableContainer from '@material-ui/core/TableContainer';
 
-const sqlite3 = require('sqlite3').verbose();
-
 interface Transaction {
   id: number;
   client: number;
@@ -48,7 +46,7 @@ class PrintUserTransactions extends Component {
   render() {
     const {user, transactionList} = this.props;
     return (
-      <div className='pagebreak' style={{ padding: '5% 10%', color: '#0a0a0a', fontSize: '0.8rem'
+      <div className='pagebreak' style={{ color: '#0a0a0a', fontSize: '0.8rem'
       }}>
         <Grid style={{margin: 16}}>
           <Typography align='center' variant='h5'>
@@ -71,8 +69,9 @@ class PrintUserTransactions extends Component {
           <Table aria-label="simple table" size='small'>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
+                {/*<TableCell>Title</TableCell>*/}
                 <TableCell>Type</TableCell>
+                <TableCell>Time</TableCell>
                 <TableCell>Paid amount</TableCell>
                 <TableCell>Total Cost</TableCell>
                 <TableCell>Labour cost</TableCell>
@@ -92,14 +91,17 @@ class PrintUserTransactions extends Component {
                 :
                 transactionList.map((row:Transaction) => (
                   <TableRow key={row.id}>
-                    <TableCell align="left">
+                   {/* <TableCell align="left">
                       {Number(row.transaction_type) === transactionType['other'] ?
                         row.description === null ? 'N/A' : row.description :
                         row.client_name === null ? 'N/A' : row.client_name
                       }
-                    </TableCell>
+                    </TableCell>*/}
                     <TableCell align="left">
                       {this.getType(row.transaction_type)}
+                    </TableCell>
+                    <TableCell align='left'>
+                      {dayjs(row.timestamp).format('DD MMMM, YYYY [a]t hh:mm A')}
                     </TableCell>
                     <TableCell align="left">
                       <NumberFormat value={row.paid_amount} displayType={'text'}
