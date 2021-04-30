@@ -98,8 +98,10 @@ export default function TransactionDetails(): JSX.Element {
       pathname: routes.TRANSACTIONS,
       state: {
         verticalScrollHeight: location.state.verticalScrollHeight,
-        selectedDate: location.state.selectedDate,
-        type: location.state.type},
+        selectedDate: typeof location.state !== 'undefined' ?
+          location.state.selectedDate : dayjs(new Date()).format('YYYY-MM-DD'),
+        type: location.state.type
+      },
     })
   }
 

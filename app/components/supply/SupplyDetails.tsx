@@ -132,9 +132,10 @@ export default function SupplyDetails(): JSX.Element {
 
   const returnToList = () => {
     history.replace({
-      pathname: routes.ORDERS,
+      pathname: routes.SUPPLY,
       state: {
-        selectedDate:location.state.selectedDate
+        selectedDate: typeof location.state !== 'undefined' ?
+          location.state.selectedDate : dayjs(new Date()).format('YYYY-MM-DD')
       }
     })
   }

@@ -124,13 +124,13 @@ export default function OrderList(): JSX.Element {
   // const [OrderList, setOrderList] = useState([]);
 
   useEffect(()=> {
+    if (typeof location.state !== 'undefined') {
+      setSelectedDate(location.state.selectedDate);
+    }
   }, [])
 
   useEffect(() => {
     // add db.all function to get all Orders
-    if (typeof location.state !== 'undefined') {
-      setSelectedDate(location.state.selectedDate);
-    }
     getOrders();
   }, [selectedDate]);
 

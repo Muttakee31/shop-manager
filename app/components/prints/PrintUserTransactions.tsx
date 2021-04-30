@@ -77,8 +77,9 @@ class PrintUserTransactions extends Component {
           <Table aria-label="simple table" size='small'>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
+                {/*<TableCell>Title</TableCell>*/}
                 <TableCell>Type</TableCell>
+                <TableCell>Time</TableCell>
                 <TableCell>Paid amount</TableCell>
                 <TableCell>Total Cost</TableCell>
                 <TableCell>Labour cost</TableCell>
@@ -106,6 +107,9 @@ class PrintUserTransactions extends Component {
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {this.getType(row.transaction_type)}
+                    </TableCell>
+                    <TableCell align='left'>
+                      {dayjs(row.timestamp).format('DD MMMM, YYYY [a]t hh:mm A')}
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       <NumberFormat value={row.paid_amount} displayType={'text'}

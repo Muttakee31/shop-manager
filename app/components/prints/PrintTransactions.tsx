@@ -11,7 +11,6 @@ import TableBody from '@material-ui/core/TableBody';
 import NumberFormat from 'react-number-format';
 import TableContainer from '@material-ui/core/TableContainer';
 
-
 interface Transaction {
   id: number;
   client: number;
@@ -34,9 +33,6 @@ class PrintTransactions extends Component {
     super(props);
     this.state = {
     }
-  }
-
-  componentDidMount() {
   }
 
   getType = (type:number) => {
@@ -144,6 +140,7 @@ class PrintTransactions extends Component {
                 <TableCell>
                   {Number(type) === transactionType['other'] ? "Reason" : "Client name"}</TableCell>
                 <TableCell>Type</TableCell>
+                <TableCell>Time</TableCell>
                 <TableCell>Paid amount</TableCell>
                 <TableCell>Total Cost</TableCell>
                 <TableCell>Labour cost</TableCell>
@@ -171,6 +168,9 @@ class PrintTransactions extends Component {
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}}>
                       {this.getType(row.transaction_type)}
+                    </TableCell>
+                    <TableCell align='left'>
+                      {dayjs(row.timestamp).format('DD MMMM, YYYY [a]t hh:mm A')}
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}}>
                       <NumberFormat value={row.paid_amount} displayType={'text'}

@@ -125,10 +125,13 @@ export default function SupplyList(): JSX.Element {
   // const [SupplyList, setSupplyList] = useState([]);
 
   useEffect(() => {
-    // add db.all function to get all Supplys
     if (typeof location.state !== 'undefined') {
       setSelectedDate(location.state.selectedDate);
     }
+  }, [])
+
+  useEffect(() => {
+    // add db.all function to get all Supplys
     getSupplies();
   }, [selectedDate]);
 
