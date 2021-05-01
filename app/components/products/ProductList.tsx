@@ -223,10 +223,14 @@ export default function ProductList(): JSX.Element {
                                     decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.shop_stock_count}
+                      <NumberFormat value={row.shop_stock_count} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.godown_stock_count}
+                      <NumberFormat value={row.godown_stock_count} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={2}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
                       {row.unit === null ? 'N/A' : row.unit}
