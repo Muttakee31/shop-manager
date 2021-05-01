@@ -134,19 +134,19 @@ class PrintTransactions extends Component {
           </Typography>*/}
         </Grid>
         <TableContainer style={{overflow: 'hidden'}}>
-          <Table aria-label="simple table" size='small'>
+          <Table aria-label="simple table" size='small' style={{tableLayout: 'fixed'}}>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  {Number(type) === transactionType['other'] ? "Reason" : "Client name"}</TableCell>
+                  {Number(type) === transactionType['other'] ? "Reason" : "Client"}</TableCell>
                 <TableCell>Type</TableCell>
-                <TableCell>Time</TableCell>
-                <TableCell>Paid amount</TableCell>
-                <TableCell>Total Cost</TableCell>
-                <TableCell>Labour cost</TableCell>
+                <TableCell colSpan={3}>Time</TableCell>
+                <TableCell>Paid</TableCell>
+                <TableCell>Cost</TableCell>
+                <TableCell>Labour</TableCell>
                 <TableCell>Discount</TableCell>
                 <TableCell>
-                  {Number(type) === transactionType['supply'] ? "Balance" : "Due amount"}
+                  {Number(type) === transactionType['supply'] ? "Balance" : "Due"}
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -169,7 +169,7 @@ class PrintTransactions extends Component {
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}}>
                       {this.getType(row.transaction_type)}
                     </TableCell>
-                    <TableCell align='left'>
+                    <TableCell colSpan={3} align='left' style={{fontSize: '12px', borderBottom: 'none'}}>
                       {dayjs(row.timestamp).format('DD MMMM, YYYY [a]t hh:mm A')}
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}}>

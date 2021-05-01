@@ -74,18 +74,18 @@ class PrintUserTransactions extends Component {
           </Typography>
         </Grid>
         <TableContainer style={{overflow: 'hidden'}}>
-          <Table aria-label="simple table" size='small'>
+          <Table aria-label="simple table" size='small' style={{tableLayout: 'fixed'}}>
             <TableHead>
               <TableRow>
                 {/*<TableCell>Title</TableCell>*/}
                 <TableCell>Type</TableCell>
-                <TableCell>Time</TableCell>
-                <TableCell>Paid amount</TableCell>
-                <TableCell>Total Cost</TableCell>
-                <TableCell>Labour cost</TableCell>
+                <TableCell colSpan={3}>Time</TableCell>
+                <TableCell>Paid</TableCell>
+                <TableCell>Cost</TableCell>
+                <TableCell>Labour</TableCell>
                 <TableCell>Discount</TableCell>
                 <TableCell>
-                  Balance/Due amount
+                  Balance/Due
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -99,16 +99,16 @@ class PrintUserTransactions extends Component {
                 :
                 transactionList.map((row:Transaction) => (
                   <TableRow key={row.id}>
-                    <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
+                    {/*<TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {Number(row.transaction_type) === transactionType['other'] ?
                         row.description === null ? 'N/A' : row.description :
                         row.client_name === null ? 'N/A' : row.client_name
                       }
-                    </TableCell>
+                    </TableCell>*/}
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >
                       {this.getType(row.transaction_type)}
                     </TableCell>
-                    <TableCell align='left'>
+                    <TableCell colSpan={3} align='left' style={{fontSize: '12px', borderBottom: 'none'}} >
                       {dayjs(row.timestamp).format('DD MMMM, YYYY [a]t hh:mm A')}
                     </TableCell>
                     <TableCell align="left" style={{fontSize: '12px', borderBottom: 'none'}} >

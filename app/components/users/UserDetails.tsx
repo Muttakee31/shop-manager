@@ -178,7 +178,7 @@ export default function UserDetails(): JSX.Element {
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell className={classes.texts}>Client name</TableCell>
+                  {/*<TableCell className={classes.texts}>Client name</TableCell>*/}
                   <TableCell className={classes.texts}>Type</TableCell>
                   <TableCell className={classes.texts}>Time</TableCell>
                   <TableCell className={classes.texts}>Cost</TableCell>
@@ -197,9 +197,9 @@ export default function UserDetails(): JSX.Element {
                   </TableRow>
                   :transactionList.map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell align="left" className={classes.texts}>
+                     {/* <TableCell align="left" className={classes.texts}>
                         {row.client_name}
-                      </TableCell>
+                      </TableCell>*/}
                       <TableCell align="left" className={classes.texts}>
                         {Object.keys(transactionType).find(item => {
                           // @ts-ignore
