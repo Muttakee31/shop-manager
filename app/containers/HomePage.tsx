@@ -318,11 +318,13 @@ export default function HomePage() {
               let saleSum: number = 0;
               let orderCount: number = 0;
               let laborCost: number = 0;
+              let totalInputSum: number = 0;
               let dueSum: number = 0;
               instant.map(item => {
                 if (item.transaction_type === transactionType["order"]) {
                   orderSum += Number(item.order_cost);
                   dueSum += Number(item.due_amount);
+                  totalInputSum += Number(item.paid_amount);
                   orderCount++;
                 }
                 if (item.transaction_type === transactionType["supply"] ||
@@ -330,12 +332,16 @@ export default function HomePage() {
                   item.transaction_type === transactionType["bill"]) {
                   saleSum += Number(item.paid_amount);
                 }
+                if (item.transaction_type === transactionType["due"]) {
+                  totalInputSum += Number(item.paid_amount);
+                }
                 laborCost += Number(item.labour_cost);
               });
 
               setTotalSale(orderSum);
               setTotalDue(dueSum);
               setTotalExpense(saleSum);
+              setTotalInput(totalInputSum);
               setOrderCount(orderCount);
               setTotalLabourCost(laborCost);
             }
@@ -349,51 +355,11 @@ export default function HomePage() {
     }
   };
 
-  const getMonthlyInput = (date:string) => {
-    const monthFormat = date.slice(0, 7);
-    try {
-      const db = new sqlite3.Database(dbpath.dbPath);
-      db.all(
-        'SELECT * FROM Transactions WHERE timestamp LIKE ?',
-        [monthFormat + "%"],
-        (_err: Error, instant: Transaction[]) => {
-          if (_err) {
-            console.log(_err)
-          } else {
-            if (instant !== undefined) {
-              let totalInputSum: number = 0;
-              instant.map(item => {
-                if (item.transaction_type === transactionType["order"]) {
-                  totalInputSum += Number(item.paid_amount);
-                }
-                if (item.transaction_type === transactionType["due"]) {
-                  totalInputSum += Number(item.paid_amount);
-                  // dueSum -= Number(item.paid_amount);
-                }
-              });
-              setTotalInput(totalInputSum);
-            }
-          }
-        }
-      );
-      db.close();
-    }
-    catch (e) {
-      console.log(e);
-    }
-  }
-
-
   const changeDate = async (e:React.ChangeEvent) => {
     // @ts-ignore
-    const temp = selectedDate;
     const value: string = e.target.value;
     await setSelectedDate(value);
     await getTransactionCount(value);
-    if ((Number(temp.split('-')[0]) !== Number(value.split('-')[0])) ||
-    ((Number(temp.split('-')[1])) !== Number(value.split('-')[1]))) {
-      await getMonthlyInput(value);
-    }
   }
 
 
