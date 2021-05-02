@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as dbpath from '../../constants/config';
 import dayjs from 'dayjs';
 import CssTextField from '../snippets/CssTextField';
+import NumberFormat from 'react-number-format';
 
 interface StockHistory {
   id: number;
@@ -132,10 +133,20 @@ export default function StockHistoryList(): JSX.Element {
                     </TableCell>
 
                     <TableCell align="left" className={classes.texts}>
-                      {row.prev_shop_stock} / {row.current_shop_stock}
+                      <NumberFormat value={row.prev_shop_stock} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={3}/> /
+                      <NumberFormat value={row.current_shop_stock} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={3}/>
                     </TableCell>
                     <TableCell align="left" className={classes.texts}>
-                      {row.prev_godown_stock} / {row.current_godown_stock}
+                      <NumberFormat value={row.prev_godown_stock} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={3}/> /
+                      <NumberFormat value={row.current_godown_stock} displayType={'text'}
+                                    thousandSeparator={true} thousandsGroupStyle="lakh"
+                                    decimalScale={3}/>
                     </TableCell>
                     <TableCell align='left' className={classes.texts}>
                       {dayjs(row.date_updated.split('Z')[0]).format('MMMM DD, YYYY [a]t hh:mm A')}
