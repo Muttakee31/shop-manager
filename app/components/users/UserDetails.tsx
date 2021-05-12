@@ -209,7 +209,7 @@ export default function UserDetails(): JSX.Element {
                         })}
                       </TableCell>
                       <TableCell align='left' className={classes.texts}>
-                        {dayjs(row.timestamp).format('DD MMMM, YYYY [a]t hh:mm A')}
+                        {dayjs(row.timestamp.split('Z')[0]).format('DD MMMM, YYYY [a]t hh:mm A')}
                       </TableCell>
                       <TableCell align="left" className={classes.texts}>
                         <NumberFormat value={row.order_cost} displayType={'text'}

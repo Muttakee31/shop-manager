@@ -99,7 +99,7 @@ class PrintTransactions extends Component {
                       {this.getType(row.transaction_type)}
                     </TableCell>
                     <TableCell align='left'>
-                      {dayjs(row.timestamp).format('DD MMMM, YYYY [a]t hh:mm A')}
+                      {dayjs(row.timestamp.split('Z')[0]).format('DD MMMM, YYYY [a]t hh:mm A')}
                     </TableCell>
                     <TableCell align="left">
                       <NumberFormat value={row.paid_amount} displayType={'text'}
